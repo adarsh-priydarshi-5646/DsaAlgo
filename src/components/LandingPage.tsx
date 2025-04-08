@@ -34,7 +34,7 @@ export default function LandingPage({ onEnter }: LandingPageProps) {
           <div className="space-y-6 animate-fade-in">
             <Brain className="w-20 h-20 mx-auto text-purple-600" />
             <h1 className="text-5xl md:text-7xl font-bold text-gray-900">
-              DSA Tracker & Practice Hub
+              DSA Algo & Practice Hub
             </h1>
             <p className="text-xl md:text-2xl text-gray-600">
               Master Data Structures and Algorithms, one question at a time
