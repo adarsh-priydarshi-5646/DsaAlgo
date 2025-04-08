@@ -80,7 +80,7 @@ export default function QuestionList({ questions, difficulty, topic, onClose }: 
                       rel="noopener noreferrer"
                       className="flex items-center space-x-2 text-blue-600 hover:text-blue-800 transition-colors"
                     >
-                      <img src="./public/owkdod-removebg-preview.png" alt="LeetCode" className="w-11 h-6" style={{ fill: 'currentColor' }} />
+                      <img src="public/owkdod-removebg-preview.png" alt="LeetCode" className="w-11 h-6" style={{ fill: 'currentColor' }} />
                       <span>LeetCode</span>
                       <ExternalLink className="w-4 h-4" />
                     </a>
@@ -90,7 +90,7 @@ export default function QuestionList({ questions, difficulty, topic, onClose }: 
                       rel="noopener noreferrer"
                       className="flex items-center space-x-2 text-green-600 hover:text-green-800 transition-colors"
                     >
-                      <img src="./public/gfg-removebg-preview.png" alt="GeeksForGeeks" className="w-5 h-6 mr-1" style={{ fill: 'currentColor' }} />
+                      <img src="public/gfg-removebg-preview.png" alt="GeeksForGeeks" className="w-5 h-6 mr-1" style={{ fill: 'currentColor' }} />
                       <span>GeeksForGeeks</span>
                       <ExternalLink className="w-4 h-4" />
                     </a>
