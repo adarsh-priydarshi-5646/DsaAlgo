@@ -8,7 +8,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* About Section */}
           <div>
-            <h3 className="text-lg font-semibold text-white/95 mb-4">About DSA Hub</h3>
+            <h3 className="text-lg font-semibold text-white/95 mb-4">About DSA Algo</h3>
             <p className="text-white/80">
               Your one-stop platform for mastering Data Structures and Algorithms. 
               Track your progress, solve problems, and level up your coding skills.
@@ -74,7 +74,7 @@ export default function Footer() {
         </div>
 
         <div className="mt-8 pt-8 border-t border-gray-800/30 text-center text-white/70">
-          <p>&copy; {new Date().getFullYear()} DSA Hub. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} DSA Algo. All rights reserved.</p>
         </div>
       </div>
     </footer>
