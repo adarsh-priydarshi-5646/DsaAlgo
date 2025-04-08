@@ -10,7 +10,7 @@ export default function Navbar() {
           <div className="flex items-center">
             <Link to="/" className="flex items-center space-x-2">
               <Brain className="w-8 h-8 text-purple-600" />
-              <span className="text-xl font-bold text-gray-900">DSA Hub</span>
+              <span className="text-xl font-bold text-gray-900">DSA Algo</span>
             </Link>
           </div>
           
