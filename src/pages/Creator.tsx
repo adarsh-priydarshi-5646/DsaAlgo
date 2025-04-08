@@ -7,7 +7,7 @@ export default function Creator() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 mt-16">
         <div className="text-center mb-12">
           <h1 className="text-5xl md:text-7xl font-bold text-gray-900 mb-4">Meet the Creator</h1>
-          <p className="text-xl md:text-2xl text-gray-600">The mind behind DSA Hub</p>
+          <p className="text-xl md:text-2xl text-gray-600">The mind behind DSA Algo</p>
         </div>
 
         {/* Creator Profile */}
@@ -18,27 +18,23 @@ export default function Creator() {
                 <Code2 className="w-16 h-16 text-purple-600" />
               </div>
               <h2 className="text-2xl font-bold text-gray-900">Adarsh Priyadarshi</h2>
-              <p className="text-gray-600">Full Stack Developer & DSA Enthusiast</p>
+              <p className="text-gray-600">Full Stack Developer & AI/ML Enthusiast || Problem Solver</p>
             </div>
 
             <div className="space-y-4">
               <p className="text-gray-600">
-                Passionate about creating tools that help developers learn and grow. 
-                With years of experience in competitive programming and software development, 
-                I built DSA Hub to make DSA learning more accessible and engaging.
+                Passionate about creating tools that help developers, 
+                I built DSA Algo to make DSA learning more accessible and engaging.
               </p>
               
               <div className="flex justify-center space-x-4 mt-6">
-                <a href="#" className="text-gray-600 hover:text-purple-600 transition-colors">
+                <a href="https://github.com/adarsh-priydarshi-5646" className="text-gray-600 hover:text-purple-600 transition-colors">
                   <Github className="w-6 h-6" />
                 </a>
-                <a href="#" className="text-gray-600 hover:text-purple-600 transition-colors">
+                <a href="https://www.linkedin.com/in/adarsh-priydarshi-536430316/" className="text-gray-600 hover:text-purple-600 transition-colors">
                   <Linkedin className="w-6 h-6" />
                 </a>
-                <a href="#" className="text-gray-600 hover:text-purple-600 transition-colors">
-                  <Twitter className="w-6 h-6" />
-                </a>
-                <a href="#" className="text-gray-600 hover:text-purple-600 transition-colors">
+                <a href="mailto:adarshpriydarshi5646@gmail.com" className="text-gray-600 hover:text-purple-600 transition-colors">
                   <Mail className="w-6 h-6" />
                 </a>
               </div>
@@ -56,11 +52,15 @@ export default function Creator() {
                 </div>
                 <div className="flex items-center space-x-2">
                   <div className="w-2 h-2 bg-purple-600 rounded-full"></div>
+                  <span className="text-gray-600">JavaScript</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <div className="w-2 h-2 bg-purple-600 rounded-full"></div>
                   <span className="text-gray-600">TypeScript</span>
                 </div>
                 <div className="flex items-center space-x-2">
                   <div className="w-2 h-2 bg-purple-600 rounded-full"></div>
-                  <span className="text-gray-600">Node.js</span>
+                  <span className="text-gray-600">Python</span>
                 </div>
                 <div className="flex items-center space-x-2">
                   <div className="w-2 h-2 bg-purple-600 rounded-full"></div>
@@ -77,8 +77,12 @@ export default function Creator() {
                     <Trophy className="w-5 h-5 text-purple-600" />
                   </div>
                   <div>
-                    <h4 className="font-medium text-gray-900">Codeforces Expert</h4>
-                    <p className="text-sm text-gray-600">Max Rating: 1600+</p>
+                    <h4 className="font-medium text-gray-900">Codeforces Rating</h4>
+                    <p className="text-sm text-gray-600">Rating: 550+</p>
+                  </div>
+                   <div>
+                    <h4 className="font-medium text-gray-900">CodeChef Rating</h4>
+                    <p className="text-sm text-gray-600">Rating: 1 ⭐️</p>
                   </div>
                 </div>
                 <div className="flex items-center space-x-3">
@@ -101,7 +105,7 @@ export default function Creator() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
               {
-                title: "DSA Hub",
+                title: "DSA Algo",
                 description: "A comprehensive platform for learning Data Structures and Algorithms",
                 icon: <Code className="w-6 h-6 text-purple-600" />
               },
@@ -109,11 +113,6 @@ export default function Creator() {
                 title: "Code Runner",
                 description: "Online code execution platform with multiple language support",
                 icon: <Code2 className="w-6 h-6 text-purple-600" />
-              },
-              {
-                title: "Algo Visualizer",
-                description: "Interactive visualization tool for algorithms",
-                icon: <Star className="w-6 h-6 text-purple-600" />
               }
             ].map((project, index) => (
               <div key={index} className="bg-gray-50 shadow-lg rounded-xl p-6">
@@ -133,12 +132,12 @@ export default function Creator() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {[
               {
-                quote: "DSA Hub has completely transformed how I learn algorithms. The interactive approach makes it so much easier to understand complex concepts.",
+                quote: "DSA Algo has completely transformed how I learn algorithms. The interactive approach makes it so much easier to understand complex concepts.",
                 author: "Sarah Johnson",
                 role: "Software Engineer"
               },
               {
-                quote: "The best platform for competitive programming preparation. The practice problems and explanations are top-notch.",
+                quote: "The best platform for DSA preparation. The practice problems and explanations are top-notch.",
                 author: "Michael Chen",
                 role: "Competitive Programmer"
               }
