@@ -80,7 +80,7 @@ export default function QuestionList({ questions, difficulty, topic, onClose }: 
                       rel="noopener noreferrer"
                       className="flex items-center space-x-2 text-blue-600 hover:text-blue-800 transition-colors"
                     >
-                      <img src="https://cdn.iconscout.com/icon/free/png-256/free-leetcode-logo-icon-download-in-svg-png-gif-file-formats--technology-social-media-vol-4-pack-logos-icons-2944960.png" alt="LeetCode" className="w-11 h-6" style={{ fill: 'currentColor' }} />
+                      <img src="https://cdn.iconscout.com/icon/free/png-256/free-leetcode-logo-icon-download-in-svg-png-gif-file-formats--technology-social-media-vol-4-pack-logos-icons-2944960.png" alt="LeetCode" className="w-9 h-6" style={{ fill: 'currentColor' }} />
                       <span>LeetCode</span>
                       <ExternalLink className="w-4 h-4" />
                     </a>
