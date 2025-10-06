@@ -1,0 +1,45 @@
+{
+  "name": "dsaalgo-frontend",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "lint": "eslint .",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.20.1",
+    "lucide-react": "^0.344.0",
+    "@react-three/fiber": "^8.15.12",
+    "@react-three/drei": "^9.88.17",
+    "three": "^0.158.0",
+    "framer-motion": "^10.16.16",
+    "axios": "^1.6.2",
+    "@tanstack/react-query": "^5.8.4",
+    "react-hook-form": "^7.48.2",
+    "react-hot-toast": "^2.4.1",
+    "zustand": "^4.4.7",
+    "monaco-editor": "^0.44.0",
+    "@monaco-editor/react": "^4.6.0",
+    "react-syntax-highlighter": "^15.5.0",
+    "recharts": "^2.8.0",
+    "react-intersection-observer": "^9.5.3",
+    "lottie-react": "^2.4.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.9.1",
+    "@vitejs/plugin-react": "^4.3.1",
+    "autoprefixer": "^10.4.18",
+    "eslint": "^9.9.1",
+    "eslint-plugin-react-hooks": "^5.1.0-rc.0",
+    "eslint-plugin-react-refresh": "^0.4.11",
+    "globals": "^15.9.0",
+    "postcss": "^8.4.35",
+    "tailwindcss": "^3.4.1",
+    "vite": "^5.4.17"
+  }
+}
