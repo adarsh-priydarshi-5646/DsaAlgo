@@ -19,6 +19,9 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5001;
 
+// Trust proxy for deployment platforms like Render, Heroku, etc.
+app.set('trust proxy', 1);
+
 // Security middleware
 app.use(helmet({
   crossOriginEmbedderPolicy: false,
