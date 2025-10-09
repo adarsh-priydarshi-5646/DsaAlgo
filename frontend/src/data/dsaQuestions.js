@@ -1,19 +1,10 @@
-export interface Question {
-  title: string;
-  leetcode: string;
-  gfg: string;
-}
+// Question structure:
+// { title: string, leetcode: string, gfg: string }
 
-export interface TopicData {
-  name: string;
-  icon: string;
-  description: string;
-  easy: Question[];
-  medium: Question[];
-  hard: Question[];
-}
+// TopicData structure:
+// { name: string, icon: string, description: string, questions: { easy: Question[], medium: Question[], hard: Question[] } }
 
-export const dsaTopics: TopicData[] = [
+export const dsaTopics = [
   {
     name: "Arrays",
     icon: "📊",
