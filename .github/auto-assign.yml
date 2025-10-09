@@ -1,0 +1,12 @@
+# Auto-assign configuration
+reviewers:
+  - adarsh-priydarshi-5646  # Your GitHub username
+
+assignees:
+  - adarsh-priydarshi-5646
+
+# Skip if PR is in draft
+skipDraftPr: true
+
+# Number of reviewers to assign
+numberOfReviewers: 1
