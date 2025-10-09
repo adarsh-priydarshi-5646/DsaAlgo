@@ -16,6 +16,9 @@ import leaderboardRoutes from './routes/leaderboard.js';
 // Load environment variables
 dotenv.config();
 
+// Import database connection
+import prisma from './config/database.js';
+
 const app = express();
 const PORT = process.env.PORT || 5001;
 
@@ -193,12 +196,26 @@ process.on('SIGINT', () => {
   process.exit(0);
 });
 
+// Test database connection
+async function testDatabaseConnection() {
+  try {
+    await prisma.$connect();
+    console.log('✅ Database connected successfully');
+  } catch (error) {
+    console.error('❌ Database connection failed:', error.message);
+  }
+}
+
 // Start server
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
   console.log(`🚀 Server running on port ${PORT}`);
   console.log(`📊 Environment: ${process.env.NODE_ENV || 'development'}`);
   console.log(`🔗 Health check: http://localhost:${PORT}/health`);
   console.log(`🌐 API Base URL: http://localhost:${PORT}/api`);
+  
+  // Test database connection
+  await testDatabaseConnection();
+  
   console.log(`📚 Available endpoints:`);
   console.log(`   - POST /api/auth/register`);
   console.log(`   - POST /api/auth/login`);
