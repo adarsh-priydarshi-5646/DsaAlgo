@@ -226,7 +226,201 @@ const mockProblems = [
         output: [1, 3, 2]
       }
     ]
+  },
+  {
+    id: '7',
+    title: 'Move Zeroes',
+    slug: 'move-zeroes',
+    difficulty: 'EASY',
+    category: {
+      id: '1',
+      name: 'Arrays',
+      icon: 'BarChart3',
+      color: '#3B82F6'
+    },
+    tags: ['array', 'two-pointers'],
+    submissionCount: 1987,
+    solutionCount: 1,
+    userProgress: null,
+    order: 7,
+    leetcodeUrl: 'https://leetcode.com/problems/move-zeroes/',
+    description: 'Given an integer array nums, move all 0\'s to the end of it while maintaining the relative order of the non-zero elements.',
+    examples: [
+      {
+        input: 'nums = [0,1,0,3,12]',
+        output: '[1,3,12,0,0]',
+        explanation: 'All zeros are moved to the end while non-zero elements remain in their original order.'
+      }
+    ],
+    testCases: [
+      {
+        input: { nums: [0, 1, 0, 3, 12] },
+        output: [1, 3, 12, 0, 0]
+      },
+      {
+        input: { nums: [0, 0, 1] },
+        output: [1, 0, 0]
+      }
+    ]
+  },
+  {
+    id: '8',
+    title: 'Longest Substring Without Repeating Characters',
+    slug: 'longest-substring-without-repeating-characters',
+    difficulty: 'MEDIUM',
+    category: {
+      id: '5',
+      name: 'Dynamic Programming',
+      icon: 'Zap',
+      color: '#EF4444'
+    },
+    tags: ['string', 'sliding-window', 'hash-table'],
+    submissionCount: 2675,
+    solutionCount: 1,
+    userProgress: null,
+    order: 8,
+    leetcodeUrl: 'https://leetcode.com/problems/longest-substring-without-repeating-characters/',
+    description: 'Given a string s, find the length of the longest substring without repeating characters.',
+    examples: [
+      {
+        input: 's = "abcabcbb"',
+        output: '3',
+        explanation: 'The answer is "abc", with the length of 3.'
+      }
+    ],
+    testCases: [
+      {
+        input: { s: "abcabcbb" },
+        output: 3
+      },
+      {
+        input: { s: "bbbbb" },
+        output: 1
+      },
+      {
+        input: { s: "pwwkew" },
+        output: 3
+      }
+    ]
+  },
+  {
+    id: '9',
+    title: 'Add Two Numbers',
+    slug: 'add-two-numbers',
+    difficulty: 'MEDIUM',
+    category: {
+      id: '2',
+      name: 'Linked Lists',
+      icon: 'Link',
+      color: '#10B981'
+    },
+    tags: ['linked-list', 'math'],
+    submissionCount: 3542,
+    solutionCount: 1,
+    userProgress: null,
+    order: 9,
+    leetcodeUrl: 'https://leetcode.com/problems/add-two-numbers/',
+    description: 'You are given two non-empty linked lists representing two non-negative integers. Add the two numbers and return the sum as a linked list.',
+    examples: [
+      {
+        input: 'l1 = [2,4,3], l2 = [5,6,4]',
+        output: '[7,0,8]',
+        explanation: '342 + 465 = 807.'
+      }
+    ],
+    testCases: [
+      {
+        input: { l1: [2, 4, 3], l2: [5, 6, 4] },
+        output: [7, 0, 8]
+      },
+      {
+        input: { l1: [0], l2: [0] },
+        output: [0]
+      }
+    ]
+  },
+  {
+    id: '10',
+    title: 'Climbing Stairs',
+    slug: 'climbing-stairs',
+    difficulty: 'EASY',
+    category: {
+      id: '5',
+      name: 'Dynamic Programming',
+      icon: 'Zap',
+      color: '#EF4444'
+    },
+    tags: ['dynamic-programming', 'math'],
+    submissionCount: 2987,
+    solutionCount: 1,
+    userProgress: null,
+    order: 10,
+    leetcodeUrl: 'https://leetcode.com/problems/climbing-stairs/',
+    description: 'You are climbing a staircase. It takes n steps to reach the top. Each time you can climb 1 or 2 steps. In how many distinct ways can you climb to the top?',
+    examples: [
+      {
+        input: 'n = 2',
+        output: '2',
+        explanation: 'There are two ways: (1 + 1) and (2).'
+      },
+      {
+        input: 'n = 3',
+        output: '3',
+        explanation: 'There are three ways: (1+1+1), (1+2), (2+1).'
+      }
+    ],
+    testCases: [
+      {
+        input: { n: 2 },
+        output: 2
+      },
+      {
+        input: { n: 3 },
+        output: 3
+      },
+      {
+        input: { n: 5 },
+        output: 8
+      }
+    ]
+  },
+  {
+    id: '11',
+    title: 'Best Time to Buy and Sell Stock',
+    slug: 'best-time-to-buy-and-sell-stock',
+    difficulty: 'EASY',
+    category: {
+      id: '1',
+      name: 'Arrays',
+      icon: 'BarChart3',
+      color: '#3B82F6'
+    },
+    tags: ['array', 'dynamic-programming'],
+    submissionCount: 3321,
+    solutionCount: 1,
+    userProgress: null,
+    order: 11,
+    leetcodeUrl: 'https://leetcode.com/problems/best-time-to-buy-and-sell-stock/',
+    description: 'You are given an array prices where prices[i] is the price of a stock on the ith day. You want to maximize your profit by choosing a day to buy and a day to sell. Return the maximum profit you can achieve.',
+    examples: [
+      {
+        input: 'prices = [7,1,5,3,6,4]',
+        output: '5',
+        explanation: 'Buy on day 2 (price=1) and sell on day 5 (price=6), profit = 6-1 = 5.'
+      }
+    ],
+    testCases: [
+      {
+        input: { prices: [7, 1, 5, 3, 6, 4] },
+        output: 5
+      },
+      {
+        input: { prices: [7, 6, 4, 3, 1] },
+        output: 0
+      }
+    ]
   }
+
 ];
 
 const mockCategories = [
@@ -311,13 +505,13 @@ export const getProblems = async (req, res) => {
 
     // Apply filters
     if (category) {
-      filteredProblems = filteredProblems.filter(p => 
+      filteredProblems = filteredProblems.filter(p =>
         p.category.name.toLowerCase() === category.toLowerCase()
       );
     }
 
     if (difficulty) {
-      filteredProblems = filteredProblems.filter(p => 
+      filteredProblems = filteredProblems.filter(p =>
         p.difficulty === difficulty.toUpperCase()
       );
     }
