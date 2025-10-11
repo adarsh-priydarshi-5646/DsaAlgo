@@ -20,6 +20,7 @@ import useAuthStore from './store/authStore';
 
 // Styles
 import './index.css';
+import Error404 from './components/Error404';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -179,6 +180,16 @@ function App() {
 
             {/* Catch all route */}
             <Route path="*" element={<Navigate to="/" replace />} />
+             <Route 
+              path="/components/error404" 
+              element={
+                <PublicRoute>
+                  
+                      <Error404/>
+            
+                </PublicRoute>
+              } 
+            />
           </Routes>
 
           {/* Toast Notifications */}
