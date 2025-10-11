@@ -77,6 +77,7 @@ jobs:
     - name: Setup environment variables
       run: |
         echo "DATABASE_URL=postgresql://postgres:postgres@localhost:5432/test_db" > .env
+        echo "DIRECT_URL=postgresql://postgres:postgres@localhost:5432/test_db" >> .env
         echo "JWT_SECRET=test-secret-for-dsa-algo" >> .env
         echo "NODE_ENV=test" >> .env
         echo "PORT=5001" >> .env
