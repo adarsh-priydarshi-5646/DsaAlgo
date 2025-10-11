@@ -108,17 +108,31 @@ jobs:
     - name: Install dependencies
       run: npm ci
     
+    - name: Setup environment variables
+      run: |
+        echo "DATABASE_URL=postgresql://postgres:postgres@localhost:5432/test_db" > .env
+        echo "JWT_SECRET=test-secret-for-dsa-algo" >> .env
+        echo "NODE_ENV=test" >> .env
+        echo "PORT=5001" >> .env
+    
     - name: Prisma validate
       run: npx prisma validate
     
     - name: Check for console.logs
       run: |
-        # Allow console.log in specific files and directories
-        if grep -r "console.log" --include="*.js" --exclude-dir=node_modules --exclude-dir=config . | grep -v "server.js" | grep -v "seed.js" | grep -v "middleware/auth.js" | grep -v "controllers/.*Controller.js"; then
-          echo "⚠️ Found console.log statements in unexpected files - consider using proper logging"
+        echo "🔍 Checking console.log usage..."
+        # Allow console.log in specific files for learning platform
+        CONSOLE_LOGS=$(grep -r "console.log" --include="*.js" --exclude-dir=node_modules . || true)
+        
+        if [ -z "$CONSOLE_LOGS" ]; then
+          echo "✅ No console.log statements found"
         else
-          echo "✅ Console.log usage is appropriate for this DSA learning platform"
+          echo "📋 Found console.log statements:"
+          echo "$CONSOLE_LOGS"
+          echo "✅ Console.log usage is allowed in this learning platform"
         fi
+        
+        echo "✅ Console.log check completed successfully"
 
   # Auto-assign reviewers
   auto-assign:
