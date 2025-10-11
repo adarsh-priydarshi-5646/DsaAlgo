@@ -27,8 +27,12 @@ export default [
         'warn',
         { allowConstantExport: true },
       ],
-      // JavaScript specific rules
-      'no-unused-vars': 'warn',
+      // JavaScript specific rules - more lenient for learning platform
+      'no-unused-vars': ['warn', { 
+        'argsIgnorePattern': '^_',
+        'varsIgnorePattern': '^_',
+        'ignoreRestSiblings': true 
+      }],
       'no-undef': 'error',
     },
   }
