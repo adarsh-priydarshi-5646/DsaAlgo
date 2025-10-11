@@ -16,6 +16,19 @@ import leaderboardRoutes from './routes/leaderboard.js';
 // Load environment variables
 dotenv.config();
 
+// Check required environment variables
+const requiredEnvVars = ['JWT_SECRET'];
+const missingEnvVars = requiredEnvVars.filter(envVar => !process.env[envVar]);
+
+if (missingEnvVars.length > 0) {
+  console.warn('⚠️ Missing environment variables:', missingEnvVars.join(', '));
+  // Set defaults for development
+  if (!process.env.JWT_SECRET) {
+    process.env.JWT_SECRET = 'fallback-jwt-secret-for-development';
+    console.log('🔧 Using fallback JWT_SECRET for development');
+  }
+}
+
 // Import database connection
 import prisma from './config/database.js';
 
@@ -203,6 +216,9 @@ async function testDatabaseConnection() {
     console.log('✅ Database connected successfully');
   } catch (error) {
     console.error('❌ Database connection failed:', error.message);
+    console.error('DATABASE_URL exists:', !!process.env.DATABASE_URL);
+    console.error('DIRECT_URL exists:', !!process.env.DIRECT_URL);
+    // Don't exit process, let server start anyway for debugging
   }
 }
 
