@@ -1,6 +1,5 @@
 import prisma from '../config/database.js';
 
-// Mock data for development
 const mockProblems = [
   {
     id: '1',
@@ -419,7 +418,57 @@ const mockProblems = [
         output: 0
       }
     ]
-  }
+  },
+  {
+  id: '12',
+  title: 'Fibonacci Number',
+  slug: 'fibonacci-number',
+  difficulty: 'EASY',
+  category: {
+    id: '5',
+    name: 'Dynamic Programming',
+    icon: 'Zap',
+    color: '#EF4444'
+  },
+  tags: ['dynamic-programming', 'recursion', 'math'],
+  submissionCount: 4125,
+  solutionCount: 1,
+  userProgress: null,
+  order: 12,
+  leetcodeUrl: 'https://leetcode.com/problems/fibonacci-number/',
+  description: 'The Fibonacci numbers, commonly denoted F(n), form a sequence, called the Fibonacci sequence, such that each number is the sum of the two preceding ones, starting from 0 and 1. Given n, calculate F(n).',
+  examples: [
+    {
+      input: 'n = 2',
+      output: '1',
+      explanation: 'F(2) = F(1) + F(0) = 1 + 0 = 1.'
+    },
+    {
+      input: 'n = 4',
+      output: '3',
+      explanation: 'F(4) = F(3) + F(2) = 2 + 1 = 3.'
+    }
+  ],
+  testCases: [
+    {
+      input: { n: 0 },
+      output: 0
+    },
+    {
+      input: { n: 1 },
+      output: 1
+    },
+    {
+      input: { n: 5 },
+      output: 5
+    },
+    {
+      input: { n: 10 },
+      output: 55
+    }
+  ]
+}
+
 
 ];
 
