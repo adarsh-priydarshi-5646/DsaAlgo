@@ -36,13 +36,20 @@ run_test() {
         echo -e "   ${RED}❌ FAILED${NC}"
     fi
     
-    # Return to root directory
-    cd "$(dirname "$0")/.." || exit 1
+    # Return to project root directory
+    cd "$PROJECT_ROOT" || exit 1
 }
 
 # Get script directory and project root
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
+
+# Ensure we're in the project root
+if [ ! -f "$PROJECT_ROOT/package.json" ] && [ ! -f "$PROJECT_ROOT/frontend/package.json" ]; then
+    echo "Error: Could not find project root"
+    exit 1
+fi
+
 cd "$PROJECT_ROOT" || exit 1
 
 echo "🏠 Project Root: $PROJECT_ROOT"
