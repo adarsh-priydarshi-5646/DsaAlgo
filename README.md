@@ -594,20 +594,23 @@ Special thanks to:
 
 If this project helped you learn DSA concepts or inspired your own projects, please consider:
 
-[![⭐ Star this repo](https://img.shields.io/badge/⭐-Star_this_repo-yellow?style=for-the-badge)](https://github.com/naveenkumar29052006/DsaAlgo/stargazers)
-[![🍴 Fork this repo](https://img.shields.io/badge/🍴-Fork_this_repo-blue?style=for-the-badge)](https://github.com/naveenkumar29052006/DsaAlgo/fork)
-[![📢 Share](https://img.shields.io/badge/📢-Share-green?style=for-the-badge)](https://twitter.com/intent/tweet?text=Check%20out%20this%20amazing%20DSA%20learning%20platform!&url=https://github.com/naveenkumar29052006/DsaAlgo)
+[![⭐ Star this repo](https://img.shields.io/badge/⭐-Star_this_repo-yellow?style=for-the-badge)](https://github.com/adarsh-priydarshi-5646/DsaAlgo/stargazers)
+[![🍴 Fork this repo](https://img.shields.io/badge/🍴-Fork_this_repo-blue?style=for-the-badge)](https://github.com/adarsh-priydarshi-5646/DsaAlgo/fork)
+[![📢 Share](https://img.shields.io/badge/📢-Share-green?style=for-the-badge)](https://twitter.com/intent/tweet?text=Check%20out%20this%20amazing%20DSA%20learning%20platform!&url=https://github.com/adarsh-priydarshi-5646/DsaAlgo)
 
 ### 📈 Project Stats
 
-![GitHub stars](https://img.shields.io/github/stars/naveenkumar29052006/DsaAlgo?style=social)
-![GitHub forks](https://img.shields.io/github/forks/naveenkumar29052006/DsaAlgo?style=social)
-![GitHub watchers](https://img.shields.io/github/watchers/naveenkumar29052006/DsaAlgo?style=social)
+![GitHub stars](https://img.shields.io/github/stars/adarsh-priydarshi-5646/DsaAlgo?style=social)
+![GitHub forks](https://img.shields.io/github/forks/adarsh-priydarshi-5646/DsaAlgo?style=social)
+![GitHub watchers](https://img.shields.io/github/watchers/adarsh-priydarshi-5646/DsaAlgo?style=social)
+![GitHub last commit](https://img.shields.io/github/last-commit/adarsh-priydarshi-5646/DsaAlgo?style=social)
 
 ---
 
 **Made with ❤️ by developers, for developers**
 
 *Happy Coding! 🚀*
+
+![Footer](https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=6,11,20&height=100&section=footer)
 
 </div>
