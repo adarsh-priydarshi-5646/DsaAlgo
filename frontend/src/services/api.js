@@ -44,6 +44,7 @@ export const authAPI = {
   getMe: () => api.get('/auth/me'),
   updateProfile: (data) => api.put('/auth/profile', data),
   changePassword: (data) => api.put('/auth/password', data),
+  updateSettings: (preferences) => api.patch('/auth/settings', { preferences }),
 };
 
 // Problems API
@@ -59,11 +60,13 @@ export const problemsAPI = {
 export const usersAPI = {
   getProfile: (username) => api.get(`/users/${username}`),
   getStats: (username) => api.get(`/users/${username}/stats`),
+  exportUser: (id) => api.get(`/users/${id}/export`, { responseType: 'blob' }),
 };
 
 // Progress API
 export const progressAPI = {
   getProgress: () => api.get('/progress'),
+  getUserStats: () => api.get('/progress/stats'),
   getProblemProgress: (problemId) => api.get(`/progress/problem/${problemId}`),
   updateProgress: (problemId, data) => api.put(`/progress/problem/${problemId}`, data),
 };

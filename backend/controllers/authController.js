@@ -150,6 +150,8 @@ export const getMe = async (req, res) => {
         lastName: true,
         role: true,
         avatar: true,
+        bio: true,
+        preferences: true,
         createdAt: true
       }
     });
@@ -168,14 +170,27 @@ export const getMe = async (req, res) => {
 // Update profile
 export const updateProfile = async (req, res) => {
   try {
-    const { firstName, lastName, avatar } = req.body;
+    const { firstName, lastName, avatar, username, email, bio } = req.body;
+
+    // Ensure unique username/email when updating
+    if (username) {
+      const exists = await prisma.user.findFirst({ where: { username, NOT: { id: req.userId } } });
+      if (exists) return res.status(400).json({ error: 'Username already taken' });
+    }
+    if (email) {
+      const exists = await prisma.user.findFirst({ where: { email, NOT: { id: req.userId } } });
+      if (exists) return res.status(400).json({ error: 'Email already registered' });
+    }
 
     const user = await prisma.user.update({
       where: { id: req.userId },
       data: {
-        ...(firstName && { firstName }),
-        ...(lastName && { lastName }),
-        ...(avatar && { avatar })
+        ...(firstName !== undefined && { firstName }),
+        ...(lastName !== undefined && { lastName }),
+        ...(avatar !== undefined && { avatar }),
+        ...(username !== undefined && { username }),
+        ...(email !== undefined && { email }),
+        ...(bio !== undefined && { bio })
       },
       select: {
         id: true,
@@ -185,6 +200,7 @@ export const updateProfile = async (req, res) => {
         lastName: true,
         role: true,
         avatar: true,
+        bio: true,
         createdAt: true
       }
     });
@@ -195,6 +211,27 @@ export const updateProfile = async (req, res) => {
     });
   } catch (error) {
     console.error('Update profile error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+// Update user settings/preferences
+export const updateSettings = async (req, res) => {
+  try {
+    const { preferences } = req.body; // arbitrary JSON
+    const user = await prisma.user.update({
+      where: { id: req.userId },
+      data: { preferences },
+      select: {
+        id: true,
+        username: true,
+        email: true,
+        preferences: true
+      }
+    });
+    res.json({ message: 'Settings updated successfully', user });
+  } catch (error) {
+    console.error('Update settings error:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 };
