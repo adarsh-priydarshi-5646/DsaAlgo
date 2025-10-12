@@ -6,7 +6,8 @@ import {
   login,
   getMe,
   updateProfile,
-  changePassword
+  changePassword,
+  updateSettings
 } from '../controllers/authController.js';
 
 const router = express.Router();
@@ -28,6 +29,9 @@ const validateLogin = [
 const validateProfileUpdate = [
   body('firstName').optional().trim(),
   body('lastName').optional().trim(),
+  body('username').optional().isString().trim().isLength({ min: 3 }),
+  body('email').optional().isEmail(),
+  body('bio').optional().isString(),
   body('avatar').optional().isURL().withMessage('Avatar must be a valid URL')
 ];
 
@@ -54,5 +58,6 @@ router.post('/login', validateLogin, handleValidationErrors, login);
 router.get('/me', authenticateToken, getMe);
 router.put('/profile', authenticateToken, validateProfileUpdate, handleValidationErrors, updateProfile);
 router.put('/password', authenticateToken, validatePasswordChange, handleValidationErrors, changePassword);
+router.patch('/settings', authenticateToken, (req, res, next) => next(), updateSettings);
 
 export default router;
