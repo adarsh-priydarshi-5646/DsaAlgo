@@ -10,6 +10,7 @@ import ProblemList from './components/ProblemList';
 import ProblemDetail from './components/ProblemDetail';
 import Profile from './components/Profile';
 import Leaderboard from './pages/Leaderboard';
+import Learn from './pages/Learn';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Navbar from './components/Navbar';
@@ -162,6 +163,16 @@ function App() {
                 <ProtectedRoute>
                   <ProtectedLayout>
                     <Leaderboard />
+                  </ProtectedLayout>
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/learn" 
+              element={
+                <ProtectedRoute>
+                  <ProtectedLayout>
+                    <Learn />
                   </ProtectedLayout>
                 </ProtectedRoute>
               } 
