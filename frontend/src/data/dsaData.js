@@ -1,20 +1,10 @@
-export interface Problem {
-  id: string;
-  title: string;
-  difficulty: 'SCHOOL' | 'BASIC' | 'EASY' | 'MEDIUM' | 'HARD';
-  points: number;
-  completed: boolean;
-}
+// Problem structure:
+// { id: string, title: string, difficulty: 'SCHOOL'|'BASIC'|'EASY'|'MEDIUM'|'HARD', points: number, completed: boolean }
 
-export interface Badge {
-  id: string;
-  name: string;
-  icon: string;
-  threshold: number;
-  description: string;
-}
+// Badge structure:
+// { id: string, name: string, icon: string, threshold: number, description: string }
 
-export const problemsByDifficulty: Record<string, Problem[]> = {
+export const problemsByDifficulty = {
   SCHOOL: [
     { id: 's1', title: 'Array Search', difficulty: 'SCHOOL', points: 10, completed: false },
     { id: 's2', title: 'Min and Max in Array', difficulty: 'SCHOOL', points: 10, completed: false },
@@ -42,7 +32,7 @@ export const problemsByDifficulty: Record<string, Problem[]> = {
   ],
 };
 
-export const badges: Badge[] = [
+export const badges = [
   {
     id: 'contributor',
     name: 'Contributor',

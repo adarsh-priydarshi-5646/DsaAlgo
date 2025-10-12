@@ -10,8 +10,10 @@ import ProblemList from './components/ProblemList';
 import ProblemDetail from './components/ProblemDetail';
 import Profile from './components/Profile';
 import Leaderboard from './pages/Leaderboard';
+import Learn from './pages/Learn';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import NotFound from './pages/NotFound';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 
@@ -85,8 +87,8 @@ function App() {
         <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-blue-900">
           <Routes>
             {/* Public Routes */}
-            <Route 
-              path="/" 
+            <Route
+              path="/"
               element={
                 <PublicRoute>
                   <div className="min-h-screen flex flex-col">
@@ -96,10 +98,10 @@ function App() {
                     <Footer />
                   </div>
                 </PublicRoute>
-              } 
+              }
             />
-            <Route 
-              path="/login" 
+            <Route
+              path="/login"
               element={
                 <PublicRoute>
                   <div className="min-h-screen flex flex-col">
@@ -109,10 +111,10 @@ function App() {
                     <Footer />
                   </div>
                 </PublicRoute>
-              } 
+              }
             />
-            <Route 
-              path="/register" 
+            <Route
+              path="/register"
               element={
                 <PublicRoute>
                   <div className="min-h-screen flex flex-col">
@@ -122,63 +124,82 @@ function App() {
                     <Footer />
                   </div>
                 </PublicRoute>
-              } 
+              }
             />
 
             {/* Protected Routes */}
-            <Route 
-              path="/dashboard" 
+            <Route
+              path="/dashboard"
               element={
                 <ProtectedRoute>
                   <ProtectedLayout>
                     <Dashboard />
                   </ProtectedLayout>
                 </ProtectedRoute>
-              } 
+              }
             />
-            <Route 
-              path="/problems" 
+            <Route
+              path="/problems"
               element={
                 <ProtectedRoute>
                   <ProtectedLayout>
                     <ProblemList />
                   </ProtectedLayout>
                 </ProtectedRoute>
-              } 
+              }
             />
-            <Route 
-              path="/problems/:slug" 
+            <Route
+              path="/problems/:slug"
               element={
                 <ProtectedRoute>
                   <ProtectedLayout>
                     <ProblemDetail />
                   </ProtectedLayout>
                 </ProtectedRoute>
-              } 
+              }
             />
-            <Route 
-              path="/leaderboard" 
+            <Route
+              path="/leaderboard"
               element={
                 <ProtectedRoute>
                   <ProtectedLayout>
                     <Leaderboard />
                   </ProtectedLayout>
                 </ProtectedRoute>
-              } 
+              }
             />
-            <Route 
-              path="/profile/:username" 
+            <Route
+              path="/learn"
+              element={
+                <ProtectedRoute>
+                  <ProtectedLayout>
+                    <Learn />
+                  </ProtectedLayout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/profile/:username"
               element={
                 <ProtectedRoute>
                   <ProtectedLayout>
                     <Profile />
                   </ProtectedLayout>
                 </ProtectedRoute>
-              } 
+              }
             />
 
             {/* Catch all route */}
-            <Route path="*" element={<Navigate to="/" replace />} />
+            <Route
+              path="*"
+              element={
+                <div className="min-h-screen flex flex-col">
+                  <main className="flex-1">
+                    <NotFound />
+                  </main>
+                </div>
+              }
+            />
           </Routes>
 
           {/* Toast Notifications */}

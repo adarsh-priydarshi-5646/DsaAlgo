@@ -1,7 +1,5 @@
-export interface ContributionData {
-  date: string;
-  count: number;
-}
+// ContributionData structure:
+// { date: string, count: number }
 
 // Helper function to generate random submission counts
 const generateRandomCount = () => {
@@ -14,8 +12,8 @@ const generateRandomCount = () => {
 };
 
 // Generate data for the past year
-export const mockContributionData: ContributionData[] = (() => {
-  const data: ContributionData[] = [];
+export const mockContributionData = (() => {
+  const data = [];
   const today = new Date();
   
   for (let i = 365; i >= 0; i--) {
