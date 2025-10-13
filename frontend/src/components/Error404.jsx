@@ -37,18 +37,36 @@ export default function Error404() {
     >
       {/* Animated background blobs */}
       <div style={{ position: 'absolute', inset: 0, overflow: 'hidden' }}>
-        {/* Large rotating ball - bottom left */}
+        {/* Large moving ball with gradient - moves through all corners */}
         <div
           style={{
             position: 'absolute',
-            bottom: '-100px',
-            left: '-150px',
+            width: '300px',
+            height: '300px',
+            // background: 'radial-gradient(circle at 30% 30%, #036103ff 0%, #1a472a 50%, #0f3428 100%)',
+             background: 'radial-gradient(circle at 50% 120%, #81e8f6, #76deef 10%, #055194 80%, #062745 100%)',
+            borderRadius: '9999px',
+            opacity: 0.25,
+            animation: 'moveCorners 88s linear infinite',
+            boxShadow: '0 0 80px rgba(26, 71, 42, 0.6), inset -30px -30px 60px rgba(0, 0, 0, 0.4)',
+            // filter: 'blur(40px)',
+          }}
+        ></div>
+         <div
+          style={{
+            position: 'absolute',
+            top:'300px',
+            left:'100px',
             width: '400px',
             height: '400px',
-            backgroundColor: '#1a472a',
+            // background: 'radial-gradient(circle at 30% 30%, #036103ff 0%, #1a472a 50%, #0f3428 100%)',
+             background: 'radial-gradient(circle at 50% 120%, #c781f6ff, #b976efff 10%, #5b0594ff 80%, #310645ff  100%)',
             borderRadius: '9999px',
-            opacity: 0.15,
-            animation: 'rotateSlow 15s linear infinite',
+            opacity: 0.95,
+            animation: 'moveCorners2 48s linear infinite alternate',
+            // animationDelay:'5s',
+            boxShadow: '0 0 80px rgba(26, 71, 42, 0.6), inset -30px -30px 60px rgba(0, 0, 0, 0.4)',
+            // filter: 'blur(40px)',
           }}
         ></div>
 
@@ -312,14 +330,94 @@ export default function Error404() {
           50% { opacity: 0.4; }
         }
 
-        @keyframes rotateSlow {
-          0% {
-            transform: rotate(0deg);
-          }
-          100% {
-            transform: rotate(360deg);
-          }
-        }
+
+        
+@keyframes moveCorners {
+  0% {
+    transform: translate(0, 0);
+    opacity: 0.25;
+  }
+
+  25% {
+    transform: translate(1800px, 100px);
+    opacity: 0.3;
+  }
+
+  50% {
+    transform: translate(0px, 400px);
+    opacity: 0.25;
+  }
+
+  75% {
+    transform: translate(1500px, 700px);
+    opacity: 0.3;
+  }
+
+  100% {
+    transform: translate(-300px, 0);
+    opacity: 0.25;
+  }
+}
+       
+@keyframes moveCorners2 {
+  0% {
+    transform: translate(0, 0);
+    opacity: 0.25;
+  }
+
+  25% {
+    transform: translate(1800px, 200px);
+    opacity: 0.3;
+  }
+
+  50% {
+    transform: translate(1100px, 700px);
+    opacity: 0.25;
+  }
+
+  75% {
+    transform: translate(0px, 500px);
+    opacity: 0.3;
+  }
+
+  100% {
+    transform: translate(-300px, 0);
+    opacity: 0.25;
+  }
+}
+        // @keyframes moveCorners {
+        //   0% {
+        //     bottom: -250px;
+        //     left: -250px;
+        //     opacity: 0.25;
+        //   }
+        //   25% {
+        //     bottom: auto;
+        //     top: -250px;
+        //     right: -250px;
+        //     left: auto;
+        //     opacity: 0.3;
+        //   }
+        //   50% {
+        //     bottom: auto;
+        //     top: -250px;
+        //     left: -250px;
+        //     right: auto;
+        //     opacity: 0.25;
+        //   }
+        //   75% {
+        //     bottom: -250px;
+        //     right: -250px;
+        //     left: auto;
+        //     top: auto;
+        //     opacity: 0.3;
+        //   }
+        //   100% {
+        //     bottom: -250px;
+        //     left: -250px;
+        //     opacity: 0.25;
+        //   }
+        // }
 
         @keyframes jumpBall {
           0%, 100% {
