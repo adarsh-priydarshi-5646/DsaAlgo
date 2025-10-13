@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from 'react-hot-toast';
 
-// Components
 import LandingPage from './components/LandingPage';
 import Dashboard from './components/Dashboard';
 import ProblemList from './components/ProblemList';
@@ -16,6 +15,7 @@ import Register from './pages/Register';
 import NotFound from './pages/NotFound';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
+import Error404 from './components/Error404';
 
 // Store
 import useAuthStore from './store/authStore';
@@ -58,6 +58,18 @@ const ProtectedLayout = ({ children }) => {
   );
 };
 
+// Layout Component for Public Routes
+const PublicLayout = ({ children }) => {
+  return (
+    <div className="min-h-screen flex flex-col">
+      <main className="flex-1">
+        {children}
+      </main>
+      <Footer />
+    </div>
+  );
+};
+
 function App() {
   const { fetchUser, isAuthenticated, isLoading } = useAuthStore();
 
@@ -91,12 +103,9 @@ function App() {
               path="/"
               element={
                 <PublicRoute>
-                  <div className="min-h-screen flex flex-col">
-                    <main className="flex-1">
-                      <LandingPage />
-                    </main>
-                    <Footer />
-                  </div>
+                  <PublicLayout>
+                    <LandingPage />
+                  </PublicLayout>
                 </PublicRoute>
               }
             />
@@ -104,12 +113,9 @@ function App() {
               path="/login"
               element={
                 <PublicRoute>
-                  <div className="min-h-screen flex flex-col">
-                    <main className="flex-1">
-                      <Login />
-                    </main>
-                    <Footer />
-                  </div>
+                  <PublicLayout>
+                    <Login />
+                  </PublicLayout>
                 </PublicRoute>
               }
             />
@@ -117,12 +123,9 @@ function App() {
               path="/register"
               element={
                 <PublicRoute>
-                  <div className="min-h-screen flex flex-col">
-                    <main className="flex-1">
-                      <Register />
-                    </main>
-                    <Footer />
-                  </div>
+                  <PublicLayout>
+                    <Register />
+                  </PublicLayout>
                 </PublicRoute>
               }
             />
@@ -189,16 +192,14 @@ function App() {
               }
             />
 
-            {/* Catch all route */}
-            <Route
-              path="*"
+            {/* 404 Not Found - Catch all route (must be last) */}
+            <Route 
+              path="*" 
               element={
-                <div className="min-h-screen flex flex-col">
-                  <main className="flex-1">
-                    <NotFound />
-                  </main>
-                </div>
-              }
+                <PublicLayout>
+                  <Error404 />
+                </PublicLayout>
+              } 
             />
           </Routes>
 
