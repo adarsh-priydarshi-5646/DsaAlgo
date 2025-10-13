@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Canvas } from '@react-three/fiber';
@@ -26,7 +27,11 @@ import {
   Crown
 } from 'lucide-react';
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line, Area, AreaChart } from 'recharts';
+import DynamicIcon from '../utils/iconMapping.jsx';
 import { usersAPI } from '../services/api';
+import toast from 'react-hot-toast';
+import EditProfileModal from './Profile/EditProfileModal';
+import SettingsModal from './Profile/Settings';
 import useAuthStore from '../store/authStore';
 
 function FloatingProfile() {
@@ -46,35 +51,77 @@ const Profile = () => {
   const [stats, setStats] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isOwnProfile, setIsOwnProfile] = useState(false);
+  const [exporting, setExporting] = useState(false);
+  const [showEdit, setShowEdit] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
+
+  const profileQuery = useQuery({
+    queryKey: ['userProfile', username],
+    queryFn: async () => {
+      const res = await usersAPI.getProfile(username);
+      return res.data.user;
+    },
+    enabled: !!username,
+  });
+
+  const statsQuery = useQuery({
+    queryKey: ['userStats', username],
+    queryFn: async () => {
+      const res = await usersAPI.getStats(username);
+      return res.data.stats;
+    },
+    enabled: !!username,
+  });
 
   useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        setIsLoading(true);
-        const [profileRes, statsRes] = await Promise.all([
-          usersAPI.getProfile(username),
-          usersAPI.getStats(username)
-        ]);
-        
-        setProfile(profileRes.data.user);
-        setStats(statsRes.data.stats);
-        setIsOwnProfile(currentUser?.username === username);
-      } catch (error) {
-        console.error('Failed to fetch profile:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
+    setIsLoading(profileQuery.isLoading || statsQuery.isLoading);
+    if (profileQuery.data) setProfile(profileQuery.data);
+    if (statsQuery.data) setStats(statsQuery.data);
+    setIsOwnProfile(currentUser?.username === username);
+  }, [profileQuery.data, profileQuery.isLoading, statsQuery.data, statsQuery.isLoading, currentUser, username]);
 
-    if (username) {
-      fetchProfile();
+  const handleExport = async () => {
+    if (!profile?.id) return;
+    try {
+      setExporting(true);
+      const res = await usersAPI.exportUser(profile.id);
+      const blob = new Blob([res.data], { type: 'application/json' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `user_${profile.username}_export.json`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+      toast.success('Export downloaded');
+    } catch (e) {
+      console.error('Export failed', e);
+      toast.error('Export failed');
+    } finally {
+      setExporting(false);
     }
-  }, [username, currentUser]);
+  };
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500"></div>
+      <div className="min-h-screen pt-20 px-4 pb-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="mb-8 p-8 rounded-2xl border border-white/10 bg-white/5 animate-pulse">
+            <div className="h-8 w-1/3 bg-white/10 rounded mb-6"></div>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {[...Array(4)].map((_, i) => (
+                <div key={i} className="h-24 bg-white/10 rounded-xl"></div>
+              ))}
+            </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            {[...Array(4)].map((_, i) => (
+              <div key={i} className="h-40 bg-white/10 rounded-xl border border-white/10 animate-pulse"></div>
+            ))}
+          </div>
+          <div className="h-80 bg-white/10 rounded-2xl border border-white/10 animate-pulse"></div>
+        </div>
       </div>
     );
   }
@@ -102,20 +149,14 @@ const Profile = () => {
     accepted: submission.status === 'ACCEPTED' ? 1 : 0
   })) || [];
 
-  // Mock achievements data
-  const achievements = [
-    { id: 1, title: 'First Steps', description: 'Solved your first problem', icon: Star, earned: true, date: '2024-01-15' },
-    { id: 2, title: 'Problem Solver', description: 'Solved 10 problems', icon: Trophy, earned: true, date: '2024-02-01' },
-    { id: 3, title: 'Speed Demon', description: 'Solved a problem in under 1 minute', icon: Zap, earned: true, date: '2024-02-15' },
-    { id: 4, title: 'Consistency King', description: '7-day solving streak', icon: Flame, earned: false },
-    { id: 5, title: 'Master Coder', description: 'Solved 100 problems', icon: Crown, earned: false },
-  ];
+  // Achievements from backend
+  const achievements = stats?.achievements || [];
 
-  // Mock progress data for the last 30 days
-  const progressData = Array.from({ length: 30 }, (_, i) => ({
+  // 30-day progress from backend stats.activitySeries
+  const progressData = (stats?.activitySeries || []).map((d, i) => ({
     day: i + 1,
-    problems: Math.floor(Math.random() * 5),
-    streak: Math.random() > 0.3 ? 1 : 0
+    problems: d.submissions || 0,
+    accepted: d.accepted || 0,
   }));
 
   return (
@@ -181,7 +222,7 @@ const Profile = () => {
                     </div>
                     <div className="flex items-center gap-2">
                       <Flame className="w-4 h-4" />
-                      7 day streak
+                      {stats?.streak || 0} day streak
                     </div>
                   </div>
 
@@ -189,11 +230,11 @@ const Profile = () => {
                   <div className="flex gap-3">
                     {isOwnProfile ? (
                       <>
-                        <button className="flex items-center gap-2 bg-gradient-to-r from-purple-500 to-blue-500 text-white px-4 py-2 rounded-lg font-medium hover:from-purple-600 hover:to-blue-600 transition-all">
+                        <button onClick={() => setShowEdit(true)} className="flex items-center gap-2 bg-gradient-to-r from-purple-500 to-blue-500 text-white px-4 py-2 rounded-lg font-medium hover:from-purple-600 hover:to-blue-600 transition-all">
                           <Edit className="w-4 h-4" />
                           Edit Profile
                         </button>
-                        <button className="flex items-center gap-2 bg-white/10 text-white px-4 py-2 rounded-lg font-medium hover:bg-white/20 transition-all">
+                        <button onClick={() => setShowSettings(true)} className="flex items-center gap-2 bg-white/10 text-white px-4 py-2 rounded-lg font-medium hover:bg-white/20 transition-all">
                           <Settings className="w-4 h-4" />
                           Settings
                         </button>
@@ -210,9 +251,9 @@ const Profile = () => {
                         </button>
                       </>
                     )}
-                    <button className="flex items-center gap-2 bg-white/10 text-white px-4 py-2 rounded-lg font-medium hover:bg-white/20 transition-all">
+                    <button onClick={handleExport} disabled={exporting} className="flex items-center gap-2 bg-white/10 text-white px-4 py-2 rounded-lg font-medium hover:bg-white/20 transition-all disabled:opacity-60">
                       <Download className="w-4 h-4" />
-                      Export
+                      {exporting ? 'Exporting...' : 'Export'}
                     </button>
                   </div>
                 </div>
@@ -221,10 +262,10 @@ const Profile = () => {
               {/* Quick Stats */}
               <div className="flex-1 grid grid-cols-2 md:grid-cols-4 gap-4">
                 {[
-                  { label: 'Rank', value: '#1,234', icon: Medal, color: 'text-yellow-400' },
-                  { label: 'Points', value: '2,456', icon: Star, color: 'text-purple-400' },
-                  { label: 'Streak', value: '7 days', icon: Flame, color: 'text-orange-400' },
-                  { label: 'Rate', value: '85%', icon: Target, color: 'text-green-400' }
+                  { label: 'Rank', value: stats?.rank ? `#${stats.rank}` : '—', icon: Medal, color: 'text-yellow-400' },
+                  { label: 'Points', value: stats?.points ?? 0, icon: Star, color: 'text-purple-400' },
+                  { label: 'Streak', value: stats?.streak ? `${stats.streak} days` : '0 days', icon: Flame, color: 'text-orange-400' },
+                  { label: 'Rate', value: stats?.rate || '—', icon: Target, color: 'text-green-400' }
                 ].map((stat, index) => (
                   <motion.div
                     key={stat.label}
@@ -260,15 +301,13 @@ const Profile = () => {
             },
             {
               title: 'Total Submissions',
-              value: stats?.recentSubmissions?.length || 0,
+              value: stats?.totalSubmissions || 0,
               icon: TrendingUp,
               color: 'from-blue-500 to-cyan-500'
             },
             {
               title: 'Success Rate',
-              value: stats?.problemsSolved && stats?.totalProblems 
-                ? `${Math.round((stats.problemsSolved / stats.totalProblems) * 100)}%`
-                : '0%',
+              value: typeof stats?.successRate === 'number' ? `${Math.round(stats.successRate)}%` : '0%',
               icon: Trophy,
               color: 'from-purple-500 to-pink-500'
             }
@@ -303,34 +342,32 @@ const Profile = () => {
             Achievements
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-            {achievements.map((achievement, index) => (
+            {(achievements || []).map((achievement, index) => (
               <motion.div
-                key={achievement.id}
+                key={achievement.id || index}
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.4 + index * 0.1 }}
                 className={`backdrop-blur-lg rounded-2xl p-6 border text-center transition-all hover:scale-105 ${
-                  achievement.earned 
+                  achievement.earnedAt 
                     ? 'bg-gradient-to-br from-yellow-500/20 to-orange-500/20 border-yellow-500/50' 
                     : 'bg-white/5 border-white/10'
                 }`}
               >
-                <achievement.icon className={`w-12 h-12 mx-auto mb-3 ${
-                  achievement.earned ? 'text-yellow-400' : 'text-gray-500'
-                }`} />
-                <h3 className={`font-semibold mb-2 ${
-                  achievement.earned ? 'text-white' : 'text-gray-400'
-                }`}>
-                  {achievement.title}
+                {achievement.icon ? (
+                  <DynamicIcon iconName={achievement.icon} className={`w-12 h-12 mx-auto mb-3 ${achievement.earnedAt ? 'text-yellow-400' : 'text-gray-500'}`} />
+                ) : (
+                  <Star className={`w-12 h-12 mx-auto mb-3 ${achievement.earnedAt ? 'text-yellow-400' : 'text-gray-500'}`} />
+                )}
+                <h3 className={`font-semibold mb-2 ${achievement.earnedAt ? 'text-white' : 'text-gray-400'}`}>
+                  {achievement.name || achievement.title}
                 </h3>
-                <p className={`text-sm ${
-                  achievement.earned ? 'text-gray-300' : 'text-gray-500'
-                }`}>
-                  {achievement.description}
+                <p className={`text-sm ${achievement.earnedAt ? 'text-gray-300' : 'text-gray-500'}`}>
+                  {achievement.description || ''}
                 </p>
-                {achievement.earned && achievement.date && (
+                {achievement.earnedAt && (
                   <p className="text-xs text-yellow-400 mt-2">
-                    Earned {new Date(achievement.date).toLocaleDateString()}
+                    Earned {new Date(achievement.earnedAt).toLocaleDateString()}
                   </p>
                 )}
               </motion.div>
@@ -455,12 +492,7 @@ const Profile = () => {
               Languages Used
             </h3>
             <div className="space-y-4">
-              {[
-                { name: 'JavaScript', percentage: 45, color: '#F7DF1E' },
-                { name: 'Python', percentage: 30, color: '#3776AB' },
-                { name: 'Java', percentage: 15, color: '#ED8B00' },
-                { name: 'C++', percentage: 10, color: '#00599C' }
-              ].map((lang, index) => (
+              {(stats?.languageDistribution || []).map((lang, index) => (
                 <motion.div
                   key={lang.name}
                   initial={{ opacity: 0, x: 20 }}
@@ -475,14 +507,16 @@ const Profile = () => {
                   <div className="w-full bg-white/10 rounded-full h-2">
                     <motion.div
                       initial={{ width: 0 }}
-                      animate={{ width: `${lang.percentage}%` }}
+                      animate={{ width: `${lang.percentage || 0}%` }}
                       transition={{ delay: 0.8 + index * 0.1, duration: 0.8 }}
-                      className="h-2 rounded-full"
-                      style={{ backgroundColor: lang.color }}
+                      className="h-2 rounded-full bg-purple-500"
                     ></motion.div>
                   </div>
                 </motion.div>
               ))}
+              {(!stats?.languageDistribution || stats.languageDistribution.length === 0) && (
+                <div className="text-center text-gray-400">No language data yet</div>
+              )}
             </div>
           </motion.div>
         </div>
@@ -541,8 +575,19 @@ const Profile = () => {
           </div>
         </motion.div>
       </div>
+      {/* Modals */}
+      <EditProfileModal
+        open={showEdit}
+        onClose={() => setShowEdit(false)}
+        initial={profile}
+      />
+      <SettingsModal
+        open={showSettings}
+        onClose={() => setShowSettings(false)}
+      />
     </div>
   );
 };
 
 export default Profile;
+

@@ -11,7 +11,8 @@ import {
   User, 
   LogOut,
   Settings,
-  Bell
+  Bell,
+  BookOpen
 } from 'lucide-react';
 import useAuthStore from '../store/authStore';
 
@@ -31,6 +32,7 @@ const Navbar = () => {
     { name: 'Dashboard', path: '/dashboard', icon: Home },
     { name: 'Problems', path: '/problems', icon: Code },
     { name: 'Leaderboard', path: '/leaderboard', icon: Trophy },
+    { name: 'Learn', path: '/learn', icon: BookOpen },
   ];
 
   const isActive = (path) => location.pathname === path;
