@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from 'react-hot-toast';
 
-// Components
 import LandingPage from './components/LandingPage';
 import Dashboard from './components/Dashboard';
 import ProblemList from './components/ProblemList';
@@ -13,8 +12,10 @@ import Leaderboard from './pages/Leaderboard';
 import Learn from './pages/Learn';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import NotFound from './pages/NotFound';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
+import Error404 from './components/Error404';
 
 // Store
 import useAuthStore from './store/authStore';
@@ -57,6 +58,18 @@ const ProtectedLayout = ({ children }) => {
   );
 };
 
+// Layout Component for Public Routes
+const PublicLayout = ({ children }) => {
+  return (
+    <div className="min-h-screen flex flex-col">
+      <main className="flex-1">
+        {children}
+      </main>
+      <Footer />
+    </div>
+  );
+};
+
 function App() {
   const { fetchUser, isAuthenticated, isLoading } = useAuthStore();
 
@@ -86,110 +99,108 @@ function App() {
         <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-blue-900">
           <Routes>
             {/* Public Routes */}
-            <Route 
-              path="/" 
+            <Route
+              path="/"
               element={
                 <PublicRoute>
-                  <div className="min-h-screen flex flex-col">
-                    <main className="flex-1">
-                      <LandingPage />
-                    </main>
-                    <Footer />
-                  </div>
+                  <PublicLayout>
+                    <LandingPage />
+                  </PublicLayout>
                 </PublicRoute>
-              } 
+              }
             />
-            <Route 
-              path="/login" 
+            <Route
+              path="/login"
               element={
                 <PublicRoute>
-                  <div className="min-h-screen flex flex-col">
-                    <main className="flex-1">
-                      <Login />
-                    </main>
-                    <Footer />
-                  </div>
+                  <PublicLayout>
+                    <Login />
+                  </PublicLayout>
                 </PublicRoute>
-              } 
+              }
             />
-            <Route 
-              path="/register" 
+            <Route
+              path="/register"
               element={
                 <PublicRoute>
-                  <div className="min-h-screen flex flex-col">
-                    <main className="flex-1">
-                      <Register />
-                    </main>
-                    <Footer />
-                  </div>
+                  <PublicLayout>
+                    <Register />
+                  </PublicLayout>
                 </PublicRoute>
-              } 
+              }
             />
 
             {/* Protected Routes */}
-            <Route 
-              path="/dashboard" 
+            <Route
+              path="/dashboard"
               element={
                 <ProtectedRoute>
                   <ProtectedLayout>
                     <Dashboard />
                   </ProtectedLayout>
                 </ProtectedRoute>
-              } 
+              }
             />
-            <Route 
-              path="/problems" 
+            <Route
+              path="/problems"
               element={
                 <ProtectedRoute>
                   <ProtectedLayout>
                     <ProblemList />
                   </ProtectedLayout>
                 </ProtectedRoute>
-              } 
+              }
             />
-            <Route 
-              path="/problems/:slug" 
+            <Route
+              path="/problems/:slug"
               element={
                 <ProtectedRoute>
                   <ProtectedLayout>
                     <ProblemDetail />
                   </ProtectedLayout>
                 </ProtectedRoute>
-              } 
+              }
             />
-            <Route 
-              path="/leaderboard" 
+            <Route
+              path="/leaderboard"
               element={
                 <ProtectedRoute>
                   <ProtectedLayout>
                     <Leaderboard />
                   </ProtectedLayout>
                 </ProtectedRoute>
-              } 
+              }
             />
-            <Route 
-              path="/learn" 
+            <Route
+              path="/learn"
               element={
                 <ProtectedRoute>
                   <ProtectedLayout>
                     <Learn />
                   </ProtectedLayout>
                 </ProtectedRoute>
-              } 
+              }
             />
-            <Route 
-              path="/profile/:username" 
+            <Route
+              path="/profile/:username"
               element={
                 <ProtectedRoute>
                   <ProtectedLayout>
                     <Profile />
                   </ProtectedLayout>
                 </ProtectedRoute>
-              } 
+              }
             />
 
-            {/* Catch all route */}
-            <Route path="*" element={<Navigate to="/" replace />} />
+            {/* 404 Not Found - Catch all route (must be last) */}
+            <Route 
+              path="*" 
+              element={
+                <PublicLayout>
+                  <Error404 />
+                </PublicLayout>
+              } 
+            />
           </Routes>
 
           {/* Toast Notifications */}
