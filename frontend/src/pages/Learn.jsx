@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
+import { Canvas } from '@react-three/fiber';
+import { Float, Box } from '@react-three/drei';
 import { BookOpen, Search, Code, Database, Server, Globe, Lock, Layers } from 'lucide-react';
 
 const Learn = () => {
@@ -30,9 +32,9 @@ const Learn = () => {
         
         <p class="mb-4">In simple terms, a closure gives you access to an outer function's scope from an inner function, even after the outer function has returned.</p>
         
-        <p class="mb-4"><span class="text-purple-400 font-medium">In Hinglish:</span> Closure ek function ke andar ka function hota hai jo bahar wale function ke variables ko access kar sakta hai, even after bahar wala function execute ho chuka hai.</p>
+         <p class="mb-4"><span class="text-white/90 font-medium">In Hinglish:</span> Closure ek function ke andar ka function hota hai jo bahar wale function ke variables ko access kar sakta hai, even after bahar wala function execute ho chuka hai.</p>
         
-        <div class="bg-gray-800 rounded-lg p-4 my-4">
+        <div class="backdrop-blur-lg bg-white/5 rounded-lg p-4 my-4 border border-white/10">
           <pre><code class="language-javascript">function outerFunction() {
   const outerVariable = "I am outside!";
   
@@ -70,9 +72,9 @@ myFunction(); // Logs: "I am outside!"</code></pre>
       answer: `
         <p class="mb-4">The JavaScript Event Loop is a mechanism that allows JavaScript to perform non-blocking operations despite being single-threaded.</p>
         
-        <p class="mb-4"><span class="text-purple-400 font-medium">In Hinglish:</span> Event Loop ek mechanism hai jo JavaScript ko single-threaded hone ke bawajood bhi non-blocking operations perform karne deta hai. Iska matlab hai ki JavaScript ek hi thread par chalta hai, lekin async operations ko handle kar leta hai.</p>
+         <p class="mb-4"><span class="text-white/90 font-medium">In Hinglish:</span> Event Loop ek mechanism hai jo JavaScript ko single-threaded hone ke bawajood bhi non-blocking operations perform karne deta hai. Iska matlab hai ki JavaScript ek hi thread par chalta hai, lekin async operations ko handle kar leta hai.</p>
         
-        <div class="bg-gray-800 rounded-lg p-4 my-4">
+        <div class="backdrop-blur-lg bg-white/5 rounded-lg p-4 my-4 border border-white/10">
           <pre><code class="language-javascript">console.log("Start");
 
 setTimeout(() => {
@@ -109,7 +111,7 @@ console.log("End");
           <li>Then processes the Callback Queue (setTimeout, I/O, etc.)</li>
         </ol>
         
-        <div class="mt-4 p-3 bg-purple-900/30 rounded-lg">
+        <div class="mt-4 p-4 backdrop-blur-lg bg-white/10 rounded-lg border border-white/20">
           <p class="font-semibold mb-2">🔍 Interview Tip:</p>
           <p>Mention that understanding the Event Loop is crucial for debugging and optimizing JavaScript applications, especially when dealing with asynchronous operations.</p>
         </div>
@@ -122,9 +124,9 @@ console.log("End");
       answer: `
         <p class="mb-4">React Hooks are functions that let you "hook into" React state and lifecycle features from function components. They were introduced in React 16.8.</p>
         
-        <p class="mb-4"><span class="text-purple-400 font-medium">In Hinglish:</span> React Hooks special functions hote hain jo aapko function components mein state aur lifecycle features ka use karne dete hain. Hooks se pehle, in features ke liye class components zaruri the.</p>
+         <p class="mb-4"><span class="text-white/90 font-medium">In Hinglish:</span> React Hooks special functions hote hain jo aapko function components mein state aur lifecycle features ka use karne dete hain. Hooks se pehle, in features ke liye class components zaruri the.</p>
         
-        <div class="bg-gray-800 rounded-lg p-4 my-4">
+        <div class="backdrop-blur-lg bg-white/5 rounded-lg p-4 my-4 border border-white/10">
           <pre><code class="language-javascript">import React, { useState, useEffect } from 'react';
 
 function Counter() {
@@ -172,7 +174,7 @@ function Counter() {
           <li><code>useRef</code> - Creates a mutable reference</li>
         </ul>
         
-        <div class="mt-4 p-3 bg-purple-900/30 rounded-lg">
+        <div class="mt-4 p-4 backdrop-blur-lg bg-white/10 rounded-lg border border-white/20">
           <p class="font-semibold mb-2">🔍 Interview Tip:</p>
           <p>Mention that hooks follow rules: only call hooks at the top level (not inside loops, conditions, or nested functions) and only call hooks from React function components or custom hooks.</p>
         </div>
@@ -185,7 +187,7 @@ function Counter() {
       answer: `
         <p class="mb-4">Node.js is an open-source, cross-platform JavaScript runtime environment that executes JavaScript code outside a web browser. It allows developers to use JavaScript for server-side scripting.</p>
         
-        <p class="mb-4"><span class="text-purple-400 font-medium">In Hinglish:</span> Node.js ek aisa platform hai jo JavaScript ko browser ke bahar chalane ki capability deta hai. Isse hum JavaScript ka use server-side programming ke liye kar sakte hain, jisse frontend aur backend dono jagah same language use kar sakte hain.</p>
+         <p class="mb-4"><span class="text-white/90 font-medium">In Hinglish:</span> Node.js ek aisa platform hai jo JavaScript ko browser ke bahar chalane ki capability deta hai. Isse hum JavaScript ka use server-side programming ke liye kar sakte hain, jisse frontend aur backend dono jagah same language use kar sakte hain.</p>
         
         <p class="mb-4"><strong>How Node.js works:</strong></p>
         <ul class="list-disc pl-6 mb-4">
@@ -195,7 +197,7 @@ function Counter() {
           <li><strong>Node.js Bindings:</strong> Connect JavaScript and C++ features</li>
         </ul>
         
-        <div class="bg-gray-800 rounded-lg p-4 my-4">
+        <div class="backdrop-blur-lg bg-white/5 rounded-lg p-4 my-4 border border-white/10">
           <pre><code class="language-javascript">// Simple Node.js HTTP server
 const http = require('http');
 
@@ -228,7 +230,7 @@ server.listen(3000, '127.0.0.1', () => {
           <li>Microservices architecture</li>
         </ul>
         
-        <div class="mt-4 p-3 bg-purple-900/30 rounded-lg">
+        <div class="mt-4 p-4 backdrop-blur-lg bg-white/10 rounded-lg border border-white/20">
           <p class="font-semibold mb-2">🔍 Interview Tip:</p>
           <p>Highlight that while Node.js is single-threaded, it can handle concurrent operations efficiently through its non-blocking I/O model. For CPU-intensive tasks, you can use the cluster module or worker threads.</p>
         </div>
@@ -241,7 +243,7 @@ server.listen(3000, '127.0.0.1', () => {
       answer: `
         <p class="mb-4">JWT (JSON Web Token) is an open standard that defines a compact and self-contained way for securely transmitting information between parties as a JSON object.</p>
         
-        <p class="mb-4"><span class="text-purple-400 font-medium">In Hinglish:</span> JWT ek secure tarika hai information transfer karne ka. Ye ek encoded string hota hai jisme user ki information hoti hai, aur server ise verify kar sakta hai bina database query kiye.</p>
+         <p class="mb-4"><span class="text-white/90 font-medium">In Hinglish:</span> JWT ek secure tarika hai information transfer karne ka. Ye ek encoded string hota hai jisme user ki information hoti hai, aur server ise verify kar sakta hai bina database query kiye.</p>
         
         <p class="mb-4"><strong>JWT Structure:</strong> A JWT consists of three parts separated by dots:</p>
         <ol class="list-decimal pl-6 mb-4">
@@ -250,7 +252,7 @@ server.listen(3000, '127.0.0.1', () => {
           <li><strong>Signature:</strong> Verifies that the sender of the JWT is who it says it is</li>
         </ol>
         
-        <div class="bg-gray-800 rounded-lg p-4 my-4">
+        <div class="backdrop-blur-lg bg-white/5 rounded-lg p-4 my-4 border border-white/10">
           <pre><code>// JWT format
 xxxxx.yyyyy.zzzzz
 
@@ -260,7 +262,7 @@ eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.
 SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c</code></pre>
         </div>
         
-        <div class="bg-gray-800 rounded-lg p-4 my-4">
+        <div class="backdrop-blur-lg bg-white/5 rounded-lg p-4 my-4 border border-white/10">
           <pre><code class="language-javascript">// Node.js JWT implementation
 const jwt = require('jsonwebtoken');
 
@@ -307,7 +309,7 @@ try {
           <li>Use strong secret keys and consider key rotation</li>
         </ul>
         
-        <div class="mt-4 p-3 bg-purple-900/30 rounded-lg">
+        <div class="mt-4 p-4 backdrop-blur-lg bg-white/10 rounded-lg border border-white/20">
           <p class="font-semibold mb-2">🔍 Interview Tip:</p>
           <p>Mention that while JWTs are popular for authentication, they have trade-offs. They can't be invalidated before expiry without additional backend logic, and the payload increases request size.</p>
         </div>
@@ -323,71 +325,97 @@ try {
   });
 
   return (
-    <div className="min-h-screen pt-24 pb-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-gray-900 to-black text-white">
+    <div className="min-h-screen pt-20 px-4 pb-8 learn-page">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <motion.div
-          initial={{ opacity: 0, y: -20 }}
+          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="text-center mb-12"
+          className="mb-8"
         >
-          <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-purple-400 to-blue-500 bg-clip-text text-transparent mb-4">
-            Full-Stack Interview Preparation
-          </h1>
-          <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-            Comprehensive guide to web development interview questions with detailed explanations, code examples, and real-world scenarios.
-          </p>
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-4xl font-bold text-white mb-2">
+                Full-Stack Interview Preparation
+              </h1>
+               <p className="text-white/85 text-lg">
+                 Comprehensive guide to web development interview questions with detailed explanations and examples.
+               </p>
+            </div>
+            
+            <div className="hidden md:block w-32 h-32">
+              <Canvas>
+                <ambientLight intensity={0.5} />
+                <directionalLight position={[10, 10, 5]} intensity={0.5} />
+                <Float speed={2} rotationIntensity={0.2} floatIntensity={0.3}>
+                  <Box args={[0.8, 0.8, 0.8]} position={[0, 0, 0]}>
+                    <meshStandardMaterial color="#FFFFFF" transparent opacity={0.6} />
+                  </Box>
+                </Float>
+              </Canvas>
+            </div>
+          </div>
         </motion.div>
 
         {/* Search Bar */}
-        <div className="mb-8 max-w-2xl mx-auto">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+          className="mb-8 max-w-2xl"
+        >
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/70" />
             <input
               type="text"
               placeholder="Search interview questions..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-gray-800/50 border border-gray-700 rounded-lg py-3 pl-10 pr-4 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              className="w-full backdrop-blur-lg bg-white/10 border border-white/20 rounded-lg py-3 pl-10 pr-4 focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent text-white"
             />
           </div>
-        </div>
+        </motion.div>
 
         {/* Categories */}
-        <div className="mb-8 overflow-x-auto">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          className="mb-8 overflow-x-auto"
+        >
           <div className="flex space-x-2 pb-2 min-w-max">
             {categories.map((category) => (
               <button
                 key={category.id}
                 onClick={() => setActiveCategory(category.id)}
-                className={`flex items-center gap-2 px-4 py-2 rounded-full transition-all ${
-                  activeCategory === category.id
-                    ? 'bg-purple-600 text-white'
-                    : 'bg-gray-800/70 text-gray-300 hover:bg-gray-700'
-                }`}
+                 className={`flex items-center gap-2 px-4 py-2 rounded-full transition-all ${
+                   activeCategory === category.id
+                     ? 'bg-white/30 text-white border border-white'
+                     : 'backdrop-blur-lg bg-white/10 border border-white/20 text-white/75 hover:bg-white/20'
+                 }`}
               >
                 <category.icon className="w-4 h-4" />
                 <span>{category.name}</span>
               </button>
             ))}
           </div>
-        </div>
+        </motion.div>
 
         {/* Questions and Answers */}
         <div className="space-y-6">
           {filteredQuestions.length > 0 ? (
-            filteredQuestions.map((item) => (
+            filteredQuestions.map((item, index) => (
               <motion.div
                 key={item.id}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.5 }}
-                className="bg-gray-800/50 border border-gray-700 rounded-xl overflow-hidden"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 + index * 0.1 }}
+                whileHover={{ scale: 1.01 }}
+                className="backdrop-blur-lg bg-white/10 rounded-2xl overflow-hidden border border-white/20 hover:border-white/50 transition-all"
               >
                 <div className="p-6">
                   <div className="flex items-center gap-2 mb-2">
-                    <span className="px-3 py-1 bg-purple-600/30 text-purple-300 rounded-full text-sm">
+                    <span className="px-3 py-1 bg-white/20 text-white rounded-full text-sm">
                       {categories.find(c => c.id === item.category)?.name || item.category}
                     </span>
                   </div>
@@ -403,20 +431,25 @@ try {
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="text-center py-12"
+              className="text-center py-12 backdrop-blur-lg bg-white/10 rounded-2xl border border-white/20"
             >
-              <BookOpen className="w-16 h-16 mx-auto text-gray-600 mb-4" />
-              <h3 className="text-xl font-medium text-gray-400">No questions found</h3>
-              <p className="text-gray-500 mt-2">Try adjusting your search or category filter</p>
+               <BookOpen className="w-16 h-16 mx-auto text-white/70 mb-4" />
+              <h3 className="text-xl font-medium text-white">No questions found</h3>
+              <p className="text-white/70 mt-2">Try adjusting your search or category filter</p>
             </motion.div>
           )}
         </div>
 
         {/* More content indicator */}
         {filteredQuestions.length > 0 && (
-          <div className="text-center mt-12">
-            <p className="text-gray-400">More questions are being added regularly...</p>
-          </div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5 }}
+            className="text-center mt-12"
+          >
+            <p className="text-white/60">More questions are being added regularly...</p>
+          </motion.div>
         )}
       </div>
     </div>
