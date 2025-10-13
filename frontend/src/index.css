@@ -44,3 +44,54 @@
     @apply antialiased;
   }
 }
+
+/* Learn page specific styles with different shades of white */
+.learn-page {
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.learn-page h1, 
+.learn-page h2, 
+.learn-page h3 {
+  color: white !important;
+}
+
+.learn-page p {
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+
+.learn-page .prose * {
+  color: rgba(255, 255, 255, 0.85) !important;
+}
+
+.learn-page .prose code {
+  color: rgba(255, 255, 255, 1) !important;
+  background-color: rgba(255, 255, 255, 0.1);
+  padding: 0.1em 0.3em;
+  border-radius: 0.25em;
+}
+
+.learn-page .prose strong {
+  color: white !important;
+  font-weight: 600;
+}
+
+.learn-page .prose li {
+  color: rgba(255, 255, 255, 0.85) !important;
+}
+
+.learn-page .prose-invert a {
+  color: rgba(255, 255, 255, 0.95) !important;
+  text-decoration: underline;
+  text-decoration-color: rgba(255, 255, 255, 0.4);
+}
+
+.learn-page .prose pre {
+  background-color: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.learn-page .prose pre code {
+  background-color: transparent;
+  color: rgba(255, 255, 255, 0.9) !important;
+}
