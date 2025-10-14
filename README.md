@@ -58,16 +58,16 @@ DSA Algorithm Learning Platform is a modern, full-stack web application designed
 
 ### 🧩 Core Features
 
-| Feature | Description |
-|---------|-------------|
-| 🔐 **User Authentication** | Secure JWT-based registration and login system |
-| 📝 **Problem Database** | Extensive collection of DSA problems categorized by difficulty |
-| 💻 **Code Editor** | Monaco Editor with syntax highlighting and auto-completion |
-| ⚡ **Real-time Execution** | Execute code with test cases and get instant feedback |
-| 📊 **Progress Analytics** | Track solved problems, success rates, and time complexity |
-| 🏆 **Leaderboard System** | Compete with other users and climb the rankings |
-| 🎖️ **Achievement System** | Unlock badges and achievements for milestones |
-| 📱 **Responsive UI** | Beautiful, mobile-first design with dark mode support |
+| Feature                    | Description                                                    |
+| -------------------------- | -------------------------------------------------------------- |
+| 🔐 **User Authentication** | Secure JWT-based registration and login system                 |
+| 📝 **Problem Database**    | Extensive collection of DSA problems categorized by difficulty |
+| 💻 **Code Editor**         | Monaco Editor with syntax highlighting and auto-completion     |
+| ⚡ **Real-time Execution** | Execute code with test cases and get instant feedback          |
+| 📊 **Progress Analytics**  | Track solved problems, success rates, and time complexity      |
+| 🏆 **Leaderboard System**  | Compete with other users and climb the rankings                |
+| 🎖️ **Achievement System**  | Unlock badges and achievements for milestones                  |
+| 📱 **Responsive UI**       | Beautiful, mobile-first design with dark mode support          |
 
 ### 🎨 Advanced Features
 
@@ -85,42 +85,45 @@ DSA Algorithm Learning Platform is a modern, full-stack web application designed
 ## 🛠️ Tech Stack
 
 ### Frontend 🎨
+
 ![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
 ![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
 ![Three.js](https://img.shields.io/badge/Three.js-000000?style=for-the-badge&logo=three.js&logoColor=white)
 
-| Technology | Version | Purpose |
-|-----------|---------|---------|
-| **React** | 18.3.1 | UI Framework |
-| **Vite** | 5.4.17 | Build Tool & Dev Server |
-| **Tailwind CSS** | 3.4.1 | Styling Framework |
-| **React Router** | 6.20.1 | Client-side routing |
-| **Framer Motion** | 10.16.16 | Animations |
-| **Three.js** | 0.158.0 | 3D Graphics |
-| **Monaco Editor** | 0.44.0 | Code Editor |
-| **Zustand** | 4.4.7 | State Management |
-| **TanStack Query** | 5.8.4 | Server State Management |
-| **Recharts** | 2.8.0 | Data Visualization |
+| Technology         | Version  | Purpose                 |
+| ------------------ | -------- | ----------------------- |
+| **React**          | 18.3.1   | UI Framework            |
+| **Vite**           | 5.4.17   | Build Tool & Dev Server |
+| **Tailwind CSS**   | 3.4.1    | Styling Framework       |
+| **React Router**   | 6.20.1   | Client-side routing     |
+| **Framer Motion**  | 10.16.16 | Animations              |
+| **Three.js**       | 0.158.0  | 3D Graphics             |
+| **Monaco Editor**  | 0.44.0   | Code Editor             |
+| **Zustand**        | 4.4.7    | State Management        |
+| **TanStack Query** | 5.8.4    | Server State Management |
+| **Recharts**       | 2.8.0    | Data Visualization      |
 
 ### Backend ⚙️
+
 ![Node.js](https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white)
 ![Express.js](https://img.shields.io/badge/Express.js-404D59?style=for-the-badge)
 ![Prisma](https://img.shields.io/badge/Prisma-3982CE?style=for-the-badge&logo=Prisma&logoColor=white)
 ![MySQL](https://img.shields.io/badge/MySQL-00000F?style=for-the-badge&logo=mysql&logoColor=white)
 
-| Technology | Version | Purpose |
-|-----------|---------|---------|
-| **Node.js** | 18+ | Runtime Environment |
-| **Express.js** | 4.18.2 | Web Framework |
-| **Prisma** | 5.6.0 | Database ORM |
-| **MySQL** | Latest | Database |
-| **JWT** | 9.0.2 | Authentication |
-| **bcryptjs** | 2.4.3 | Password Hashing |
-| **Helmet** | 7.1.0 | Security Middleware |
-| **Morgan** | 1.10.0 | HTTP Request Logger |
+| Technology     | Version | Purpose             |
+| -------------- | ------- | ------------------- |
+| **Node.js**    | 18+     | Runtime Environment |
+| **Express.js** | 4.18.2  | Web Framework       |
+| **Prisma**     | 5.6.0   | Database ORM        |
+| **MySQL**      | Latest  | Database            |
+| **JWT**        | 9.0.2   | Authentication      |
+| **bcryptjs**   | 2.4.3   | Password Hashing    |
+| **Helmet**     | 7.1.0   | Security Middleware |
+| **Morgan**     | 1.10.0  | HTTP Request Logger |
 
 ### Development Tools 🔧
+
 ![ESLint](https://img.shields.io/badge/ESLint-4B3263?style=for-the-badge&logo=eslint&logoColor=white)
 ![Nodemon](https://img.shields.io/badge/NODEMON-%23323330.svg?style=for-the-badge&logo=nodemon&logoColor=BBDEAD)
 
@@ -177,14 +180,14 @@ DsaAlgo/
 
 ### 🗂️ Key Directories Explained
 
-| Directory | Purpose |
-|-----------|---------|
-| `backend/controllers/` | Business logic for API endpoints |
-| `backend/routes/` | API route definitions and middleware |
-| `backend/prisma/` | Database schema, migrations, and seeding |
-| `frontend/src/components/` | Reusable React UI components |
-| `frontend/src/store/` | Global state management with Zustand |
-| `frontend/src/services/` | API integration and HTTP client setup |
+| Directory                  | Purpose                                  |
+| -------------------------- | ---------------------------------------- |
+| `backend/controllers/`     | Business logic for API endpoints         |
+| `backend/routes/`          | API route definitions and middleware     |
+| `backend/prisma/`          | Database schema, migrations, and seeding |
+| `frontend/src/components/` | Reusable React UI components             |
+| `frontend/src/store/`      | Global state management with Zustand     |
+| `frontend/src/services/`   | API integration and HTTP client setup    |
 
 ---
 
@@ -229,12 +232,14 @@ npm run dev
 ## 🔧 Installation
 
 ### Step 1: Clone the Repository
+
 ```bash
 git clone https://github.com/naveenkumar29052006/DsaAlgo.git
 cd DsaAlgo
 ```
 
 ### Step 2: Backend Setup
+
 ```bash
 cd backend
 
@@ -247,6 +252,7 @@ cp .env.example .env
 ```
 
 **Required Environment Variables:**
+
 ```env
 DATABASE_URL="mysql://username:password@localhost:3306/dsaalgo"
 JWT_SECRET="your-super-secret-jwt-key"
@@ -256,6 +262,7 @@ PORT=5001
 ```
 
 ### Step 3: Database Setup
+
 ```bash
 # Generate Prisma client
 npm run db:generate
@@ -268,6 +275,7 @@ npm run db:seed
 ```
 
 ### Step 4: Frontend Setup
+
 ```bash
 cd ../frontend
 
@@ -280,11 +288,13 @@ cp .env.example .env
 ```
 
 **Frontend Environment Variables:**
+
 ```env
 VITE_API_URL="http://localhost:5001"
 ```
 
 ### Step 5: Start Development Servers
+
 ```bash
 # Start backend (from backend directory)
 npm run dev
@@ -298,11 +308,13 @@ npm run dev
 ## 🚀 Usage
 
 ### 🔐 Authentication
+
 1. **Register**: Create a new account with email and username
 2. **Login**: Access your personalized dashboard
 3. **Profile**: Manage your account and view statistics
 
 ### 🧩 Problem Solving
+
 1. **Browse Problems**: Explore categorized DSA problems
 2. **Select Difficulty**: Choose from School, Basic, Easy, Medium, Hard
 3. **Code Solution**: Use the Monaco editor with syntax highlighting
@@ -310,12 +322,14 @@ npm run dev
 5. **Track Progress**: Monitor your solving statistics
 
 ### 📊 Progress Tracking
+
 - View your problem-solving statistics
 - Track time complexity improvements
 - Monitor success rates across categories
 - Earn achievements and badges
 
 ### 🏆 Leaderboard
+
 - Compete with other users
 - View global rankings
 - Track your position and progress
@@ -323,34 +337,35 @@ npm run dev
 ### 💻 Code Examples
 
 **Sample API Usage:**
+
 ```javascript
 // Login user
-const loginResponse = await fetch('/api/auth/login', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
+const loginResponse = await fetch("/api/auth/login", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
   body: JSON.stringify({
-    login: 'username@example.com',
-    password: 'password123'
-  })
+    login: "username@example.com",
+    password: "password123",
+  }),
 });
 
 // Fetch problems
-const problemsResponse = await fetch('/api/problems', {
-  headers: { 'Authorization': `Bearer ${token}` }
+const problemsResponse = await fetch("/api/problems", {
+  headers: { Authorization: `Bearer ${token}` },
 });
 
 // Submit solution
-const submissionResponse = await fetch('/api/problems/submit', {
-  method: 'POST',
-  headers: { 
-    'Content-Type': 'application/json',
-    'Authorization': `Bearer ${token}`
+const submissionResponse = await fetch("/api/problems/submit", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${token}`,
   },
   body: JSON.stringify({
-    problemId: 'problem-id',
-    code: 'your-solution-code',
-    language: 'javascript'
-  })
+    problemId: "problem-id",
+    code: "your-solution-code",
+    language: "javascript",
+  }),
 });
 ```
 
@@ -359,40 +374,45 @@ const submissionResponse = await fetch('/api/problems/submit', {
 ## 📊 API Endpoints
 
 ### 🔐 Authentication Routes (`/api/auth`)
-| Method | Endpoint | Description | Auth Required |
-|--------|----------|-------------|---------------|
-| `POST` | `/register` | Register new user | ❌ |
-| `POST` | `/login` | User login | ❌ |
-| `GET` | `/me` | Get current user | ✅ |
-| `PUT` | `/profile` | Update user profile | ✅ |
+
+| Method | Endpoint    | Description         | Auth Required |
+| ------ | ----------- | ------------------- | ------------- |
+| `POST` | `/register` | Register new user   | ❌            |
+| `POST` | `/login`    | User login          | ❌            |
+| `GET`  | `/me`       | Get current user    | ✅            |
+| `PUT`  | `/profile`  | Update user profile | ✅            |
 
 ### 🧩 Problem Routes (`/api/problems`)
-| Method | Endpoint | Description | Auth Required |
-|--------|----------|-------------|---------------|
-| `GET` | `/` | Get all problems | ✅ |
-| `GET` | `/categories` | Get problem categories | ✅ |
-| `GET` | `/:id` | Get specific problem | ✅ |
-| `POST` | `/submit` | Submit solution | ✅ |
-| `GET` | `/:id/solutions` | Get problem solutions | ✅ |
+
+| Method | Endpoint         | Description            | Auth Required |
+| ------ | ---------------- | ---------------------- | ------------- |
+| `GET`  | `/`              | Get all problems       | ✅            |
+| `GET`  | `/categories`    | Get problem categories | ✅            |
+| `GET`  | `/:id`           | Get specific problem   | ✅            |
+| `POST` | `/submit`        | Submit solution        | ✅            |
+| `GET`  | `/:id/solutions` | Get problem solutions  | ✅            |
 
 ### 📈 Progress Routes (`/api/progress`)
-| Method | Endpoint | Description | Auth Required |
-|--------|----------|-------------|---------------|
-| `GET` | `/` | Get user progress | ✅ |
-| `GET` | `/stats` | Get detailed statistics | ✅ |
-| `POST` | `/update` | Update progress | ✅ |
+
+| Method | Endpoint  | Description             | Auth Required |
+| ------ | --------- | ----------------------- | ------------- |
+| `GET`  | `/`       | Get user progress       | ✅            |
+| `GET`  | `/stats`  | Get detailed statistics | ✅            |
+| `POST` | `/update` | Update progress         | ✅            |
 
 ### 🏆 Leaderboard Routes (`/api/leaderboard`)
-| Method | Endpoint | Description | Auth Required |
-|--------|----------|-------------|---------------|
-| `GET` | `/` | Get global leaderboard | ✅ |
-| `GET` | `/achievements` | Get user achievements | ✅ |
+
+| Method | Endpoint        | Description            | Auth Required |
+| ------ | --------------- | ---------------------- | ------------- |
+| `GET`  | `/`             | Get global leaderboard | ✅            |
+| `GET`  | `/achievements` | Get user achievements  | ✅            |
 
 ---
 
 ## 🌐 Environment Variables
 
 ### Backend Configuration
+
 ```env
 # Database
 DATABASE_URL="mysql://username:password@localhost:3306/dsaalgo"
@@ -417,6 +437,7 @@ MAX_FILE_SIZE=5242880  # 5MB
 ```
 
 ### Frontend Configuration
+
 ```env
 # API Configuration
 VITE_API_URL="http://localhost:5001"
@@ -435,6 +456,7 @@ VITE_ENABLE_DARK_MODE="true"
 ## 🧪 Testing
 
 ### Running Tests
+
 ```bash
 # Backend tests
 cd backend
@@ -449,12 +471,14 @@ npm run test:e2e
 ```
 
 ### Test Coverage
+
 ```bash
 # Generate coverage report
 npm run test:coverage
 ```
 
 ### Manual Testing Checklist
+
 - [ ] User registration and login
 - [ ] Problem browsing and filtering
 - [ ] Code editor functionality
@@ -472,6 +496,7 @@ We welcome contributions from developers of all skill levels! 🎉
 ### 🔄 How to Contribute
 
 1. **Fork the Repository**
+
    ```bash
    # Click the Fork button on GitHub, then:
    git clone https://github.com/YOUR-USERNAME/DsaAlgo.git
@@ -479,29 +504,34 @@ We welcome contributions from developers of all skill levels! 🎉
    ```
 
 2. **Create a Feature Branch**
+
    ```bash
    git checkout -b feature/amazing-feature
    ```
 
 3. **Make Your Changes**
+
    - Add new features
    - Fix bugs
    - Improve documentation
    - Add tests
 
 4. **Test Your Changes**
+
    ```bash
    npm run test
    npm run lint
    ```
 
 5. **Commit Your Changes**
+
    ```bash
    git add .
    git commit -m "✨ Add amazing feature"
    ```
 
 6. **Push to Your Fork**
+
    ```bash
    git push origin feature/amazing-feature
    ```
@@ -514,26 +544,32 @@ We welcome contributions from developers of all skill levels! 🎉
 ### 📋 Contribution Guidelines
 
 #### Code Style
+
 - Use **ESLint** and **Prettier** for consistent formatting
 - Follow **conventional commit** messages
 - Write **clear, descriptive** variable and function names
 - Add **comments** for complex logic
 
 #### Pull Request Guidelines
+
 - Ensure all tests pass ✅
 - Update documentation if needed 📝
 - Add tests for new features 🧪
 - Keep PRs focused and atomic 🎯
 
 #### Issue Reporting
+
 When reporting bugs, please include:
+
 - **Steps to reproduce** the issue
 - **Expected behavior** vs **actual behavior**
 - **Browser/OS** information
 - **Screenshots** if applicable
 
 ### 🏷️ Good First Issues
+
 Look for issues labeled with:
+
 - `good first issue` - Perfect for newcomers
 - `help wanted` - We need community help
 - `documentation` - Improve our docs
@@ -568,19 +604,51 @@ copies or substantial portions of the Software.
 <div align="center">
 
 ### 🎨 **Adarsh Priydarshi**
-*Lead Developer & Project Creator*
+
+_Lead Developer & Project Creator_
 
 [![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/naveenkumar29052006)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://linkedin.com/in/adarsh-priydarshi)
 [![Email](https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:adarsh@example.com)
 
-*"Building the future of interactive learning, one algorithm at a time."*
+_"Building the future of interactive learning, one algorithm at a time."_
 
 </div>
+
+## 🤝 Join the Community
+
+### About Us 🌟
+
+A community driven platform to strengthen learners' understanding of Data Structures and Algorithms. Practice problems, see explanations, track your progress and access multilingual support for all learners.
+
+### Contact ☎️
+
+For queries or feedback,reach out to us:
+📧adarsh@example.com
+
+### Privacy Policy 🔒
+
+All user data is secure with JWT authentication. User information is maintained confidentially. This project is licensed under the MIT License — see the [LICENSE](LICENSE) for details.
+
+### Terms of service ⚖️
+
+By using this platform, you agree to use it responsibly and for educational purposes. Misuse may result in debarment of the account.
+
+### FAQ ❓
+
+- **Who can use this platform?**  
+   Anyone interested in learning and practicing DSA.
+
+- **Is it free?**  
+   Yes! The platform is completely free and open-source.
+
+- **How can I contribute?**  
+   Check out the [Contributing](#-contributing) section to start helping.
 
 ### 🙏 Acknowledgments
 
 Special thanks to:
+
 - **Open Source Community** for amazing libraries and tools
 - **Contributors** who help improve this platform
 - **Users** who provide feedback and suggestions
@@ -608,6 +676,6 @@ If this project helped you learn DSA concepts or inspired your own projects, ple
 
 **Made with ❤️ by developers, for developers**
 
-*Happy Coding! 🚀*
+_Happy Coding! 🚀_
 
 </div>
