@@ -18,7 +18,7 @@ import {
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import useAuthStore from '../store/authStore';
 import useProblemStore from '../store/problemStore';
-import { progressAPI } from '../services/api';
+import { usersAPI } from '../services/api';
 import DynamicIcon from '../utils/iconMapping.jsx';
 
 function FloatingStats() {
@@ -42,8 +42,10 @@ const Dashboard = () => {
       try {
         setIsLoading(true);
         await fetchCategories();
-        const progressRes = await progressAPI.getProgress();
-        setProgress(progressRes.data);
+        if (user?.username) {
+          const res = await usersAPI.getStats(user.username);
+          setProgress(res.data?.stats || null);
+        }
       } catch (error) {
         console.error('Failed to fetch dashboard data:', error);
       } finally {
@@ -52,7 +54,7 @@ const Dashboard = () => {
     };
 
     fetchData();
-  }, [fetchCategories]);
+  }, [fetchCategories, user?.username]);
 
   if (isLoading) {
     return (
@@ -68,49 +70,52 @@ const Dashboard = () => {
   const stats = [
     {
       title: 'Problems Solved',
-      value: progress?.summary?.totalSolved || 0,
+      value: progress?.problemsSolved || 0,
       icon: Trophy,
       color: 'from-green-500 to-emerald-500',
       change: '+12%'
     },
     {
       title: 'Current Streak',
-      value: '7 days',
+      value: `${progress?.streak || 0} days`,
       icon: Zap,
       color: 'from-yellow-500 to-orange-500',
       change: '+2 days'
     },
     {
       title: 'Total Attempts',
-      value: progress?.summary?.totalAttempted || 0,
+      value: progress?.problemsAttempted || 0,
       icon: Target,
       color: 'from-blue-500 to-cyan-500',
       change: '+8%'
     },
     {
       title: 'Success Rate',
-      value: `${progress?.summary?.completionRate || 0}%`,
+      value: `${progress?.successRate || 0}%`,
       icon: TrendingUp,
       color: 'from-purple-500 to-pink-500',
       change: '+5%'
     }
   ];
 
-  const difficultyData = [
-    { name: 'Easy', value: 45, color: '#10B981' },
-    { name: 'Medium', value: 30, color: '#F59E0B' },
-    { name: 'Hard', value: 15, color: '#EF4444' }
-  ];
+  const difficultyData = (() => {
+    const breakdown = progress?.difficultyBreakdown || { EASY: 0, MEDIUM: 0, HARD: 0 };
+    return [
+      { name: 'Easy', value: breakdown.EASY || 0, color: '#10B981' },
+      { name: 'Medium', value: breakdown.MEDIUM || 0, color: '#F59E0B' },
+      { name: 'Hard', value: breakdown.HARD || 0, color: '#EF4444' }
+    ];
+  })();
 
-  const weeklyData = [
-    { day: 'Mon', problems: 3 },
-    { day: 'Tue', problems: 5 },
-    { day: 'Wed', problems: 2 },
-    { day: 'Thu', problems: 7 },
-    { day: 'Fri', problems: 4 },
-    { day: 'Sat', problems: 6 },
-    { day: 'Sun', problems: 3 }
-  ];
+  const weeklyData = (() => {
+    const series = progress?.activitySeries || [];
+    const last7 = series.slice(-7);
+    const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+    return last7.map(item => {
+      const d = new Date(item.date);
+      return { day: days[d.getUTCDay()], problems: item.submissions };
+    });
+  })();
 
   return (
     <div className="min-h-screen pt-20 px-4 pb-8">
@@ -156,7 +161,6 @@ const Dashboard = () => {
                 <div className={`w-12 h-12 bg-gradient-to-r ${stat.color} rounded-xl flex items-center justify-center`}>
                   <stat.icon className="w-6 h-6 text-white" />
                 </div>
-                <span className="text-green-400 text-sm font-medium">{stat.change}</span>
               </div>
               <h3 className="text-2xl font-bold text-white mb-1">{stat.value}</h3>
               <p className="text-gray-400 text-sm">{stat.title}</p>
@@ -328,16 +332,16 @@ const Dashboard = () => {
             Recent Activity
           </h3>
           
-          {progress?.recentActivity && progress.recentActivity.length > 0 ? (
+          {progress?.recentSubmissions && progress.recentSubmissions.length > 0 ? (
             <div className="space-y-4">
-              {progress.recentActivity.slice(0, 5).map((activity) => (
+              {progress.recentSubmissions.slice(0, 5).map((activity) => (
                 <div
                   key={activity.id}
                   className="flex items-center justify-between p-4 bg-white/5 rounded-lg border border-white/10"
                 >
                   <div className="flex items-center gap-4">
                     <div className={`w-3 h-3 rounded-full ${
-                      activity.status === 'SOLVED' ? 'bg-green-400' : 'bg-yellow-400'
+                      activity.status === 'ACCEPTED' ? 'bg-green-400' : 'bg-yellow-400'
                     }`}></div>
                     <div>
                       <h4 className="text-white font-medium">{activity.problem.title}</h4>
@@ -349,19 +353,17 @@ const Dashboard = () => {
                         }`}>
                           {activity.problem.difficulty}
                         </span>
-                        <span>{activity.problem.category.name}</span>
-                        <span>{activity.attempts} attempts</span>
                       </div>
                     </div>
                   </div>
                   <div className="text-right">
                     <div className={`font-medium ${
-                      activity.status === 'SOLVED' ? 'text-green-400' : 'text-yellow-400'
+                      activity.status === 'ACCEPTED' ? 'text-green-400' : 'text-yellow-400'
                     }`}>
-                      {activity.status === 'SOLVED' ? 'Solved' : 'Attempted'}
+                      {activity.status === 'ACCEPTED' ? 'Solved' : 'Attempted'}
                     </div>
                     <div className="text-sm text-gray-400">
-                      {new Date(activity.lastAttempt).toLocaleDateString()}
+                      {new Date(activity.createdAt).toLocaleDateString()}
                     </div>
                   </div>
                 </div>
