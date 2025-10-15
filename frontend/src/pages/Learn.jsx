@@ -318,7 +318,249 @@ try {
   ];
 
   // Filter questions based on search and category
-  const filteredQuestions = interviewQuestions.filter(q => {
+  const moreQuestions = [
+    {
+      id: 6,
+      category: 'architecture',
+      question: 'What is Big O notation and why is it important?',
+      answer: `
+        <p class="mb-4">Big O notation describes the upper bound of an algorithm's time or space complexity as the input size grows. It helps compare performance independent of hardware.</p>
+        
+        <p class="mb-4"><span class="text-white/90 font-medium">In Hinglish:</span> Big O batata hai ki input badhne par algorithm kitna slow/fast hoga. Ye performance ko estimate karne ka tarika hai.</p>
+        
+        <div class="backdrop-blur-lg bg-white/5 rounded-lg p-4 my-4 border border-white/10">
+          <pre><code class="language-javascript">// Common complexities
+// O(1): Array access by index
+// O(log n): Binary search
+// O(n): Linear search
+// O(n log n): Efficient sorts (merge/quick avg)
+// O(n^2): Nested loops (bubble sort)
+// O(2^n): Exponential (subset generation)</code></pre>
+        </div>
+        
+        <p class="mb-2"><strong>Key points:</strong></p>
+        <ul class="list-disc pl-6 mb-4">
+          <li>Describes growth rate, not exact time</li>
+          <li>Focus on the dominant term (ignore constants)</li>
+          <li>Guides trade-offs between time and space</li>
+        </ul>
+      `,
+    },
+    {
+      id: 7,
+      category: 'architecture',
+      question: 'How does a hash table work and how are collisions handled?',
+      answer: `
+        <p class="mb-4">A hash table stores key-value pairs using a hash function to map keys to buckets. Collisions occur when different keys map to the same bucket.</p>
+        
+        <p class="mb-4"><span class="text-white/90 font-medium">In Hinglish:</span> Hash table mein key ko hash karke bucket milta hai. Agar do keys same bucket pe aa jayein to usse collision kehte hain.</p>
+        
+        <p class="mb-2"><strong>Collision strategies:</strong></p>
+        <ul class="list-disc pl-6 mb-4">
+          <li><strong>Chaining:</strong> Bucket stores a list of entries</li>
+          <li><strong>Open addressing:</strong> Probe to find another empty slot (linear, quadratic, double hashing)</li>
+        </ul>
+        
+        <p class="mb-2"><strong>Complexity:</strong></p>
+        <ul class="list-disc pl-6 mb-4">
+          <li>Average O(1) for search/insert/delete (good hash + load factor control)</li>
+          <li>Worst-case O(n) if many collisions</li>
+        </ul>
+      `,
+    },
+    {
+      id: 8,
+      category: 'mysql',
+      question: 'What is a database index and how does it work?',
+      answer: `
+        <p class="mb-4">An index is a data structure (commonly B-Tree) that speeds up data retrieval at the cost of extra writes and storage.</p>
+        
+        <p class="mb-4"><span class="text-white/90 font-medium">In Hinglish:</span> Index ek kitab ke index ki tarah hota hai – data ko jaldi dhoondhne mein madad karta hai, lekin insert/update thoda mehenga ho jata hai.</p>
+        
+        <p class="mb-2"><strong>Key ideas:</strong></p>
+        <ul class="list-disc pl-6 mb-4">
+          <li><strong>B-Tree:</strong> Balanced tree keeps keys sorted for O(log n) lookups</li>
+          <li><strong>Covering index:</strong> Query can be served entirely from index</li>
+          <li><strong>Selectivity:</strong> High-cardinality columns benefit most</li>
+        </ul>
+        
+        <div class="backdrop-blur-lg bg-white/5 rounded-lg p-4 my-4 border border-white/10">
+          <pre><code class="language-sql">-- Example (MySQL)
+CREATE INDEX idx_users_email ON users(email);
+EXPLAIN SELECT id FROM users WHERE email = 'a@b.com';</code></pre>
+        </div>
+      `,
+    },
+    {
+      id: 9,
+      category: 'mysql',
+      question: 'Explain ACID properties in databases',
+      answer: `
+        <p class="mb-4">ACID ensures reliable transactions in relational databases.</p>
+        
+        <ul class="list-disc pl-6 mb-4">
+          <li><strong>Atomicity:</strong> All or nothing</li>
+          <li><strong>Consistency:</strong> Valid state before/after transaction</li>
+          <li><strong>Isolation:</strong> Concurrent transactions appear serial</li>
+          <li><strong>Durability:</strong> Once committed, changes persist</li>
+        </ul>
+        
+        <p class="mb-4"><span class="text-white/90 font-medium">In Hinglish:</span> Ek transaction ya to poori hoti hai ya bilkul nahi; data hamesha valid rehta hai; parallel ka asar result pe nahi padta; commit ke baad data safe rehta hai.</p>
+      `,
+    },
+    {
+      id: 10,
+      category: 'architecture',
+      question: 'What is the difference between a process and a thread?',
+      answer: `
+        <p class="mb-4"><strong>Process:</strong> Independent execution unit with its own memory space. Context switches are heavier.</p>
+        <p class="mb-4"><strong>Thread:</strong> Lightweight unit within a process sharing the same memory. Faster context switches.</p>
+        
+        <p class="mb-2"><strong>Implications:</strong></p>
+        <ul class="list-disc pl-6 mb-4">
+          <li>Threads share address space → requires synchronization (locks) to avoid race conditions</li>
+          <li>Processes provide isolation → safer but more overhead for IPC</li>
+        </ul>
+        
+        <p class="mb-4"><span class="text-white/90 font-medium">In Hinglish:</span> Process alag ghar jaisa hai; thread us ghar ke rooms jaisa. Rooms mein saman shared hota hai, isliye dikkat se manage karna padta hai.</p>
+      `,
+    },
+    {
+      id: 11,
+      category: 'express',
+      question: 'What is middleware in Express and how does next() work?',
+      answer: `
+        <p class="mb-4">Middleware are functions that have access to the request and response objects and the next middleware in the request-response cycle. They can execute code, modify req/res, end the response, or call <code>next()</code> to pass control.</p>
+        
+        <p class="mb-4"><span class="text-white/90 font-medium">In Hinglish:</span> Middleware beech ka function hota hai jo request/response ko process karta hai. Agar response yahin khatam nahi karna toh <code>next()</code> call karke aage bhej do.</p>
+        
+        <p class="mb-2"><strong>Types:</strong></p>
+        <ul class="list-disc pl-6 mb-4">
+          <li>Application-level, Router-level, Built-in, Third-party</li>
+          <li>Error-handling middleware with 4 args: <code>(err, req, res, next)</code></li>
+        </ul>
+        
+        <div class="backdrop-blur-lg bg-white/5 rounded-lg p-4 my-4 border border-white/10">
+          <pre><code class="language-javascript">const express = require('express');
+const app = express();
+
+// Logger middleware
+app.use((req, res, next) => {
+  console.log(req.method, req.url);
+  next(); // pass control to next middleware/route
+});
+
+app.get('/hello', (req, res) => res.send('Hi'));
+
+// Error-handling middleware
+app.use((err, req, res, next) => {
+  console.error(err);
+  res.status(500).json({ error: 'Something broke' });
+});</code></pre>
+        </div>
+      `,
+    },
+    {
+      id: 12,
+      category: 'express',
+      question: 'How do you handle errors in Express?',
+      answer: `
+        <p class="mb-4">Use a dedicated error-handling middleware (4 parameters) and forward errors from async handlers by calling <code>next(err)</code> or using wrappers that catch rejections.</p>
+        
+        <ul class="list-disc pl-6 mb-4">
+          <li>Centralized error handler: <code>(err, req, res, next)</code></li>
+          <li>Return consistent JSON with codes and messages</li>
+          <li>Avoid leaking stack traces in production</li>
+        </ul>
+        
+        <div class="backdrop-blur-lg bg-white/5 rounded-lg p-4 my-4 border border-white/10">
+          <pre><code class="language-javascript">// Async route error forwarding
+app.get('/user/:id', async (req, res, next) => {
+  try {
+    const user = await getUser(req.params.id);
+    if (!user) return res.status(404).json({ error: 'Not found' });
+    res.json(user);
+  } catch (e) {
+    next(e);
+  }
+});</code></pre>
+        </div>
+      `,
+    },
+    {
+      id: 13,
+      category: 'mongodb',
+      question: 'What are common index types in MongoDB and when to use them?',
+      answer: `
+        <p class="mb-4">MongoDB supports several index types to optimize queries. The right choice depends on access patterns.</p>
+        
+        <ul class="list-disc pl-6 mb-4">
+          <li><strong>Single/Compound:</strong> Equality and sort on multiple fields</li>
+          <li><strong>Multikey:</strong> Index array fields</li>
+          <li><strong>Text:</strong> Full-text search</li>
+          <li><strong>TTL:</strong> Auto-expire documents</li>
+          <li><strong>Hashed:</strong> Sharding key distribution</li>
+        </ul>
+        
+        <div class="backdrop-blur-lg bg-white/5 rounded-lg p-4 my-4 border border-white/10">
+          <pre><code class="language-javascript">// Examples
+db.users.createIndex({ email: 1 });
+db.logs.createIndex({ createdAt: 1 }, { expireAfterSeconds: 3600 });
+db.posts.createIndex({ title: 'text', body: 'text' });</code></pre>
+        </div>
+      `,
+    },
+    {
+      id: 14,
+      category: 'mongodb',
+      question: 'How do you design schemas in MongoDB (embedding vs referencing)?',
+      answer: `
+        <p class="mb-4">Choose between embedding documents and referencing based on read/write patterns, document growth, and data duplication tolerance.</p>
+        
+        <ul class="list-disc pl-6 mb-4">
+          <li><strong>Embed</strong> when data is accessed together, small and bounded</li>
+          <li><strong>Reference</strong> when data is large, shared, or updated independently</li>
+          <li>Consider document size limit (16MB) and atomicity at document level</li>
+        </ul>
+      `,
+    },
+    {
+      id: 15,
+      category: 'auth',
+      question: 'JWT vs OAuth2: when to use which?',
+      answer: `
+        <p class="mb-4">JWT is a token format (self-contained claims). OAuth2 is an authorization framework (flows like auth code, client credentials). They solve different problems but can be used together.</p>
+        
+        <ul class="list-disc pl-6 mb-4">
+          <li><strong>JWT:</strong> Stateless API auth between clients and servers</li>
+          <li><strong>OAuth2:</strong> Delegated authorization and third-party access</li>
+          <li>Use OAuth2 with OpenID Connect for user authentication</li>
+        </ul>
+      `,
+    },
+    {
+      id: 16,
+      category: 'auth',
+      question: 'Best practices for password storage and authentication security',
+      answer: `
+        <p class="mb-4">Hash and salt passwords using strong algorithms (e.g., bcrypt/argon2), enforce strong policies, and secure tokens.</p>
+        
+        <ul class="list-disc pl-6 mb-4">
+          <li>Use <code>bcrypt</code>/<code>argon2id</code> with proper cost factors</li>
+          <li>Per-user salt, optional application pepper</li>
+          <li>Rate limiting, MFA, lockout after attempts</li>
+          <li>Store session/JWT securely (HttpOnly, Secure, SameSite)</li>
+        </ul>
+        
+        <div class="backdrop-blur-lg bg-white/5 rounded-lg p-4 my-4 border border-white/10">
+          <pre><code class="language-javascript">const bcrypt = require('bcryptjs');
+const hash = await bcrypt.hash(password, 12);
+const ok = await bcrypt.compare(input, hash);</code></pre>
+        </div>
+      `,
+    }
+  ];
+  const filteredQuestions = [...interviewQuestions, ...moreQuestions].filter(q => {
     const matchesSearch = q.question.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCategory = activeCategory === 'all' || q.category === activeCategory;
     return matchesSearch && matchesCategory;
