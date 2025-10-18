@@ -12,6 +12,7 @@ import Leaderboard from './pages/Leaderboard';
 import Learn from './pages/Learn';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import OAuthCallback from './pages/OAuthCallback';
 import NotFound from './pages/NotFound';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
@@ -117,6 +118,14 @@ function App() {
                     <Login />
                   </PublicLayout>
                 </PublicRoute>
+              }
+            />
+            <Route
+              path="/oauth/callback"
+              element={
+                <PublicLayout>
+                  <OAuthCallback />
+                </PublicLayout>
               }
             />
             <Route
