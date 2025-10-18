@@ -1,0 +1,203 @@
+# 🤖 GitHub Bot Configuration for DSA Algorithm Platform
+
+# PR Review Bot Settings
+pr_review:
+  enabled: true
+  
+  # Auto-review triggers
+  triggers:
+    - opened
+    - synchronize
+    - reopened
+  
+  # Files to check
+  watch_patterns:
+    - "frontend/**/*.{js,jsx,ts,tsx,json}"
+    - "backend/**/*.{js,ts,json}"
+    - "*.{js,json,md}"
+    - "package*.json"
+    - "yarn.lock"
+    - "pnpm-lock.yaml"
+  
+  # Critical files that need extra attention
+  critical_files:
+    - "package.json"
+    - "package-lock.json"
+    - "backend/prisma/schema.prisma"
+    - "backend/server.js"
+    - "frontend/src/App.jsx"
+    - "frontend/vite.config.js"
+    - ".env*"
+  
+  # Security patterns to detect
+  security_patterns:
+    - "api[_-]?key"
+    - "password"
+    - "secret"
+    - "token"
+    - "private[_-]?key"
+    - "https?://[^:]+:[^@]+@"  # URLs with credentials
+  
+  # Code quality checks
+  quality_checks:
+    frontend_lint: true
+    frontend_build: true
+    backend_syntax: true
+    prisma_schema: true
+    security_scan: true
+  
+  # Bundle size limits (in MB)
+  bundle_size_limits:
+    warning: 2
+    error: 5
+
+# Auto-merge Bot Settings  
+auto_merge:
+  enabled: true
+  
+  # Merge requirements
+  requirements:
+    min_approvals: 1
+    require_review_bot_pass: true
+    require_status_checks: true
+    require_up_to_date: true
+  
+  # Blocking labels (PRs with these labels won't auto-merge)
+  blocking_labels:
+    - "❌ needs-fixes"
+    - "🔒 security-review"
+    - "⚠️ do-not-merge"
+    - "🚧 work-in-progress"
+    - "❓ needs-discussion"
+  
+  # Auto-merge triggers
+  auto_merge_labels:
+    - "🤖 auto-merge"
+    - "✅ ready-for-merge"
+  
+  # Merge method
+  merge_method: "squash"  # Options: merge, squash, rebase
+  
+  # Wait time before merging (seconds)
+  merge_delay: 30
+
+# Labels Configuration
+labels:
+  # Size labels
+  size:
+    small: "size/small"      # < 20 files
+    medium: "size/medium"    # 20-50 files  
+    large: "size/large"      # > 50 files
+  
+  # Status labels
+  status:
+    ready: "✅ ready-for-review"
+    needs_fixes: "❌ needs-fixes"
+    security: "🔒 security-review"
+    critical: "⚠️ critical-changes"
+    auto_merge: "🤖 auto-merge"
+  
+  # Type labels
+  types:
+    bug: "🐛 bug"
+    feature: "✨ feature"
+    docs: "📚 documentation"
+    style: "🎨 style"
+    refactor: "♻️ refactor"
+    performance: "⚡ performance"
+    test: "🧪 test"
+    dsa: "🎯 dsa-problem"
+    auth: "🔐 authentication"
+    database: "🗄️ database"
+
+# Notification Settings
+notifications:
+  # Slack/Discord webhook (optional)
+  webhook_url: ""
+  
+  # Notify on events
+  notify_on:
+    - pr_review_failed
+    - auto_merge_success
+    - auto_merge_failed
+    - security_issues_found
+  
+  # Mention users for critical changes
+  critical_reviewers:
+    - "adarsh-priydarshi-5646"  # Repository owner
+
+# Branch Protection Rules (recommended settings)
+branch_protection:
+  main:
+    required_status_checks:
+      - "🔍 Automated PR Review"
+    enforce_admins: false
+    required_pull_request_reviews:
+      required_approving_review_count: 1
+      dismiss_stale_reviews: true
+      require_code_owner_reviews: false
+    restrictions: null
+    allow_force_pushes: false
+    allow_deletions: false
+
+# Comment Templates
+comment_templates:
+  welcome_new_contributor: |
+    👋 Welcome to the DSA Algorithm Platform! Thanks for your contribution.
+    
+    🤖 Our automated review bot will check your PR shortly. Please ensure:
+    - ✅ All tests pass
+    - ✅ Code follows our style guidelines  
+    - ✅ No security issues are present
+    
+    If you need help, feel free to ask in the comments!
+  
+  security_issue_found: |
+    🔒 **Security Issue Detected**
+    
+    Our automated security scan found potential issues in your PR:
+    - Please remove any hardcoded API keys, passwords, or secrets
+    - Use environment variables instead
+    - Review the files mentioned in the bot comment
+    
+    Once fixed, push your changes and the bot will re-review automatically.
+  
+  auto_merge_success: |
+    🎉 **Auto-merged successfully!**
+    
+    ✅ All checks passed
+    ✅ Required approvals received  
+    🤖 Merged automatically by Auto Merge Bot
+  
+  large_pr_warning: |
+    ⚠️ **Large PR Detected**
+    
+    This PR changes many files. Consider:
+    - Breaking it into smaller, focused PRs
+    - Adding detailed description of changes
+    - Ensuring thorough testing
+    
+    Large PRs take longer to review and are more likely to have issues.
+
+# Advanced Settings
+advanced:
+  # Maximum PR size (files changed)
+  max_pr_size: 100
+  
+  # Timeout for checks (minutes)
+  check_timeout: 10
+  
+  # Retry failed checks
+  retry_failed_checks: true
+  retry_count: 3
+  
+  # Skip bot for certain users (maintainers)
+  skip_bot_for_users:
+    - "dependabot[bot]"
+    - "renovate[bot]"
+  
+  # Custom check commands
+  custom_checks:
+    frontend_test: "cd frontend && npm test"
+    backend_test: "cd backend && npm test"
+    e2e_test: "npm run test:e2e"

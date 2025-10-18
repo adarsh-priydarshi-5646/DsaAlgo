@@ -1,0 +1,215 @@
+name: 🔄 Auto Merge Bot
+
+on:
+  pull_request_review:
+    types: [submitted]
+  pull_request:
+    types: [labeled]
+
+permissions:
+  contents: write
+  pull-requests: write
+  checks: read
+
+jobs:
+  auto-merge:
+    name: 🤖 Auto Merge Approved PRs
+    runs-on: ubuntu-latest
+    if: |
+      (github.event.review.state == 'approved' || 
+       contains(github.event.label.name, 'auto-merge')) &&
+      github.event.pull_request.draft == false
+
+    steps:
+      - name: 📥 Checkout Code
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 🔍 Check PR Status
+        id: pr-status
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const { data: pr } = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number,
+            });
+            
+            // Check if PR is mergeable
+            if (pr.mergeable === false) {
+              core.setOutput('mergeable', 'false');
+              core.setOutput('reason', 'PR has merge conflicts');
+              return;
+            }
+            
+            if (pr.mergeable === null) {
+              core.setOutput('mergeable', 'unknown');
+              core.setOutput('reason', 'Mergeable status unknown');
+              return;
+            }
+            
+            // Check required status checks
+            const { data: checks } = await github.rest.checks.listForRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: pr.head.sha,
+            });
+            
+            const requiredChecks = [
+              '🔍 Automated PR Review'
+            ];
+            
+            let allChecksPassed = true;
+            let failedChecks = [];
+            
+            for (const checkName of requiredChecks) {
+              const check = checks.check_runs.find(c => c.name === checkName);
+              if (!check || check.conclusion !== 'success') {
+                allChecksPassed = false;
+                failedChecks.push(checkName);
+              }
+            }
+            
+            if (!allChecksPassed) {
+              core.setOutput('mergeable', 'false');
+              core.setOutput('reason', `Required checks failed: ${failedChecks.join(', ')}`);
+              return;
+            }
+            
+            // Check for required approvals
+            const { data: reviews } = await github.rest.pulls.listReviews({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number,
+            });
+            
+            const approvals = reviews.filter(review => review.state === 'APPROVED');
+            const requiredApprovals = 1; // Minimum required approvals
+            
+            if (approvals.length < requiredApprovals) {
+              core.setOutput('mergeable', 'false');
+              core.setOutput('reason', `Insufficient approvals: ${approvals.length}/${requiredApprovals}`);
+              return;
+            }
+            
+            // Check for blocking labels
+            const blockingLabels = ['❌ needs-fixes', '🔒 security-review', '⚠️ do-not-merge'];
+            const hasBlockingLabel = pr.labels.some(label => 
+              blockingLabels.includes(label.name)
+            );
+            
+            if (hasBlockingLabel) {
+              const blockingLabel = pr.labels.find(label => 
+                blockingLabels.includes(label.name)
+              ).name;
+              core.setOutput('mergeable', 'false');
+              core.setOutput('reason', `Blocking label present: ${blockingLabel}`);
+              return;
+            }
+            
+            // All checks passed
+            core.setOutput('mergeable', 'true');
+            core.setOutput('pr_title', pr.title);
+            core.setOutput('pr_number', pr.number);
+            core.setOutput('pr_author', pr.user.login);
+
+      - name: ⏳ Wait for Final Checks
+        if: steps.pr-status.outputs.mergeable == 'true'
+        run: |
+          echo "⏳ Waiting 30 seconds for any final checks to complete..."
+          sleep 30
+
+      - name: 🔄 Auto Merge PR
+        if: steps.pr-status.outputs.mergeable == 'true'
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            try {
+              const result = await github.rest.pulls.merge({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: context.issue.number,
+                commit_title: `🤖 Auto-merge: ${{ steps.pr-status.outputs.pr_title }} (#${{ steps.pr-status.outputs.pr_number }})`,
+                commit_message: `Automatically merged PR #${{ steps.pr-status.outputs.pr_number }} by @${{ steps.pr-status.outputs.pr_author }}\n\n✅ All automated checks passed\n✅ Required approvals received\n🤖 Merged by Auto Merge Bot`,
+                merge_method: 'squash'
+              });
+              
+              console.log('✅ PR merged successfully!');
+              
+              // Add success comment
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: `🎉 **Auto-merged successfully!**\n\n✅ All checks passed\n✅ Required approvals received\n🤖 Merged automatically by Auto Merge Bot\n\nCommit SHA: ${result.data.sha}`
+              });
+              
+            } catch (error) {
+              console.error('❌ Failed to merge PR:', error.message);
+              
+              // Add failure comment
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: `❌ **Auto-merge failed**\n\nError: ${error.message}\n\n🔧 Please merge manually or check for conflicts.`
+              });
+              
+              throw error;
+            }
+
+      - name: ❌ Cannot Merge - Add Comment
+        if: steps.pr-status.outputs.mergeable != 'true'
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const reason = '${{ steps.pr-status.outputs.reason }}';
+            const mergeable = '${{ steps.pr-status.outputs.mergeable }}';
+            
+            let message = '🚫 **Auto-merge blocked**\n\n';
+            
+            if (mergeable === 'false') {
+              message += `❌ **Reason:** ${reason}\n\n`;
+              message += '### 🔧 Required Actions:\n';
+              
+              if (reason.includes('merge conflicts')) {
+                message += '- Resolve merge conflicts\n';
+                message += '- Push updated changes\n';
+              } else if (reason.includes('checks failed')) {
+                message += '- Fix failing checks\n';
+                message += '- Ensure all tests pass\n';
+              } else if (reason.includes('approvals')) {
+                message += '- Get required approvals from maintainers\n';
+              } else if (reason.includes('Blocking label')) {
+                message += '- Address issues indicated by the blocking label\n';
+                message += '- Remove blocking label when ready\n';
+              }
+              
+              message += '\n🔄 Auto-merge will retry once issues are resolved.';
+            } else if (mergeable === 'unknown') {
+              message += '⏳ **Status:** Mergeable status is still being determined\n\n';
+              message += '🔄 Auto-merge will retry shortly.';
+            }
+            
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: message
+            });
+
+      - name: 📊 Merge Summary
+        if: steps.pr-status.outputs.mergeable == 'true'
+        run: |
+          echo "🎉 Auto-merge completed successfully!"
+          echo "📋 Summary:"
+          echo "  - PR: #${{ steps.pr-status.outputs.pr_number }}"
+          echo "  - Title: ${{ steps.pr-status.outputs.pr_title }}"
+          echo "  - Author: @${{ steps.pr-status.outputs.pr_author }}"
+          echo "  - Merge method: squash"
+          echo "✅ All checks passed and PR has been merged!"
