@@ -2245,28 +2245,6 @@ console.log(/regex/ instanceof RegExp);   // true`}
                     )}
                   </div>
 
-                  {/* Progress Bar */}
-                  <div className="mb-6">
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm font-medium text-slate-300 flex items-center gap-2">
-                        <BarChart3 className="w-4 h-4" />
-                        Topic Progress
-                      </span>
-                      <span className="text-sm text-slate-400">
-                        {Math.round(getProgressPercentage())}% Complete
-                      </span>
-                    </div>
-                    <div className="w-full bg-slate-700 rounded-full h-2">
-                      <div 
-                        className="bg-gradient-to-r from-blue-500 to-cyan-500 h-2 rounded-full transition-all duration-500"
-                        style={{ width: `${getProgressPercentage()}%` }}
-                      ></div>
-                    </div>
-                    <div className="flex items-center justify-between mt-2 text-xs text-slate-400">
-                      <span>{getCurrentCategoryQuestions().filter(q => completedQuestions.has(q.id)).length} completed</span>
-                      <span>{getCurrentCategoryQuestions().length} total questions</span>
-                    </div>
-                  </div>
 
                   {/* Navigation Controls */}
                   <div className="flex items-center justify-between pt-6 border-t border-slate-700/50">
@@ -2342,7 +2320,7 @@ console.log(/regex/ instanceof RegExp);   // true`}
                   })}
                 </div>
               </motion.div>
-            ) : (
+            ) : activeCategory !== 'all' ? (
               /* Questions Display for Selected Category */
               <div className="space-y-6 pb-8">
                 {filteredQuestions.length > 0 ? (
@@ -2411,6 +2389,19 @@ console.log(/regex/ instanceof RegExp);   // true`}
                   </motion.div>
                 )}
               </div>
+            ) : (
+              /* Show message when 'All Topics' is selected */
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="text-center py-20"
+              >
+                <BookOpen className="w-20 h-20 mx-auto text-slate-600 mb-6" />
+                <h3 className="text-2xl font-bold text-white mb-4">Select a Topic to Get Started</h3>
+                <p className="text-slate-400 text-lg max-w-md mx-auto">
+                  Choose a specific topic from the sidebar to view related interview questions and start learning.
+                </p>
+              </motion.div>
             )}
           </div>
         </div>

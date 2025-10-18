@@ -17,7 +17,18 @@ import {
   Zap,
   Grid,
   List,
-  Users
+  Users,
+  Database,
+  GitBranch,
+  Layers,
+  Shuffle,
+  BarChart3,
+  Binary,
+  Hash,
+  TreePine,
+  Network,
+  Cpu,
+  Boxes
 } from 'lucide-react';
 import useProblemStore from '../store/problemStore';
 import DynamicIcon from '../utils/iconMapping.jsx';
@@ -40,6 +51,25 @@ const ProblemList = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'list'
   const [showFilters, setShowFilters] = useState(false);
+  const [selectedTopic, setSelectedTopic] = useState(null);
+
+  // DSA Topics
+  const dsaTopics = [
+    { id: 'arrays', name: 'Arrays', icon: Database, count: 45, color: 'from-blue-500 to-cyan-500' },
+    { id: 'strings', name: 'Strings', icon: Hash, count: 32, color: 'from-green-500 to-emerald-500' },
+    { id: 'linked-lists', name: 'Linked Lists', icon: GitBranch, count: 28, color: 'from-purple-500 to-pink-500' },
+    { id: 'stacks-queues', name: 'Stacks & Queues', icon: Layers, count: 24, color: 'from-orange-500 to-red-500' },
+    { id: 'trees', name: 'Trees', icon: TreePine, count: 38, color: 'from-teal-500 to-green-500' },
+    { id: 'graphs', name: 'Graphs', icon: Network, count: 35, color: 'from-indigo-500 to-purple-500' },
+    { id: 'dynamic-programming', name: 'Dynamic Programming', icon: BarChart3, count: 42, color: 'from-yellow-500 to-orange-500' },
+    { id: 'greedy', name: 'Greedy Algorithms', icon: Target, count: 26, color: 'from-pink-500 to-rose-500' },
+    { id: 'backtracking', name: 'Backtracking', icon: Shuffle, count: 22, color: 'from-cyan-500 to-blue-500' },
+    { id: 'sorting', name: 'Sorting & Searching', icon: BarChart3, count: 30, color: 'from-violet-500 to-purple-500' },
+    { id: 'binary-search', name: 'Binary Search', icon: Binary, count: 18, color: 'from-emerald-500 to-teal-500' },
+    { id: 'heap', name: 'Heap', icon: Boxes, count: 20, color: 'from-red-500 to-pink-500' },
+    { id: 'bit-manipulation', name: 'Bit Manipulation', icon: Cpu, count: 15, color: 'from-gray-500 to-slate-500' },
+    { id: 'math', name: 'Mathematical', icon: Hash, count: 25, color: 'from-amber-500 to-yellow-500' }
+  ];
 
   useEffect(() => {
     fetchProblems();
@@ -55,9 +85,41 @@ const ProblemList = () => {
     return () => clearTimeout(debounceTimer);
   }, [searchTerm, setFilters, fetchProblems]);
 
-  const handleFilterChange = (key, value) => {
-    setFilters({ [key]: value });
+  const handleFilterChange = (type, value) => {
+    const newFilters = { ...filters, [type]: value };
+    setFilters(newFilters);
     fetchProblems();
+  };
+
+  // Filter problems based on selected topic
+  const getFilteredProblems = () => {
+    if (!selectedTopic) return [];
+    
+    // Mock filtering based on topic - in real app, this would filter by topic tags
+    return problems.filter(problem => {
+      // Simple mock logic - you can enhance this based on your data structure
+      const topicKeywords = {
+        'arrays': ['array', 'list', 'index'],
+        'strings': ['string', 'char', 'text'],
+        'linked-lists': ['linked', 'node', 'pointer'],
+        'stacks-queues': ['stack', 'queue', 'push', 'pop'],
+        'trees': ['tree', 'binary', 'node'],
+        'graphs': ['graph', 'vertex', 'edge'],
+        'dynamic-programming': ['dp', 'dynamic', 'memo'],
+        'greedy': ['greedy', 'optimal'],
+        'backtracking': ['backtrack', 'recursive'],
+        'sorting': ['sort', 'merge', 'quick'],
+        'binary-search': ['binary', 'search', 'sorted'],
+        'heap': ['heap', 'priority', 'queue'],
+        'bit-manipulation': ['bit', 'xor', 'and', 'or'],
+        'math': ['math', 'number', 'calculate']
+      };
+      
+      const keywords = topicKeywords[selectedTopic.id] || [];
+      const problemText = (problem.title + ' ' + (problem.description || '')).toLowerCase();
+      
+      return keywords.some(keyword => problemText.includes(keyword));
+    });
   };
 
   const handlePageChange = (newPage) => {
@@ -299,15 +361,104 @@ const ProblemList = () => {
           </div>
         </motion.div>
 
-        {/* Problems Display */}
-        {isLoading ? (
+        {/* DSA Topics Section */}
+        {!selectedTopic && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="mb-8"
+          >
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-2xl font-bold text-white flex items-center gap-3">
+                <BookOpen className="w-8 h-8 text-blue-400" />
+                DSA Topics
+              </h2>
+              <span className="text-gray-400 text-sm">
+                {dsaTopics.length} topics available
+              </span>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+              {dsaTopics.map((topic, index) => {
+                const Icon = topic.icon;
+                return (
+                  <motion.div
+                    key={topic.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.05 }}
+                    onClick={() => setSelectedTopic(topic)}
+                    className="group cursor-pointer"
+                  >
+                    <div className="bg-gray-800/50 backdrop-blur-sm border border-gray-700/50 rounded-xl p-6 hover:border-blue-500/50 transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/10 hover:scale-105">
+                      <div className="flex items-center justify-between mb-4">
+                        <div className={`w-12 h-12 bg-gradient-to-r ${topic.color} rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform`}>
+                          <Icon className="w-6 h-6 text-white" />
+                        </div>
+                        <div className="text-right">
+                          <div className="text-2xl font-bold text-white">{topic.count}</div>
+                          <div className="text-xs text-gray-400">problems</div>
+                        </div>
+                      </div>
+                      
+                      <h3 className="text-lg font-semibold text-white mb-2 group-hover:text-blue-300 transition-colors">
+                        {topic.name}
+                      </h3>
+                      
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                          <span className="text-xs text-gray-400">Active</span>
+                        </div>
+                        <div className="text-xs text-blue-400 opacity-0 group-hover:opacity-100 transition-opacity">
+                          Click to explore →
+                        </div>
+                      </div>
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </div>
+          </motion.div>
+        )}
+
+        {/* Back to Topics Button */}
+        {selectedTopic && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-6"
+          >
+            <button
+              onClick={() => setSelectedTopic(null)}
+              className="flex items-center gap-2 px-4 py-2 bg-gray-800 hover:bg-gray-700 text-white rounded-lg transition-colors"
+            >
+              <GitBranch className="w-4 h-4" />
+              ← Back to All Topics
+            </button>
+            
+            <div className="mt-4 p-4 bg-gradient-to-r from-blue-600/10 to-purple-600/10 border border-blue-500/30 rounded-xl">
+              <div className="flex items-center gap-3 mb-2">
+                <selectedTopic.icon className="w-6 h-6 text-blue-400" />
+                <h2 className="text-xl font-bold text-white">{selectedTopic.name} Problems</h2>
+              </div>
+              <p className="text-gray-300 text-sm">
+                Showing {selectedTopic.count} problems related to {selectedTopic.name.toLowerCase()}
+              </p>
+            </div>
+          </motion.div>
+        )}
+
+        {/* Problems Display - Only show when topic is selected */}
+        {selectedTopic && (isLoading ? (
           <div className="flex justify-center items-center py-20">
             <div className="text-center">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500 mx-auto mb-4"></div>
               <p className="text-gray-400">Loading problems...</p>
             </div>
           </div>
-        ) : problems.length === 0 ? (
+        ) : getFilteredProblems().length === 0 ? (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -334,7 +485,7 @@ const ProblemList = () => {
             transition={{ delay: 0.2 }}
             className={viewMode === 'grid' ? 'grid grid-cols-1 lg:grid-cols-2 gap-6' : 'space-y-4'}
           >
-            {problems.map((problem, index) => (
+            {getFilteredProblems().map((problem, index) => (
               <motion.div
                 key={problem.id}
                 initial={{ opacity: 0, y: 20 }}
@@ -458,6 +609,21 @@ const ProblemList = () => {
                 </Link>
               </motion.div>
             ))}
+          </motion.div>
+        ))}
+
+        {/* Show message when no topic is selected */}
+        {!selectedTopic && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-center py-20"
+          >
+            <BookOpen className="w-20 h-20 mx-auto text-gray-600 mb-6" />
+            <h3 className="text-2xl font-bold text-white mb-4">Select a DSA Topic</h3>
+            <p className="text-gray-400 text-lg max-w-md mx-auto">
+              Choose a topic from above to view related problems and start practicing.
+            </p>
           </motion.div>
         )}
 

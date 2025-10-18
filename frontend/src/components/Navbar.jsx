@@ -12,7 +12,8 @@ import {
   LogOut,
   Settings,
   Bell,
-  BookOpen
+  BookOpen,
+  Terminal
 } from 'lucide-react';
 import useAuthStore from '../store/authStore';
 
@@ -31,6 +32,7 @@ const Navbar = () => {
   const navItems = [
     { name: 'Dashboard', path: '/dashboard', icon: Home },
     { name: 'Problems', path: '/problems', icon: Code },
+    { name: 'Playground', path: '/playground', icon: Terminal },
     { name: 'Leaderboard', path: '/leaderboard', icon: Trophy },
     { name: 'Learn', path: '/learn', icon: BookOpen },
   ];
