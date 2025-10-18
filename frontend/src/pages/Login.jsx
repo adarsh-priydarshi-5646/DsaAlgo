@@ -17,10 +17,22 @@ const Login = () => {
   } = useForm();
 
   const onSubmit = async (data) => {
-    const result = await login(data);
-    
-    if (result.success) {
-      navigate('/dashboard');
+    try {
+      const result = await login(data);
+      
+      if (result && result.success) {
+        // Multiple navigation attempts to ensure redirect works
+        navigate('/dashboard', { replace: true });
+        
+        // Fallback navigation
+        setTimeout(() => {
+          if (window.location.pathname !== '/dashboard') {
+            window.location.href = '/dashboard';
+          }
+        }, 500);
+      }
+    } catch (error) {
+      console.error('Login submission error:', error);
     }
   };
 

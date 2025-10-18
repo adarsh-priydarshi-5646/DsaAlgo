@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Canvas } from '@react-three/fiber';
-import { Float, Sphere, Box } from '@react-three/drei';
 import { 
   Search, 
   Filter, 
@@ -24,15 +22,7 @@ import {
 import useProblemStore from '../store/problemStore';
 import DynamicIcon from '../utils/iconMapping.jsx';
 
-function FloatingCode() {
-  return (
-    <Float speed={1.5} rotationIntensity={0.3} floatIntensity={0.4}>
-      <Box args={[0.4, 0.4, 0.4]} position={[0, 0, 0]}>
-        <meshStandardMaterial color="#8B5CF6" transparent opacity={0.6} wireframe />
-      </Box>
-    </Float>
-  );
-}
+// Removed 3D component for better stability
 
 const ProblemList = () => {
   const {
@@ -106,11 +96,9 @@ const ProblemList = () => {
           className="mb-8 relative"
         >
           <div className="absolute top-0 right-0 w-32 h-32 hidden lg:block">
-            <Canvas>
-              <ambientLight intensity={0.5} />
-              <directionalLight position={[10, 10, 5]} intensity={0.5} />
-              <FloatingCode />
-            </Canvas>
+            <div className="w-full h-full flex items-center justify-center">
+              <Code className="w-16 h-16 text-purple-400 animate-pulse" />
+            </div>
           </div>
           
           <h1 className="text-5xl font-bold bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 bg-clip-text text-transparent mb-4 flex items-center gap-3">

@@ -1,0 +1,274 @@
+name: 🤖 Automated Code Review Bot
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches: [main, develop]
+
+jobs:
+  code-review:
+    name: 🔍 Comprehensive Code Review
+    runs-on: ubuntu-latest
+    
+    permissions:
+      contents: read
+      pull-requests: write
+      checks: write
+      
+    steps:
+      - name: 📥 Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          
+      - name: 🔧 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: |
+            frontend/package-lock.json
+            backend/package-lock.json
+            
+      - name: 📦 Install Dependencies
+        run: |
+          cd frontend && npm ci
+          cd ../backend && npm ci
+          
+      - name: 🧹 Code Quality Checks
+        id: quality-checks
+        run: |
+          echo "## 🔍 Code Quality Analysis" >> $GITHUB_STEP_SUMMARY
+          
+          # Frontend Linting
+          echo "### 🎨 Frontend Linting" >> $GITHUB_STEP_SUMMARY
+          cd frontend
+          if npm run lint 2>&1 | tee lint-output.txt; then
+            echo "✅ Frontend linting passed" >> $GITHUB_STEP_SUMMARY
+            echo "frontend_lint=✅ PASSED" >> $GITHUB_OUTPUT
+          else
+            echo "❌ Frontend linting failed" >> $GITHUB_STEP_SUMMARY
+            echo "frontend_lint=❌ FAILED" >> $GITHUB_OUTPUT
+            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+            cat lint-output.txt >> $GITHUB_STEP_SUMMARY
+            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          # Backend Linting
+          echo "### 🔧 Backend Linting" >> $GITHUB_STEP_SUMMARY
+          cd ../backend
+          if npm run lint 2>&1 | tee lint-output.txt; then
+            echo "✅ Backend linting passed" >> $GITHUB_STEP_SUMMARY
+            echo "backend_lint=✅ PASSED" >> $GITHUB_OUTPUT
+          else
+            echo "❌ Backend linting failed" >> $GITHUB_STEP_SUMMARY
+            echo "backend_lint=❌ FAILED" >> $GITHUB_OUTPUT
+            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+            cat lint-output.txt >> $GITHUB_STEP_SUMMARY
+            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+      - name: 🏗️ Build Checks
+        id: build-checks
+        run: |
+          echo "### 🏗️ Build Verification" >> $GITHUB_STEP_SUMMARY
+          
+          # Frontend Build
+          cd frontend
+          if npm run build 2>&1 | tee build-output.txt; then
+            echo "✅ Frontend build successful" >> $GITHUB_STEP_SUMMARY
+            echo "frontend_build=✅ PASSED" >> $GITHUB_OUTPUT
+            
+            # Check build size
+            BUILD_SIZE=$(du -sh dist/ | cut -f1)
+            echo "📦 Build size: $BUILD_SIZE" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ Frontend build failed" >> $GITHUB_STEP_SUMMARY
+            echo "frontend_build=❌ FAILED" >> $GITHUB_OUTPUT
+            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+            cat build-output.txt >> $GITHUB_STEP_SUMMARY
+            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+      - name: 🔒 Security Audit
+        id: security-audit
+        run: |
+          echo "### 🔒 Security Audit" >> $GITHUB_STEP_SUMMARY
+          
+          # Frontend Security Audit
+          cd frontend
+          if npm audit --audit-level=high 2>&1 | tee audit-output.txt; then
+            echo "✅ Frontend security audit passed" >> $GITHUB_STEP_SUMMARY
+            echo "frontend_security=✅ PASSED" >> $GITHUB_OUTPUT
+          else
+            echo "⚠️ Frontend security vulnerabilities found" >> $GITHUB_STEP_SUMMARY
+            echo "frontend_security=⚠️ VULNERABILITIES" >> $GITHUB_OUTPUT
+            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+            cat audit-output.txt >> $GITHUB_STEP_SUMMARY
+            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          # Backend Security Audit
+          cd ../backend
+          if npm audit --audit-level=high 2>&1 | tee audit-output.txt; then
+            echo "✅ Backend security audit passed" >> $GITHUB_STEP_SUMMARY
+            echo "backend_security=✅ PASSED" >> $GITHUB_OUTPUT
+          else
+            echo "⚠️ Backend security vulnerabilities found" >> $GITHUB_STEP_SUMMARY
+            echo "backend_security=⚠️ VULNERABILITIES" >> $GITHUB_OUTPUT
+            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+            cat audit-output.txt >> $GITHUB_STEP_SUMMARY
+            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+      - name: 📊 Code Analysis
+        id: code-analysis
+        run: |
+          echo "### 📊 Code Analysis" >> $GITHUB_STEP_SUMMARY
+          
+          # Check for common issues
+          ISSUES_FOUND=0
+          
+          # Check for console.log in production code (excluding allowed files)
+          echo "#### 🐛 Console Log Check" >> $GITHUB_STEP_SUMMARY
+          CONSOLE_LOGS=$(find . -name "*.js" -o -name "*.jsx" -o -name "*.ts" -o -name "*.tsx" | \
+            grep -v node_modules | \
+            grep -v "server.js" | \
+            grep -v "seed.js" | \
+            grep -v "config/" | \
+            grep -v "middleware/auth.js" | \
+            grep -v "controllers/" | \
+            xargs grep -l "console\." || true)
+          
+          if [ -n "$CONSOLE_LOGS" ]; then
+            echo "⚠️ Console statements found in:" >> $GITHUB_STEP_SUMMARY
+            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+            echo "$CONSOLE_LOGS" >> $GITHUB_STEP_SUMMARY
+            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+            ISSUES_FOUND=$((ISSUES_FOUND + 1))
+          else
+            echo "✅ No inappropriate console statements found" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          # Check for TODO/FIXME comments
+          echo "#### 📝 TODO/FIXME Check" >> $GITHUB_STEP_SUMMARY
+          TODOS=$(find . -name "*.js" -o -name "*.jsx" -o -name "*.ts" -o -name "*.tsx" | \
+            grep -v node_modules | \
+            xargs grep -n "TODO\|FIXME" || true)
+          
+          if [ -n "$TODOS" ]; then
+            echo "📋 TODO/FIXME items found:" >> $GITHUB_STEP_SUMMARY
+            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+            echo "$TODOS" >> $GITHUB_STEP_SUMMARY
+            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "✅ No TODO/FIXME items found" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          # Check for hardcoded credentials
+          echo "#### 🔐 Credential Check" >> $GITHUB_STEP_SUMMARY
+          CREDENTIALS=$(find . -name "*.js" -o -name "*.jsx" -o -name "*.ts" -o -name "*.tsx" | \
+            grep -v node_modules | \
+            xargs grep -i "password.*=.*['\"][^'\"]*['\"]" || true)
+          
+          if [ -n "$CREDENTIALS" ]; then
+            echo "🚨 Potential hardcoded credentials found:" >> $GITHUB_STEP_SUMMARY
+            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+            echo "$CREDENTIALS" >> $GITHUB_STEP_SUMMARY
+            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+            ISSUES_FOUND=$((ISSUES_FOUND + 1))
+          else
+            echo "✅ No hardcoded credentials found" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          echo "code_issues=$ISSUES_FOUND" >> $GITHUB_OUTPUT
+          
+      - name: 📝 Generate Review Comment
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const frontendLint = '${{ steps.quality-checks.outputs.frontend_lint }}';
+            const backendLint = '${{ steps.quality-checks.outputs.backend_lint }}';
+            const frontendBuild = '${{ steps.build-checks.outputs.frontend_build }}';
+            const frontendSecurity = '${{ steps.security-audit.outputs.frontend_security }}';
+            const backendSecurity = '${{ steps.security-audit.outputs.backend_security }}';
+            const codeIssues = parseInt('${{ steps.code-analysis.outputs.code_issues }}');
+            
+            let reviewBody = `## 🤖 Automated Code Review Results\n\n`;
+            
+            reviewBody += `### 📊 Summary\n`;
+            reviewBody += `| Check | Frontend | Backend |\n`;
+            reviewBody += `|-------|----------|----------|\n`;
+            reviewBody += `| Linting | ${frontendLint} | ${backendLint} |\n`;
+            reviewBody += `| Build | ${frontendBuild} | N/A |\n`;
+            reviewBody += `| Security | ${frontendSecurity} | ${backendSecurity} |\n\n`;
+            
+            if (codeIssues > 0) {
+              reviewBody += `### ⚠️ Issues Found\n`;
+              reviewBody += `${codeIssues} potential issues detected. Please review the detailed analysis above.\n\n`;
+            }
+            
+            // Determine overall status
+            const hasFailures = frontendLint.includes('❌') || 
+                               backendLint.includes('❌') || 
+                               frontendBuild.includes('❌');
+            
+            const hasWarnings = frontendSecurity.includes('⚠️') || 
+                               backendSecurity.includes('⚠️') || 
+                               codeIssues > 0;
+            
+            if (hasFailures) {
+              reviewBody += `### ❌ Review Status: CHANGES REQUESTED\n`;
+              reviewBody += `Critical issues found that must be fixed before merging.\n\n`;
+            } else if (hasWarnings) {
+              reviewBody += `### ⚠️ Review Status: APPROVED WITH COMMENTS\n`;
+              reviewBody += `Code looks good but please address the warnings above.\n\n`;
+            } else {
+              reviewBody += `### ✅ Review Status: APPROVED\n`;
+              reviewBody += `All checks passed! Code is ready for merge.\n\n`;
+            }
+            
+            reviewBody += `### 🚀 Next Steps\n`;
+            reviewBody += `- Fix any failing checks\n`;
+            reviewBody += `- Address security vulnerabilities if any\n`;
+            reviewBody += `- Remove inappropriate console statements\n`;
+            reviewBody += `- Consider resolving TODO/FIXME items\n\n`;
+            
+            reviewBody += `---\n*🤖 This review was generated automatically by the Code Review Bot*`;
+            
+            // Post review comment
+            await github.rest.pulls.createReview({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number,
+              body: reviewBody,
+              event: hasFailures ? 'REQUEST_CHANGES' : (hasWarnings ? 'COMMENT' : 'APPROVE')
+            });
+            
+      - name: 🎯 Set Status Check
+        uses: actions/github-script@v7
+        if: always()
+        with:
+          script: |
+            const frontendLint = '${{ steps.quality-checks.outputs.frontend_lint }}';
+            const backendLint = '${{ steps.quality-checks.outputs.backend_lint }}';
+            const frontendBuild = '${{ steps.build-checks.outputs.frontend_build }}';
+            
+            const hasFailures = frontendLint.includes('❌') || 
+                               backendLint.includes('❌') || 
+                               frontendBuild.includes('❌');
+            
+            const state = hasFailures ? 'failure' : 'success';
+            const description = hasFailures ? 
+              'Code review found issues that need to be fixed' : 
+              'All code review checks passed';
+            
+            await github.rest.repos.createCommitStatus({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              sha: context.sha,
+              state: state,
+              target_url: `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`,
+              description: description,
+              context: 'Code Review Bot'
+            });

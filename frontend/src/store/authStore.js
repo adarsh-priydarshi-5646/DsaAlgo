@@ -18,7 +18,10 @@ const useAuthStore = create(
           const response = await authAPI.login(credentials);
           const { user, token } = response.data;
           
+          // Store token and update state
           localStorage.setItem('token', token);
+          localStorage.setItem('user', JSON.stringify(user));
+          
           set({ 
             user, 
             token, 
@@ -27,10 +30,10 @@ const useAuthStore = create(
           });
           
           toast.success('Login successful!');
-          return { success: true };
+          return { success: true, user, token };
         } catch (error) {
           set({ isLoading: false });
-          const message = error.response?.data?.error || 'Login failed';
+          const message = error.response?.data?.error || error.message || 'Login failed';
           toast.error(message);
           return { success: false, error: message };
         }
@@ -42,7 +45,10 @@ const useAuthStore = create(
           const response = await authAPI.register(userData);
           const { user, token } = response.data;
           
+          // Store token and user data
           localStorage.setItem('token', token);
+          localStorage.setItem('user', JSON.stringify(user));
+          
           set({ 
             user, 
             token, 
@@ -51,7 +57,7 @@ const useAuthStore = create(
           });
           
           toast.success('Registration successful!');
-          return { success: true };
+          return { success: true, user, token };
         } catch (error) {
           set({ isLoading: false });
           const message = error.response?.data?.error || 'Registration failed';

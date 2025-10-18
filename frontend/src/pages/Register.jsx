@@ -21,11 +21,23 @@ const Register = () => {
   const password = watch('password');
 
   const onSubmit = async (data) => {
-    const { confirmPassword, ...userData } = data;
-    const result = await registerUser(userData);
-    
-    if (result.success) {
-      navigate('/dashboard');
+    try {
+      const { confirmPassword, ...userData } = data;
+      const result = await registerUser(userData);
+      
+      if (result && result.success) {
+        // Multiple navigation attempts to ensure redirect works
+        navigate('/dashboard', { replace: true });
+        
+        // Fallback navigation
+        setTimeout(() => {
+          if (window.location.pathname !== '/dashboard') {
+            window.location.href = '/dashboard';
+          }
+        }, 500);
+      }
+    } catch (error) {
+      console.error('Registration submission error:', error);
     }
   };
 

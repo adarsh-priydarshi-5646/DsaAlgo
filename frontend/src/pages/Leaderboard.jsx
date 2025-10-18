@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Canvas } from '@react-three/fiber';
-import { Float, Sphere } from '@react-three/drei';
 import { 
   Trophy, 
   Star, 
@@ -15,21 +13,25 @@ import {
   Filter,
   Search,
   Target,
-  Clock
+  Clock,
+  Flame,
+  Shield,
+  Gem,
+  Sword,
+  Rocket,
+  Brain,
+  Code,
+  ChevronUp,
+  ChevronDown,
+  Eye,
+  BarChart3,
+  Activity
 } from 'lucide-react';
 import useAuthStore from '../store/authStore';
 import useLeaderboardStore from '../store/leaderboardStore';
 import { leaderboardAPI } from '../services/api';
 
-function FloatingTrophy() {
-  return (
-    <Float speed={2} rotationIntensity={0.3} floatIntensity={0.5}>
-      <Sphere args={[0.3]} position={[0, 0, 0]}>
-        <meshStandardMaterial color="#FFD700" transparent opacity={0.7} />
-      </Sphere>
-    </Float>
-  );
-}
+// Removed 3D component for better stability
 
 export default function Leaderboard() {
   const { user } = useAuthStore();
@@ -66,10 +68,10 @@ export default function Leaderboard() {
 
   const getRankIcon = (rank) => {
     switch (rank) {
-      case 1: return <Crown className="w-6 h-6 text-yellow-500" />;
-      case 2: return <Medal className="w-6 h-6 text-gray-400" />;
-      case 3: return <Award className="w-6 h-6 text-amber-600" />;
-      default: return <span className="text-lg font-bold text-gray-600">#{rank}</span>;
+      case 1: return <Crown className="w-5 h-5 text-yellow-500" />;
+      case 2: return <Medal className="w-5 h-5 text-gray-400" />;
+      case 3: return <Award className="w-5 h-5 text-amber-600" />;
+      default: return <span className="text-sm font-bold text-gray-400">#{rank}</span>;
     }
   };
 
@@ -78,6 +80,31 @@ export default function Leaderboard() {
     if (rank === 2) return 'bg-gradient-to-r from-gray-300 to-gray-500';
     if (rank === 3) return 'bg-gradient-to-r from-amber-400 to-amber-600';
     return 'bg-gradient-to-r from-purple-500 to-blue-500';
+  };
+
+  // Achievement badges as simple React icons
+  const getAchievementBadges = (score) => {
+    const badges = [];
+    
+    if (score >= 1000) badges.push({ icon: Crown, color: 'text-yellow-400', name: 'Legend' });
+    if (score >= 500) badges.push({ icon: Flame, color: 'text-orange-400', name: 'Fire Solver' });
+    if (score >= 300) badges.push({ icon: Rocket, color: 'text-blue-400', name: 'Speed Demon' });
+    if (score >= 200) badges.push({ icon: Shield, color: 'text-green-400', name: 'Defender' });
+    if (score >= 100) badges.push({ icon: Sword, color: 'text-red-400', name: 'Warrior' });
+    if (score >= 50) badges.push({ icon: Star, color: 'text-purple-400', name: 'Rising Star' });
+    if (score >= 25) badges.push({ icon: Gem, color: 'text-cyan-400', name: 'Gem Collector' });
+    if (score >= 10) badges.push({ icon: Brain, color: 'text-pink-400', name: 'Thinker' });
+    
+    return badges.slice(0, 3); // Show max 3 badges
+  };
+
+  const getDifficultyColor = (difficulty) => {
+    switch (difficulty?.toLowerCase()) {
+      case 'easy': return 'text-green-400';
+      case 'medium': return 'text-yellow-400';
+      case 'hard': return 'text-red-400';
+      default: return 'text-gray-400';
+    }
   };
 
   // Use the already filtered data from above
@@ -92,11 +119,9 @@ export default function Leaderboard() {
           className="text-center mb-12 relative"
         >
           <div className="absolute top-0 right-0 w-32 h-32 hidden md:block">
-            <Canvas>
-              <ambientLight intensity={0.5} />
-              <directionalLight position={[10, 10, 5]} intensity={0.5} />
-              <FloatingTrophy />
-            </Canvas>
+            <div className="w-full h-full flex items-center justify-center">
+              <Trophy className="w-16 h-16 text-yellow-400 animate-bounce" />
+            </div>
           </div>
           
           <h1 className="text-5xl font-bold bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 bg-clip-text text-transparent mb-4 flex items-center gap-3">
@@ -108,32 +133,40 @@ export default function Leaderboard() {
           </p>
         </motion.div>
 
-        {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        {/* Enhanced Stats Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           {[
             {
               title: 'Total Participants',
               value: metadata?.totalUsers || '1,234',
+              subtitle: '+12% this week',
               icon: Users,
-              color: 'from-blue-500 to-cyan-500'
+              color: 'from-blue-500 to-cyan-500',
+              trend: 'up'
             },
             {
-              title: 'Total Problems',
-              value: metadata?.totalProblems || '500+',
-              icon: Target,
-              color: 'from-green-500 to-emerald-500'
+              title: 'Problems Solved',
+              value: metadata?.totalProblems || '15.2K',
+              subtitle: 'Across all users',
+              icon: Code,
+              color: 'from-green-500 to-emerald-500',
+              trend: 'up'
             },
             {
               title: 'Total Submissions',
               value: metadata?.totalSubmissions || '50K+',
-              icon: TrendingUp,
-              color: 'from-purple-500 to-pink-500'
+              subtitle: 'Last 30 days',
+              icon: Activity,
+              color: 'from-purple-500 to-pink-500',
+              trend: 'up'
             },
             {
-              title: 'Active Today',
+              title: 'Active Now',
               value: '234',
+              subtitle: 'Online users',
               icon: Zap,
-              color: 'from-orange-500 to-red-500'
+              color: 'from-orange-500 to-red-500',
+              trend: 'stable'
             }
           ].map((stat, index) => (
             <motion.div
@@ -147,9 +180,15 @@ export default function Leaderboard() {
                 <div className={`w-12 h-12 bg-gradient-to-r ${stat.color} rounded-xl flex items-center justify-center`}>
                   <stat.icon className="w-6 h-6 text-white" />
                 </div>
+                <div className="flex items-center gap-1">
+                  {stat.trend === 'up' && <ChevronUp className="w-4 h-4 text-green-400" />}
+                  {stat.trend === 'down' && <ChevronDown className="w-4 h-4 text-red-400" />}
+                  {stat.trend === 'stable' && <BarChart3 className="w-4 h-4 text-gray-400" />}
+                </div>
               </div>
               <h3 className="text-2xl font-bold text-white mb-1">{stat.value}</h3>
-              <p className="text-gray-400 text-sm">{stat.title}</p>
+              <p className="text-gray-400 text-sm mb-1">{stat.title}</p>
+              <p className="text-xs text-gray-500">{stat.subtitle}</p>
             </motion.div>
           ))}
         </div>
@@ -227,16 +266,16 @@ export default function Leaderboard() {
                   transition={{ delay: 0.5 }}
                   className="text-center"
                 >
-                  <div className="backdrop-blur-lg bg-gradient-to-r from-gray-300 to-gray-500 rounded-2xl p-6 border border-white/20 h-32 flex flex-col justify-center">
-                    <Medal className="w-8 h-8 text-white mx-auto mb-2" />
-                    <span className="text-white font-bold text-lg">2nd</span>
+                  <div className="text-center">
+                    <Medal className="w-8 h-8 text-gray-400 mx-auto mb-2" />
+                    <span className="text-gray-300 font-semibold text-sm">2nd</span>
                   </div>
                   <div className="mt-4">
-                    <div className="w-16 h-16 bg-gradient-to-r from-gray-300 to-gray-500 rounded-full mx-auto mb-2 flex items-center justify-center">
+                    <div className="w-16 h-16 bg-gray-700 rounded-full mx-auto mb-2 flex items-center justify-center">
                       {filteredLeaderboard[1].user.avatar ? (
                         <img src={filteredLeaderboard[1].user.avatar} alt="" className="w-full h-full rounded-full" />
                       ) : (
-                        <Users className="w-8 h-8 text-white" />
+                        <Users className="w-8 h-8 text-gray-300" />
                       )}
                     </div>
                     <p className="text-white font-semibold">{filteredLeaderboard[1].user.username}</p>
@@ -253,16 +292,16 @@ export default function Leaderboard() {
                   transition={{ delay: 0.6 }}
                   className="text-center"
                 >
-                  <div className="backdrop-blur-lg bg-gradient-to-r from-yellow-400 to-yellow-600 rounded-2xl p-6 border border-white/20 h-40 flex flex-col justify-center">
-                    <Crown className="w-10 h-10 text-white mx-auto mb-2" />
-                    <span className="text-white font-bold text-xl">1st</span>
+                  <div className="text-center">
+                    <Crown className="w-10 h-10 text-yellow-500 mx-auto mb-2" />
+                    <span className="text-yellow-400 font-bold text-base">1st</span>
                   </div>
                   <div className="mt-4">
-                    <div className="w-20 h-20 bg-gradient-to-r from-yellow-400 to-yellow-600 rounded-full mx-auto mb-2 flex items-center justify-center">
+                    <div className="w-20 h-20 bg-gray-700 rounded-full mx-auto mb-2 flex items-center justify-center">
                       {filteredLeaderboard[0].user.avatar ? (
                         <img src={filteredLeaderboard[0].user.avatar} alt="" className="w-full h-full rounded-full" />
                       ) : (
-                        <Users className="w-10 h-10 text-white" />
+                        <Users className="w-10 h-10 text-yellow-400" />
                       )}
                     </div>
                     <p className="text-white font-semibold text-lg">{filteredLeaderboard[0].user.username}</p>
@@ -279,16 +318,16 @@ export default function Leaderboard() {
                   transition={{ delay: 0.7 }}
                   className="text-center"
                 >
-                  <div className="backdrop-blur-lg bg-gradient-to-r from-amber-400 to-amber-600 rounded-2xl p-6 border border-white/20 h-28 flex flex-col justify-center">
-                    <Award className="w-7 h-7 text-white mx-auto mb-2" />
-                    <span className="text-white font-bold">3rd</span>
+                  <div className="text-center">
+                    <Award className="w-7 h-7 text-amber-600 mx-auto mb-2" />
+                    <span className="text-amber-500 font-semibold text-sm">3rd</span>
                   </div>
                   <div className="mt-4">
-                    <div className="w-14 h-14 bg-gradient-to-r from-amber-400 to-amber-600 rounded-full mx-auto mb-2 flex items-center justify-center">
+                    <div className="w-14 h-14 bg-gray-700 rounded-full mx-auto mb-2 flex items-center justify-center">
                       {filteredLeaderboard[2].user.avatar ? (
                         <img src={filteredLeaderboard[2].user.avatar} alt="" className="w-full h-full rounded-full" />
                       ) : (
-                        <Users className="w-7 h-7 text-white" />
+                        <Users className="w-7 h-7 text-amber-500" />
                       )}
                     </div>
                     <p className="text-white font-semibold">{filteredLeaderboard[2].user.username}</p>
@@ -339,26 +378,49 @@ export default function Leaderboard() {
                         </div>
                         
                         <div>
-                          <h3 className="text-white font-semibold text-lg">
-                            {item.user.firstName && item.user.lastName 
-                              ? `${item.user.firstName} ${item.user.lastName}`
-                              : item.user.username
-                            }
+                          <div className="flex items-center gap-2 mb-1">
+                            <h3 className="text-white font-semibold text-lg">
+                              {item.user.firstName && item.user.lastName 
+                                ? `${item.user.firstName} ${item.user.lastName}`
+                                : item.user.username
+                              }
+                            </h3>
                             {item.user.username === user?.username && (
-                              <span className="ml-2 text-purple-400 text-sm">(You)</span>
+                              <span className="bg-purple-500/20 text-purple-400 text-xs px-2 py-1 rounded-full">You</span>
                             )}
-                          </h3>
-                          <p className="text-gray-400">@{item.user.username}</p>
+                          </div>
+                          <p className="text-gray-400 mb-2">@{item.user.username}</p>
+                          
+                          {/* Achievement Badges */}
+                          <div className="flex items-center gap-1">
+                            {getAchievementBadges(item.score).slice(0, 2).map((badge, badgeIndex) => {
+                              const BadgeIcon = badge.icon;
+                              return (
+                                <BadgeIcon 
+                                  key={badgeIndex}
+                                  className={`w-3 h-3 ${badge.color}`} 
+                                  title={badge.name}
+                                />
+                              );
+                            })}
+                          </div>
                         </div>
                       </div>
                     </div>
                     
                     <div className="text-right">
-                      <div className="text-2xl font-bold text-white mb-1">
-                        {item.score}
+                      <div className="flex items-center justify-end gap-2 mb-2">
+                        <div className="text-2xl font-bold text-white">
+                          {item.score}
+                        </div>
+                        <Eye className="w-4 h-4 text-gray-400" />
                       </div>
-                      <div className="text-gray-400 text-sm">
+                      <div className="text-gray-400 text-sm mb-1">
                         {item.metric}
+                      </div>
+                      <div className="flex items-center justify-end gap-1 text-xs text-gray-500">
+                        <Activity className="w-3 h-3" />
+                        <span>Last active: 2h ago</span>
                       </div>
                     </div>
                   </div>
@@ -373,17 +435,23 @@ export default function Leaderboard() {
           )}
         </motion.div>
 
-        {/* Weekly Challenges */}
+        {/* Enhanced Weekly Challenges */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6 }}
           className="mt-12"
         >
-          <h2 className="text-3xl font-bold text-white mb-8 flex items-center gap-3">
-            <Calendar className="w-8 h-8" />
-            Weekly Challenges
-          </h2>
+          <div className="flex items-center justify-between mb-8">
+            <h2 className="text-3xl font-bold text-white flex items-center gap-3">
+              <Calendar className="w-8 h-8 text-purple-400" />
+              Weekly Challenges
+            </h2>
+            <div className="flex items-center gap-2 text-sm text-gray-400">
+              <Zap className="w-4 h-4" />
+              <span>2 active challenges</span>
+            </div>
+          </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {[
@@ -393,7 +461,10 @@ export default function Leaderboard() {
                 participants: 1234,
                 timeLeft: '3 days',
                 difficulty: 'Hard',
-                reward: '500 XP'
+                reward: '500 XP',
+                progress: 30,
+                icon: Brain,
+                color: 'from-red-500 to-pink-500'
               },
               {
                 title: 'Array Mastery Challenge',
@@ -401,7 +472,10 @@ export default function Leaderboard() {
                 participants: 856,
                 timeLeft: '5 days',
                 difficulty: 'Medium',
-                reward: '300 XP'
+                reward: '300 XP',
+                progress: 60,
+                icon: Code,
+                color: 'from-blue-500 to-cyan-500'
               }
             ].map((challenge, index) => (
               <motion.div
@@ -412,9 +486,28 @@ export default function Leaderboard() {
                 className="backdrop-blur-lg bg-white/10 rounded-2xl p-6 border border-white/20 hover:border-purple-500/50 transition-all"
               >
                 <div className="flex items-start justify-between mb-4">
-                  <div>
-                    <h3 className="text-xl font-semibold text-white mb-2">{challenge.title}</h3>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-3 mb-2">
+                      <div className={`w-10 h-10 bg-gradient-to-r ${challenge.color} rounded-xl flex items-center justify-center`}>
+                        <challenge.icon className="w-5 h-5 text-white" />
+                      </div>
+                      <h3 className="text-xl font-semibold text-white">{challenge.title}</h3>
+                    </div>
                     <p className="text-gray-300 mb-4">{challenge.description}</p>
+                    
+                    {/* Progress Bar */}
+                    <div className="mb-4">
+                      <div className="flex items-center justify-between text-sm text-gray-400 mb-2">
+                        <span>Your Progress</span>
+                        <span>{challenge.progress}%</span>
+                      </div>
+                      <div className="w-full bg-gray-700 rounded-full h-2">
+                        <div 
+                          className={`bg-gradient-to-r ${challenge.color} h-2 rounded-full transition-all duration-300`}
+                          style={{ width: `${challenge.progress}%` }}
+                        ></div>
+                      </div>
+                    </div>
                     
                     <div className="flex items-center gap-4 text-sm text-gray-400 mb-4">
                       <div className="flex items-center gap-1">
@@ -428,11 +521,7 @@ export default function Leaderboard() {
                     </div>
                     
                     <div className="flex gap-2">
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                        challenge.difficulty === 'Hard' ? 'bg-red-500/20 text-red-400' :
-                        challenge.difficulty === 'Medium' ? 'bg-yellow-500/20 text-yellow-400' :
-                        'bg-green-500/20 text-green-400'
-                      }`}>
+                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${getDifficultyColor(challenge.difficulty)} bg-current/10`}>
                         {challenge.difficulty}
                       </span>
                       <span className="px-3 py-1 bg-purple-500/20 text-purple-400 rounded-full text-xs font-medium">

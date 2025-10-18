@@ -4,19 +4,22 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from 'react-hot-toast';
 
 import LandingPage from './components/LandingPage';
+import Login from './pages/Login';
+import Register from './pages/Register';
 import Dashboard from './components/Dashboard';
 import ProblemList from './components/ProblemList';
 import ProblemDetail from './components/ProblemDetail';
-import Profile from './components/Profile';
 import Leaderboard from './pages/Leaderboard';
 import Learn from './pages/Learn';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import OAuthCallback from './pages/OAuthCallback';
 import NotFound from './pages/NotFound';
+import Profile from './components/Profile';
+import Error404 from './components/Error404';
+import ErrorBoundary from './components/ErrorBoundary';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
-import Error404 from './components/Error404';
 
 // Store
 import useAuthStore from './store/authStore';
@@ -72,12 +75,28 @@ const PublicLayout = ({ children }) => {
 };
 
 function App() {
-  const { fetchUser, isAuthenticated, isLoading } = useAuthStore();
+  const { fetchUser, isAuthenticated, isLoading, user } = useAuthStore();
 
   useEffect(() => {
     // Check for existing token and fetch user data
     const token = localStorage.getItem('token');
-    if (token && !isAuthenticated) {
+    const storedUser = localStorage.getItem('user');
+    
+    if (token && storedUser && !isAuthenticated) {
+      try {
+        const userData = JSON.parse(storedUser);
+        // Restore user state from localStorage
+        useAuthStore.setState({
+          user: userData,
+          token,
+          isAuthenticated: true,
+          isLoading: false
+        });
+      } catch (error) {
+        // If stored data is corrupted, fetch fresh data
+        fetchUser();
+      }
+    } else if (token && !isAuthenticated) {
       fetchUser();
     }
   }, [fetchUser, isAuthenticated]);
@@ -95,9 +114,10 @@ function App() {
   }
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <Router>
-        <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-blue-900">
+    <ErrorBoundary>
+      <QueryClientProvider client={queryClient}>
+        <Router>
+          <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-blue-900">
           <Routes>
             {/* Public Routes */}
             <Route
@@ -238,9 +258,10 @@ function App() {
               },
             }}
           />
-        </div>
-      </Router>
-    </QueryClientProvider>
+          </div>
+        </Router>
+      </QueryClientProvider>
+    </ErrorBoundary>
   );
 }
 
