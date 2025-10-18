@@ -21,11 +21,18 @@ const Register = () => {
   const password = watch('password');
 
   const onSubmit = async (data) => {
-    const { confirmPassword, ...userData } = data;
-    const result = await registerUser(userData);
-    
-    if (result && result.success) {
-      navigate('/dashboard');
+    try {
+      const { confirmPassword, ...userData } = data;
+      const result = await registerUser(userData);
+      
+      if (result && result.success) {
+        // Force navigation to dashboard
+        setTimeout(() => {
+          navigate('/dashboard', { replace: true });
+        }, 100);
+      }
+    } catch (error) {
+      console.error('Registration submission error:', error);
     }
   };
 

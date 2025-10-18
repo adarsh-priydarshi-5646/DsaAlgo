@@ -15,12 +15,13 @@ const useAuthStore = create(
       login: async (credentials) => {
         set({ isLoading: true });
         try {
-          console.log('Login attempt with:', credentials);
           const response = await authAPI.login(credentials);
-          console.log('Login response:', response);
           const { user, token } = response.data;
           
+          // Store token and update state
           localStorage.setItem('token', token);
+          localStorage.setItem('user', JSON.stringify(user));
+          
           set({ 
             user, 
             token, 
@@ -28,11 +29,9 @@ const useAuthStore = create(
             isLoading: false 
           });
           
-          console.log('Login successful, state updated');
           toast.success('Login successful!');
-          return { success: true };
+          return { success: true, user, token };
         } catch (error) {
-          console.error('Login error:', error);
           set({ isLoading: false });
           const message = error.response?.data?.error || error.message || 'Login failed';
           toast.error(message);
@@ -46,7 +45,10 @@ const useAuthStore = create(
           const response = await authAPI.register(userData);
           const { user, token } = response.data;
           
+          // Store token and user data
           localStorage.setItem('token', token);
+          localStorage.setItem('user', JSON.stringify(user));
+          
           set({ 
             user, 
             token, 
@@ -55,7 +57,7 @@ const useAuthStore = create(
           });
           
           toast.success('Registration successful!');
-          return { success: true };
+          return { success: true, user, token };
         } catch (error) {
           set({ isLoading: false });
           const message = error.response?.data?.error || 'Registration failed';

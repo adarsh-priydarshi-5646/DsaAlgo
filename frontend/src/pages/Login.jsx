@@ -17,15 +17,17 @@ const Login = () => {
   } = useForm();
 
   const onSubmit = async (data) => {
-    console.log('Form submitted with:', data);
-    const result = await login(data);
-    console.log('Login result:', result);
-    
-    if (result && result.success) {
-      console.log('Redirecting to dashboard...');
-      navigate('/dashboard');
-    } else {
-      console.log('Login failed:', result);
+    try {
+      const result = await login(data);
+      
+      if (result && result.success) {
+        // Force navigation to dashboard
+        setTimeout(() => {
+          navigate('/dashboard', { replace: true });
+        }, 100);
+      }
+    } catch (error) {
+      console.error('Login submission error:', error);
     }
   };
 
