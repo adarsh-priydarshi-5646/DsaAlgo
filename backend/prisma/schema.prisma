@@ -18,6 +18,8 @@ model User {
   firstName   String?
   lastName    String?
   avatar      String?
+  bio         String?
+  preferences Json?
   password    String
   role        Role     @default(USER)
   isVerified  Boolean  @default(false)

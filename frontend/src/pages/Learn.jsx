@@ -1564,9 +1564,10 @@ async function processFile() {
   );
 
   // Filter questions based on search and category
-  const filteredQuestions = interviewQuestions.filter(q => {
-    const matchesSearch = q.question.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesCategory = activeCategory === 'all' || q.category === activeCategory;
+  const filteredQuestions = interviewQuestions.filter(question => {
+    const matchesSearch = question.question.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                         question.explanation.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesCategory = activeCategory === 'all' || question.category === activeCategory;
     return matchesSearch && matchesCategory;
   });
 
@@ -1715,7 +1716,7 @@ async function processFile() {
       <div className="max-w-7xl mx-auto relative z-20">
         {/* Header */}
         <motion.div
-          initial={{ opacity: 0, y: -20 }}
+          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
           className="text-center mb-16"

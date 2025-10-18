@@ -128,6 +128,22 @@ const useAuthStore = create(
           return { success: false, error: message };
         }
       },
+
+      updateSettings: async (preferences) => {
+        set({ isLoading: true });
+        try {
+          const res = await authAPI.updateSettings(preferences);
+          const { user } = res.data;
+          set({ user, isLoading: false });
+          toast.success('Settings saved');
+          return { success: true };
+        } catch (error) {
+          set({ isLoading: false });
+          const message = error.response?.data?.error || 'Failed to save settings';
+          toast.error(message);
+          return { success: false, error: message };
+        }
+      },
     }),
     {
       name: 'auth-storage',

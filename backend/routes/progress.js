@@ -4,7 +4,8 @@ import { authenticateToken } from '../middleware/auth.js';
 import {
   getProgress,
   getProblemProgress,
-  updateProgress
+  updateProgress,
+  getUserStats
 } from '../controllers/progressController.js';
 
 const router = express.Router();
@@ -29,6 +30,7 @@ const handleValidationErrors = (req, res, next) => {
 
 // Routes
 router.get('/', authenticateToken, getProgress);
+router.get('/stats', authenticateToken, getUserStats);
 router.get('/problem/:problemId', authenticateToken, getProblemProgress);
 router.put('/problem/:problemId', authenticateToken, validateProgressUpdate, handleValidationErrors, updateProgress);
 
