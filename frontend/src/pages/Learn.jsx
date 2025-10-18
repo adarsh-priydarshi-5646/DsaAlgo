@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Canvas } from '@react-three/fiber';
-import { Float, Box } from '@react-three/drei';
-import { BookOpen, Search, Code, Database, Server, Globe, Lock, Layers } from 'lucide-react';
+import { BookOpen, Search, Code, Database, Server, Globe, Lock, Layers, Copy, Check } from 'lucide-react';
 
 const Learn = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState('all');
+  const [copiedCode, setCopiedCode] = useState('');
 
   // Categories of interview questions
   const categories = [
@@ -18,24 +17,71 @@ const Learn = () => {
     { id: 'mongodb', name: 'MongoDB', icon: Database },
     { id: 'mysql', name: 'MySQL', icon: Database },
     { id: 'auth', name: 'Authentication', icon: Lock },
-    { id: 'architecture', name: 'Architecture', icon: Layers },
+    { id: 'fullstack', name: 'Full Stack', icon: Layers },
   ];
 
-  // Sample interview questions (to be expanded)
+  // Copy functionality
+  const copyToClipboard = (code, id) => {
+    navigator.clipboard.writeText(code);
+    setCopiedCode(id);
+    setTimeout(() => setCopiedCode(''), 2000);
+  };
+
+  // Code Block Component
+  const CodeBlock = ({ code, language = 'javascript', id }) => {
+    const lines = code.trim().split('\n');
+    
+    return (
+      <div className="relative bg-slate-900 rounded-lg overflow-hidden border border-slate-700 my-4">
+        {/* macOS Style Header */}
+        <div className="flex items-center justify-between px-4 py-3 bg-slate-800 border-b border-slate-700">
+          <div className="flex items-center space-x-2">
+            <div className="w-3 h-3 rounded-full bg-red-500"></div>
+            <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
+            <div className="w-3 h-3 rounded-full bg-green-500"></div>
+          </div>
+          <div className="flex items-center space-x-2">
+            <span className="text-xs text-slate-400 uppercase tracking-wider">{language}</span>
+            <button
+              onClick={() => copyToClipboard(code, id)}
+              className="flex items-center space-x-1 px-2 py-1 text-xs text-slate-400 hover:text-white bg-slate-700 hover:bg-slate-600 rounded transition-colors"
+            >
+              {copiedCode === id ? (
+                <><Check className="w-3 h-3" /> <span>Copied!</span></>
+              ) : (
+                <><Copy className="w-3 h-3" /> <span>Copy</span></>
+              )}
+            </button>
+          </div>
+        </div>
+        
+        {/* Code Content */}
+        <div className="p-4 overflow-x-auto">
+          <pre className="text-sm">
+            {lines.map((line, index) => (
+              <div key={index} className="flex">
+                <span className="text-slate-500 select-none w-8 text-right mr-4 font-mono">
+                  {index + 1}
+                </span>
+                <code className="text-slate-200 font-mono">{line}</code>
+              </div>
+            ))}
+          </pre>
+        </div>
+      </div>
+    );
+  };
+
+  // Interview questions data
   const interviewQuestions = [
     {
       id: 1,
       category: 'javascript',
       question: 'What is closure in JavaScript?',
-      answer: `
-        <p class="mb-4">A closure is the combination of a function bundled together (enclosed) with references to its surrounding state (the lexical environment).</p>
-        
-        <p class="mb-4">In simple terms, a closure gives you access to an outer function's scope from an inner function, even after the outer function has returned.</p>
-        
-         <p class="mb-4"><span class="text-white/90 font-medium">In Hinglish:</span> Closure ek function ke andar ka function hota hai jo bahar wale function ke variables ko access kar sakta hai, even after bahar wala function execute ho chuka hai.</p>
-        
-        <div class="backdrop-blur-lg bg-white/5 rounded-lg p-4 my-4 border border-white/10">
-          <pre><code class="language-javascript">function outerFunction() {
+      difficulty: 'Intermediate',
+      explanation: 'A closure is the combination of a function bundled together (enclosed) with references to its surrounding state (the lexical environment).',
+      hinglish: 'Closure ek function ke andar ka function hota hai jo bahar wale function ke variables ko access kar sakta hai, even after bahar wala function execute ho chuka hai.',
+      code: `function outerFunction() {
   const outerVariable = "I am outside!";
   
   function innerFunction() {
@@ -46,103 +92,21 @@ const Learn = () => {
 }
 
 const myFunction = outerFunction();
-myFunction(); // Logs: "I am outside!"</code></pre>
-        </div>
-        
-        <p class="mb-4">In this example:</p>
-        <ul class="list-disc pl-6 mb-4">
-          <li><code>innerFunction</code> forms a closure with <code>outerFunction</code>'s scope</li>
-          <li>Even after <code>outerFunction</code> has completed execution, <code>myFunction</code> (which is <code>innerFunction</code>) can still access <code>outerVariable</code></li>
-          <li>This is because the inner function "remembers" the environment in which it was created</li>
-        </ul>
-        
-        <p class="mb-4"><strong>Real-world use cases:</strong></p>
-        <ul class="list-disc pl-6 mb-4">
-          <li>Data privacy / encapsulation</li>
-          <li>Event handlers and callbacks</li>
-          <li>Function factories</li>
-          <li>Module pattern implementation</li>
-        </ul>
-      `,
+myFunction(); // Logs: "I am outside!"`,
+      useCase: 'Used in module patterns, event handlers, and maintaining private variables.'
     },
     {
       id: 2,
-      category: 'javascript',
-      question: 'Explain the event loop in JavaScript',
-      answer: `
-        <p class="mb-4">The JavaScript Event Loop is a mechanism that allows JavaScript to perform non-blocking operations despite being single-threaded.</p>
-        
-         <p class="mb-4"><span class="text-white/90 font-medium">In Hinglish:</span> Event Loop ek mechanism hai jo JavaScript ko single-threaded hone ke bawajood bhi non-blocking operations perform karne deta hai. Iska matlab hai ki JavaScript ek hi thread par chalta hai, lekin async operations ko handle kar leta hai.</p>
-        
-        <div class="backdrop-blur-lg bg-white/5 rounded-lg p-4 my-4 border border-white/10">
-          <pre><code class="language-javascript">console.log("Start");
-
-setTimeout(() => {
-  console.log("Timeout callback");
-}, 0);
-
-Promise.resolve().then(() => {
-  console.log("Promise resolved");
-});
-
-console.log("End");
-
-// Output:
-// Start
-// End
-// Promise resolved
-// Timeout callback</code></pre>
-        </div>
-        
-        <p class="mb-4">Key components of the Event Loop:</p>
-        <ul class="list-disc pl-6 mb-4">
-          <li><strong>Call Stack:</strong> Where function calls are tracked</li>
-          <li><strong>Callback Queue:</strong> Where callbacks from async operations wait</li>
-          <li><strong>Microtask Queue:</strong> Higher priority queue for Promises</li>
-          <li><strong>Event Loop:</strong> Constantly checks if Call Stack is empty, then processes queues</li>
-        </ul>
-        
-        <p class="mb-4">The execution flow:</p>
-        <ol class="list-decimal pl-6 mb-4">
-          <li>Synchronous code executes on the Call Stack</li>
-          <li>Async operations are offloaded to Web APIs (in browsers) or C++ APIs (in Node.js)</li>
-          <li>When async operations complete, callbacks go to appropriate queues</li>
-          <li>Once Call Stack is empty, Event Loop processes Microtask Queue first (Promises)</li>
-          <li>Then processes the Callback Queue (setTimeout, I/O, etc.)</li>
-        </ol>
-        
-        <div class="mt-4 p-4 backdrop-blur-lg bg-white/10 rounded-lg border border-white/20">
-          <p class="font-semibold mb-2">🔍 Interview Tip:</p>
-          <p>Mention that understanding the Event Loop is crucial for debugging and optimizing JavaScript applications, especially when dealing with asynchronous operations.</p>
-        </div>
-      `,
-    },
-    {
-      id: 3,
       category: 'react',
-      question: 'What are React hooks and why were they introduced?',
-      answer: `
-        <p class="mb-4">React Hooks are functions that let you "hook into" React state and lifecycle features from function components. They were introduced in React 16.8.</p>
-        
-         <p class="mb-4"><span class="text-white/90 font-medium">In Hinglish:</span> React Hooks special functions hote hain jo aapko function components mein state aur lifecycle features ka use karne dete hain. Hooks se pehle, in features ke liye class components zaruri the.</p>
-        
-        <div class="backdrop-blur-lg bg-white/5 rounded-lg p-4 my-4 border border-white/10">
-          <pre><code class="language-javascript">import React, { useState, useEffect } from 'react';
+      question: 'What is useState Hook in React?',
+      difficulty: 'Basic',
+      explanation: 'useState is a React Hook that lets you add state to functional components. It returns an array with the current state value and a function to update it.',
+      hinglish: 'useState ek React Hook hai jo functional components mein state add karne ke liye use hota hai. Ye current state value aur usko update karne wala function return karta hai.',
+      code: `import React, { useState } from 'react';
 
 function Counter() {
-  // State Hook
   const [count, setCount] = useState(0);
-  
-  // Effect Hook
-  useEffect(() => {
-    document.title = \`You clicked \${count} times\`;
-    
-    // Cleanup function (componentWillUnmount equivalent)
-    return () => {
-      document.title = 'React App';
-    };
-  }, [count]); // Only re-run if count changes
-  
+
   return (
     <div>
       <p>You clicked {count} times</p>
@@ -151,469 +115,188 @@ function Counter() {
       </button>
     </div>
   );
-}</code></pre>
-        </div>
-        
-        <p class="mb-4"><strong>Why Hooks were introduced:</strong></p>
-        <ul class="list-disc pl-6 mb-4">
-          <li><strong>Reuse stateful logic</strong> between components without complex patterns like render props or HOCs</li>
-          <li><strong>Split complex components</strong> into smaller functions based on related pieces</li>
-          <li><strong>Use React features without classes</strong>, avoiding issues with 'this' binding</li>
-          <li><strong>Reduce bundle size</strong> as function components with hooks can be more optimizable</li>
-          <li><strong>Better TypeScript integration</strong> compared to class components</li>
-        </ul>
-        
-        <p class="mb-4"><strong>Common built-in hooks:</strong></p>
-        <ul class="list-disc pl-6 mb-4">
-          <li><code>useState</code> - Adds state to function components</li>
-          <li><code>useEffect</code> - Handles side effects (similar to componentDidMount, componentDidUpdate, componentWillUnmount)</li>
-          <li><code>useContext</code> - Subscribes to React context</li>
-          <li><code>useReducer</code> - State management with reducer pattern</li>
-          <li><code>useCallback</code> - Returns memoized callback function</li>
-          <li><code>useMemo</code> - Returns memoized value</li>
-          <li><code>useRef</code> - Creates a mutable reference</li>
-        </ul>
-        
-        <div class="mt-4 p-4 backdrop-blur-lg bg-white/10 rounded-lg border border-white/20">
-          <p class="font-semibold mb-2">🔍 Interview Tip:</p>
-          <p>Mention that hooks follow rules: only call hooks at the top level (not inside loops, conditions, or nested functions) and only call hooks from React function components or custom hooks.</p>
-        </div>
-      `,
+}`,
+      useCase: 'Managing component state, form inputs, toggles, counters, and any dynamic data.'
     },
     {
-      id: 4,
+      id: 3,
       category: 'node',
       question: 'What is Node.js and how does it work?',
-      answer: `
-        <p class="mb-4">Node.js is an open-source, cross-platform JavaScript runtime environment that executes JavaScript code outside a web browser. It allows developers to use JavaScript for server-side scripting.</p>
-        
-         <p class="mb-4"><span class="text-white/90 font-medium">In Hinglish:</span> Node.js ek aisa platform hai jo JavaScript ko browser ke bahar chalane ki capability deta hai. Isse hum JavaScript ka use server-side programming ke liye kar sakte hain, jisse frontend aur backend dono jagah same language use kar sakte hain.</p>
-        
-        <p class="mb-4"><strong>How Node.js works:</strong></p>
-        <ul class="list-disc pl-6 mb-4">
-          <li><strong>V8 Engine:</strong> Google's open-source JavaScript engine that compiles JavaScript to native machine code</li>
-          <li><strong>Event Loop:</strong> Single-threaded non-blocking I/O model that handles multiple concurrent operations</li>
-          <li><strong>libuv:</strong> C library that provides the event loop, thread pool, and asynchronous I/O operations</li>
-          <li><strong>Node.js Bindings:</strong> Connect JavaScript and C++ features</li>
-        </ul>
-        
-        <div class="backdrop-blur-lg bg-white/5 rounded-lg p-4 my-4 border border-white/10">
-          <pre><code class="language-javascript">// Simple Node.js HTTP server
+      difficulty: 'Basic',
+      explanation: 'Node.js is a JavaScript runtime built on Chrome\'s V8 JavaScript engine. It uses an event-driven, non-blocking I/O model that makes it lightweight and efficient.',
+      hinglish: 'Node.js ek JavaScript runtime hai jo Chrome ke V8 engine pe banaya gaya hai. Ye event-driven aur non-blocking I/O model use karta hai jo ise fast aur efficient banata hai.',
+      code: `// Simple HTTP server in Node.js
 const http = require('http');
 
 const server = http.createServer((req, res) => {
-  res.statusCode = 200;
-  res.setHeader('Content-Type', 'text/plain');
-  res.end('Hello World\\n');
+  res.writeHead(200, { 'Content-Type': 'text/plain' });
+  res.end('Hello World!');
 });
 
-server.listen(3000, '127.0.0.1', () => {
-  console.log('Server running at http://127.0.0.1:3000/');
-});</code></pre>
-        </div>
-        
-        <p class="mb-4"><strong>Key features of Node.js:</strong></p>
-        <ul class="list-disc pl-6 mb-4">
-          <li><strong>Asynchronous & Non-blocking:</strong> Operations don't block the thread, callbacks are used when tasks complete</li>
-          <li><strong>Fast Execution:</strong> Built on Chrome's V8 JavaScript engine</li>
-          <li><strong>Single-threaded:</strong> Uses event loop for handling multiple clients</li>
-          <li><strong>No Buffering:</strong> Applications never buffer data, output is in chunks</li>
-          <li><strong>NPM:</strong> Huge ecosystem of open-source libraries</li>
-        </ul>
-        
-        <p class="mb-4"><strong>Use cases for Node.js:</strong></p>
-        <ul class="list-disc pl-6 mb-4">
-          <li>Real-time applications (chat, gaming)</li>
-          <li>Single-page applications</li>
-          <li>API servers</li>
-          <li>Streaming applications</li>
-          <li>Microservices architecture</li>
-        </ul>
-        
-        <div class="mt-4 p-4 backdrop-blur-lg bg-white/10 rounded-lg border border-white/20">
-          <p class="font-semibold mb-2">🔍 Interview Tip:</p>
-          <p>Highlight that while Node.js is single-threaded, it can handle concurrent operations efficiently through its non-blocking I/O model. For CPU-intensive tasks, you can use the cluster module or worker threads.</p>
-        </div>
-      `,
+server.listen(3000, () => {
+  console.log('Server running on port 3000');
+});`,
+      useCase: 'Building web servers, APIs, real-time applications, and command-line tools.'
+    },
+    {
+      id: 4,
+      category: 'express',
+      question: 'What is Express.js middleware?',
+      difficulty: 'Intermediate',
+      explanation: 'Middleware functions are functions that have access to the request object (req), response object (res), and the next middleware function in the application\'s request-response cycle.',
+      hinglish: 'Middleware functions wo functions hain jo request object (req), response object (res), aur next middleware function ko access kar sakte hain application ke request-response cycle mein.',
+      code: `const express = require('express');
+const app = express();
+
+// Built-in middleware
+app.use(express.json());
+
+// Custom middleware
+const logger = (req, res, next) => {
+  console.log(\`\${req.method} \${req.url}\`);
+  next(); // Call next middleware
+};
+
+app.use(logger);
+
+app.get('/', (req, res) => {
+  res.send('Hello World!');
+});`,
+      useCase: 'Authentication, logging, parsing request bodies, error handling, and CORS.'
     },
     {
       id: 5,
-      category: 'auth',
-      question: 'Explain JWT (JSON Web Tokens) authentication',
-      answer: `
-        <p class="mb-4">JWT (JSON Web Token) is an open standard that defines a compact and self-contained way for securely transmitting information between parties as a JSON object.</p>
-        
-         <p class="mb-4"><span class="text-white/90 font-medium">In Hinglish:</span> JWT ek secure tarika hai information transfer karne ka. Ye ek encoded string hota hai jisme user ki information hoti hai, aur server ise verify kar sakta hai bina database query kiye.</p>
-        
-        <p class="mb-4"><strong>JWT Structure:</strong> A JWT consists of three parts separated by dots:</p>
-        <ol class="list-decimal pl-6 mb-4">
-          <li><strong>Header:</strong> Contains the type of token and the signing algorithm</li>
-          <li><strong>Payload:</strong> Contains the claims (user data and metadata)</li>
-          <li><strong>Signature:</strong> Verifies that the sender of the JWT is who it says it is</li>
-        </ol>
-        
-        <div class="backdrop-blur-lg bg-white/5 rounded-lg p-4 my-4 border border-white/10">
-          <pre><code>// JWT format
-xxxxx.yyyyy.zzzzz
+      category: 'mongodb',
+      question: 'What is MongoDB and how is it different from SQL databases?',
+      difficulty: 'Basic',
+      explanation: 'MongoDB is a NoSQL document database that stores data in flexible, JSON-like documents. Unlike SQL databases, it doesn\'t require a predefined schema.',
+      hinglish: 'MongoDB ek NoSQL document database hai jo data ko flexible, JSON-like documents mein store karta hai. SQL databases ke unlike, isme predefined schema ki zarurat nahi hoti.',
+      code: `// MongoDB document example
+{
+  "_id": "507f1f77bcf86cd799439011",
+  "name": "John Doe",
+  "email": "john@example.com",
+  "age": 30,
+  "skills": ["JavaScript", "React", "Node.js"],
+  "address": {
+    "city": "New York",
+    "country": "USA"
+  }
+}
 
-// Example
-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.
-eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.
-SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c</code></pre>
-        </div>
-        
-        <div class="backdrop-blur-lg bg-white/5 rounded-lg p-4 my-4 border border-white/10">
-          <pre><code class="language-javascript">// Node.js JWT implementation
+// MongoDB query
+db.users.find({ "age": { "$gte": 25 } })`,
+      useCase: 'Content management, real-time analytics, IoT applications, and rapid prototyping.'
+    },
+    {
+      id: 6,
+      category: 'auth',
+      question: 'What is JWT (JSON Web Token)?',
+      difficulty: 'Intermediate',
+      explanation: 'JWT is a compact, URL-safe means of representing claims to be transferred between two parties. It consists of three parts: Header, Payload, and Signature.',
+      hinglish: 'JWT ek compact, URL-safe tarika hai claims ko represent karne ka do parties ke beech transfer karne ke liye. Isme teen parts hain: Header, Payload, aur Signature.',
+      code: `// JWT structure: header.payload.signature
 const jwt = require('jsonwebtoken');
 
-// Creating a token
+// Create token
 const token = jwt.sign(
-  { userId: user.id, email: user.email }, // payload
-  'your-secret-key',                      // secret key
-  { expiresIn: '1h' }                     // options
+  { userId: 123, email: 'user@example.com' },
+  'secret-key',
+  { expiresIn: '1h' }
 );
 
-// Verifying a token
-try {
-  const decoded = jwt.verify(token, 'your-secret-key');
-  // User is authenticated, proceed with decoded.userId
-} catch (error) {
-  // Invalid token
-}</code></pre>
-        </div>
-        
-        <p class="mb-4"><strong>JWT Authentication Flow:</strong></p>
-        <ol class="list-decimal pl-6 mb-4">
-          <li>User logs in with credentials</li>
-          <li>Server validates credentials and creates a JWT</li>
-          <li>Server sends the JWT to the client</li>
-          <li>Client stores the JWT (localStorage, cookie, etc.)</li>
-          <li>Client sends the JWT with subsequent requests in Authorization header</li>
-          <li>Server validates the JWT signature and processes the request if valid</li>
-        </ol>
-        
-        <p class="mb-4"><strong>Advantages of JWT:</strong></p>
-        <ul class="list-disc pl-6 mb-4">
-          <li><strong>Stateless:</strong> Server doesn't need to store session information</li>
-          <li><strong>Scalability:</strong> Works well with distributed systems and microservices</li>
-          <li><strong>Cross-domain:</strong> Can be used across different domains</li>
-          <li><strong>Mobile friendly:</strong> Works well with native mobile apps</li>
-        </ul>
-        
-        <p class="mb-4"><strong>Security Considerations:</strong></p>
-        <ul class="list-disc pl-6 mb-4">
-          <li>Store JWT securely (HttpOnly cookies preferred over localStorage)</li>
-          <li>Use HTTPS to prevent token interception</li>
-          <li>Set appropriate expiration times</li>
-          <li>Don't store sensitive data in payload (it's base64 encoded, not encrypted)</li>
-          <li>Use strong secret keys and consider key rotation</li>
-        </ul>
-        
-        <div class="mt-4 p-4 backdrop-blur-lg bg-white/10 rounded-lg border border-white/20">
-          <p class="font-semibold mb-2">🔍 Interview Tip:</p>
-          <p>Mention that while JWTs are popular for authentication, they have trade-offs. They can't be invalidated before expiry without additional backend logic, and the payload increases request size.</p>
-        </div>
-      `,
+// Verify token
+const decoded = jwt.verify(token, 'secret-key');
+console.log(decoded); // { userId: 123, email: 'user@example.com', ... }`,
+      useCase: 'User authentication, API authorization, secure data transmission, and stateless sessions.'
+    },
+    {
+      id: 7,
+      category: 'fullstack',
+      question: 'What is CORS and how to handle it?',
+      difficulty: 'Intermediate',
+      explanation: 'CORS (Cross-Origin Resource Sharing) is a security feature that restricts web pages from making requests to a different domain than the one serving the web page.',
+      hinglish: 'CORS ek security feature hai jo web pages ko different domain se requests banane se rokta hai, jahan se web page serve ho raha hai.',
+      code: `// Express.js CORS setup
+const cors = require('cors');
+
+// Allow all origins (development only)
+app.use(cors());
+
+// Specific CORS configuration
+app.use(cors({
+  origin: ['http://localhost:3000', 'https://myapp.com'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true
+}));
+
+// Manual CORS headers
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  next();
+});`,
+      useCase: 'API security, preventing unauthorized cross-origin requests, and enabling controlled resource sharing.'
     }
   ];
 
   // Filter questions based on search and category
-  const moreQuestions = [
-    {
-      id: 6,
-      category: 'architecture',
-      question: 'What is Big O notation and why is it important?',
-      answer: `
-        <p class="mb-4">Big O notation describes the upper bound of an algorithm's time or space complexity as the input size grows. It helps compare performance independent of hardware.</p>
-        
-        <p class="mb-4"><span class="text-white/90 font-medium">In Hinglish:</span> Big O batata hai ki input badhne par algorithm kitna slow/fast hoga. Ye performance ko estimate karne ka tarika hai.</p>
-        
-        <div class="backdrop-blur-lg bg-white/5 rounded-lg p-4 my-4 border border-white/10">
-          <pre><code class="language-javascript">// Common complexities
-// O(1): Array access by index
-// O(log n): Binary search
-// O(n): Linear search
-// O(n log n): Efficient sorts (merge/quick avg)
-// O(n^2): Nested loops (bubble sort)
-// O(2^n): Exponential (subset generation)</code></pre>
-        </div>
-        
-        <p class="mb-2"><strong>Key points:</strong></p>
-        <ul class="list-disc pl-6 mb-4">
-          <li>Describes growth rate, not exact time</li>
-          <li>Focus on the dominant term (ignore constants)</li>
-          <li>Guides trade-offs between time and space</li>
-        </ul>
-      `,
-    },
-    {
-      id: 7,
-      category: 'architecture',
-      question: 'How does a hash table work and how are collisions handled?',
-      answer: `
-        <p class="mb-4">A hash table stores key-value pairs using a hash function to map keys to buckets. Collisions occur when different keys map to the same bucket.</p>
-        
-        <p class="mb-4"><span class="text-white/90 font-medium">In Hinglish:</span> Hash table mein key ko hash karke bucket milta hai. Agar do keys same bucket pe aa jayein to usse collision kehte hain.</p>
-        
-        <p class="mb-2"><strong>Collision strategies:</strong></p>
-        <ul class="list-disc pl-6 mb-4">
-          <li><strong>Chaining:</strong> Bucket stores a list of entries</li>
-          <li><strong>Open addressing:</strong> Probe to find another empty slot (linear, quadratic, double hashing)</li>
-        </ul>
-        
-        <p class="mb-2"><strong>Complexity:</strong></p>
-        <ul class="list-disc pl-6 mb-4">
-          <li>Average O(1) for search/insert/delete (good hash + load factor control)</li>
-          <li>Worst-case O(n) if many collisions</li>
-        </ul>
-      `,
-    },
-    {
-      id: 8,
-      category: 'mysql',
-      question: 'What is a database index and how does it work?',
-      answer: `
-        <p class="mb-4">An index is a data structure (commonly B-Tree) that speeds up data retrieval at the cost of extra writes and storage.</p>
-        
-        <p class="mb-4"><span class="text-white/90 font-medium">In Hinglish:</span> Index ek kitab ke index ki tarah hota hai – data ko jaldi dhoondhne mein madad karta hai, lekin insert/update thoda mehenga ho jata hai.</p>
-        
-        <p class="mb-2"><strong>Key ideas:</strong></p>
-        <ul class="list-disc pl-6 mb-4">
-          <li><strong>B-Tree:</strong> Balanced tree keeps keys sorted for O(log n) lookups</li>
-          <li><strong>Covering index:</strong> Query can be served entirely from index</li>
-          <li><strong>Selectivity:</strong> High-cardinality columns benefit most</li>
-        </ul>
-        
-        <div class="backdrop-blur-lg bg-white/5 rounded-lg p-4 my-4 border border-white/10">
-          <pre><code class="language-sql">-- Example (MySQL)
-CREATE INDEX idx_users_email ON users(email);
-EXPLAIN SELECT id FROM users WHERE email = 'a@b.com';</code></pre>
-        </div>
-      `,
-    },
-    {
-      id: 9,
-      category: 'mysql',
-      question: 'Explain ACID properties in databases',
-      answer: `
-        <p class="mb-4">ACID ensures reliable transactions in relational databases.</p>
-        
-        <ul class="list-disc pl-6 mb-4">
-          <li><strong>Atomicity:</strong> All or nothing</li>
-          <li><strong>Consistency:</strong> Valid state before/after transaction</li>
-          <li><strong>Isolation:</strong> Concurrent transactions appear serial</li>
-          <li><strong>Durability:</strong> Once committed, changes persist</li>
-        </ul>
-        
-        <p class="mb-4"><span class="text-white/90 font-medium">In Hinglish:</span> Ek transaction ya to poori hoti hai ya bilkul nahi; data hamesha valid rehta hai; parallel ka asar result pe nahi padta; commit ke baad data safe rehta hai.</p>
-      `,
-    },
-    {
-      id: 10,
-      category: 'architecture',
-      question: 'What is the difference between a process and a thread?',
-      answer: `
-        <p class="mb-4"><strong>Process:</strong> Independent execution unit with its own memory space. Context switches are heavier.</p>
-        <p class="mb-4"><strong>Thread:</strong> Lightweight unit within a process sharing the same memory. Faster context switches.</p>
-        
-        <p class="mb-2"><strong>Implications:</strong></p>
-        <ul class="list-disc pl-6 mb-4">
-          <li>Threads share address space → requires synchronization (locks) to avoid race conditions</li>
-          <li>Processes provide isolation → safer but more overhead for IPC</li>
-        </ul>
-        
-        <p class="mb-4"><span class="text-white/90 font-medium">In Hinglish:</span> Process alag ghar jaisa hai; thread us ghar ke rooms jaisa. Rooms mein saman shared hota hai, isliye dikkat se manage karna padta hai.</p>
-      `,
-    },
-    {
-      id: 11,
-      category: 'express',
-      question: 'What is middleware in Express and how does next() work?',
-      answer: `
-        <p class="mb-4">Middleware are functions that have access to the request and response objects and the next middleware in the request-response cycle. They can execute code, modify req/res, end the response, or call <code>next()</code> to pass control.</p>
-        
-        <p class="mb-4"><span class="text-white/90 font-medium">In Hinglish:</span> Middleware beech ka function hota hai jo request/response ko process karta hai. Agar response yahin khatam nahi karna toh <code>next()</code> call karke aage bhej do.</p>
-        
-        <p class="mb-2"><strong>Types:</strong></p>
-        <ul class="list-disc pl-6 mb-4">
-          <li>Application-level, Router-level, Built-in, Third-party</li>
-          <li>Error-handling middleware with 4 args: <code>(err, req, res, next)</code></li>
-        </ul>
-        
-        <div class="backdrop-blur-lg bg-white/5 rounded-lg p-4 my-4 border border-white/10">
-          <pre><code class="language-javascript">const express = require('express');
-const app = express();
-
-// Logger middleware
-app.use((req, res, next) => {
-  console.log(req.method, req.url);
-  next(); // pass control to next middleware/route
-});
-
-app.get('/hello', (req, res) => res.send('Hi'));
-
-// Error-handling middleware
-app.use((err, req, res, next) => {
-  console.error(err);
-  res.status(500).json({ error: 'Something broke' });
-});</code></pre>
-        </div>
-      `,
-    },
-    {
-      id: 12,
-      category: 'express',
-      question: 'How do you handle errors in Express?',
-      answer: `
-        <p class="mb-4">Use a dedicated error-handling middleware (4 parameters) and forward errors from async handlers by calling <code>next(err)</code> or using wrappers that catch rejections.</p>
-        
-        <ul class="list-disc pl-6 mb-4">
-          <li>Centralized error handler: <code>(err, req, res, next)</code></li>
-          <li>Return consistent JSON with codes and messages</li>
-          <li>Avoid leaking stack traces in production</li>
-        </ul>
-        
-        <div class="backdrop-blur-lg bg-white/5 rounded-lg p-4 my-4 border border-white/10">
-          <pre><code class="language-javascript">// Async route error forwarding
-app.get('/user/:id', async (req, res, next) => {
-  try {
-    const user = await getUser(req.params.id);
-    if (!user) return res.status(404).json({ error: 'Not found' });
-    res.json(user);
-  } catch (e) {
-    next(e);
-  }
-});</code></pre>
-        </div>
-      `,
-    },
-    {
-      id: 13,
-      category: 'mongodb',
-      question: 'What are common index types in MongoDB and when to use them?',
-      answer: `
-        <p class="mb-4">MongoDB supports several index types to optimize queries. The right choice depends on access patterns.</p>
-        
-        <ul class="list-disc pl-6 mb-4">
-          <li><strong>Single/Compound:</strong> Equality and sort on multiple fields</li>
-          <li><strong>Multikey:</strong> Index array fields</li>
-          <li><strong>Text:</strong> Full-text search</li>
-          <li><strong>TTL:</strong> Auto-expire documents</li>
-          <li><strong>Hashed:</strong> Sharding key distribution</li>
-        </ul>
-        
-        <div class="backdrop-blur-lg bg-white/5 rounded-lg p-4 my-4 border border-white/10">
-          <pre><code class="language-javascript">// Examples
-db.users.createIndex({ email: 1 });
-db.logs.createIndex({ createdAt: 1 }, { expireAfterSeconds: 3600 });
-db.posts.createIndex({ title: 'text', body: 'text' });</code></pre>
-        </div>
-      `,
-    },
-    {
-      id: 14,
-      category: 'mongodb',
-      question: 'How do you design schemas in MongoDB (embedding vs referencing)?',
-      answer: `
-        <p class="mb-4">Choose between embedding documents and referencing based on read/write patterns, document growth, and data duplication tolerance.</p>
-        
-        <ul class="list-disc pl-6 mb-4">
-          <li><strong>Embed</strong> when data is accessed together, small and bounded</li>
-          <li><strong>Reference</strong> when data is large, shared, or updated independently</li>
-          <li>Consider document size limit (16MB) and atomicity at document level</li>
-        </ul>
-      `,
-    },
-    {
-      id: 15,
-      category: 'auth',
-      question: 'JWT vs OAuth2: when to use which?',
-      answer: `
-        <p class="mb-4">JWT is a token format (self-contained claims). OAuth2 is an authorization framework (flows like auth code, client credentials). They solve different problems but can be used together.</p>
-        
-        <ul class="list-disc pl-6 mb-4">
-          <li><strong>JWT:</strong> Stateless API auth between clients and servers</li>
-          <li><strong>OAuth2:</strong> Delegated authorization and third-party access</li>
-          <li>Use OAuth2 with OpenID Connect for user authentication</li>
-        </ul>
-      `,
-    },
-    {
-      id: 16,
-      category: 'auth',
-      question: 'Best practices for password storage and authentication security',
-      answer: `
-        <p class="mb-4">Hash and salt passwords using strong algorithms (e.g., bcrypt/argon2), enforce strong policies, and secure tokens.</p>
-        
-        <ul class="list-disc pl-6 mb-4">
-          <li>Use <code>bcrypt</code>/<code>argon2id</code> with proper cost factors</li>
-          <li>Per-user salt, optional application pepper</li>
-          <li>Rate limiting, MFA, lockout after attempts</li>
-          <li>Store session/JWT securely (HttpOnly, Secure, SameSite)</li>
-        </ul>
-        
-        <div class="backdrop-blur-lg bg-white/5 rounded-lg p-4 my-4 border border-white/10">
-          <pre><code class="language-javascript">const bcrypt = require('bcryptjs');
-const hash = await bcrypt.hash(password, 12);
-const ok = await bcrypt.compare(input, hash);</code></pre>
-        </div>
-      `,
-    }
-  ];
-  const filteredQuestions = [...interviewQuestions, ...moreQuestions].filter(q => {
-    const matchesSearch = q.question.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesCategory = activeCategory === 'all' || q.category === activeCategory;
+  const filteredQuestions = interviewQuestions.filter(question => {
+    const matchesSearch = question.question.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                         question.explanation.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesCategory = activeCategory === 'all' || question.category === activeCategory;
     return matchesSearch && matchesCategory;
   });
 
-  return (
-    <div className="min-h-screen pt-20 px-4 pb-8 learn-page">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mb-8"
-        >
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-4xl font-bold text-white mb-2">
-                Full-Stack Interview Preparation
-              </h1>
-               <p className="text-white/85 text-lg">
-                 Comprehensive guide to web development interview questions with detailed explanations and examples.
-               </p>
-            </div>
-            
-            <div className="hidden md:block w-32 h-32">
-              <Canvas>
-                <ambientLight intensity={0.5} />
-                <directionalLight position={[10, 10, 5]} intensity={0.5} />
-                <Float speed={2} rotationIntensity={0.2} floatIntensity={0.3}>
-                  <Box args={[0.8, 0.8, 0.8]} position={[0, 0, 0]}>
-                    <meshStandardMaterial color="#FFFFFF" transparent opacity={0.6} />
-                  </Box>
-                </Float>
-              </Canvas>
-            </div>
-          </div>
-        </motion.div>
+  // Difficulty color mapping
+  const getDifficultyColor = (difficulty) => {
+    switch (difficulty) {
+      case 'Basic': return 'bg-green-500/20 text-green-300 border-green-500/30';
+      case 'Intermediate': return 'bg-yellow-500/20 text-yellow-300 border-yellow-500/30';
+      case 'Advanced': return 'bg-red-500/20 text-red-300 border-red-500/30';
+      default: return 'bg-blue-500/20 text-blue-300 border-blue-500/30';
+    }
+  };
 
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black">
+      {/* Header */}
+      <div className="relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-purple-600/20"></div>
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="text-center"
+          >
+            <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent mb-4">
+              Full-Stack Interview Prep
+            </h1>
+            <p className="text-xl text-gray-300 mb-8">
+              Master web development concepts with interactive examples
+            </p>
+          </motion.div>
+        </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Search Bar */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="mb-8 max-w-2xl"
+          transition={{ delay: 0.2 }}
+          className="mb-8"
         >
-          <div className="relative">
-             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/70" />
+          <div className="relative max-w-md mx-auto">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
             <input
               type="text"
-              placeholder="Search interview questions..."
+              placeholder="Search questions..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full backdrop-blur-lg bg-white/10 border border-white/20 rounded-lg py-3 pl-10 pr-4 focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent text-white"
+              className="w-full pl-10 pr-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent backdrop-blur-sm"
             />
           </div>
         </motion.div>
@@ -622,75 +305,88 @@ const ok = await bcrypt.compare(input, hash);</code></pre>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="mb-8 overflow-x-auto"
+          transition={{ delay: 0.3 }}
+          className="mb-8"
         >
-          <div className="flex space-x-2 pb-2 min-w-max">
-            {categories.map((category) => (
-              <button
-                key={category.id}
-                onClick={() => setActiveCategory(category.id)}
-                 className={`flex items-center gap-2 px-4 py-2 rounded-full transition-all ${
-                   activeCategory === category.id
-                     ? 'bg-white/30 text-white border border-white'
-                     : 'backdrop-blur-lg bg-white/10 border border-white/20 text-white/75 hover:bg-white/20'
-                 }`}
-              >
-                <category.icon className="w-4 h-4" />
-                <span>{category.name}</span>
-              </button>
-            ))}
+          <div className="flex flex-wrap justify-center gap-3">
+            {categories.map((category) => {
+              const Icon = category.icon;
+              return (
+                <button
+                  key={category.id}
+                  onClick={() => setActiveCategory(category.id)}
+                  className={`flex items-center space-x-2 px-4 py-2 rounded-full transition-all duration-200 ${
+                    activeCategory === category.id
+                      ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white'
+                      : 'bg-white/10 text-gray-300 hover:bg-white/20'
+                  }`}
+                >
+                  <Icon className="w-4 h-4" />
+                  <span className="text-sm font-medium">{category.name}</span>
+                </button>
+              );
+            })}
           </div>
         </motion.div>
 
-        {/* Questions and Answers */}
+        {/* Questions */}
         <div className="space-y-6">
-          {filteredQuestions.length > 0 ? (
-            filteredQuestions.map((item, index) => (
-              <motion.div
-                key={item.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 + index * 0.1 }}
-                whileHover={{ scale: 1.01 }}
-                className="backdrop-blur-lg bg-white/10 rounded-2xl overflow-hidden border border-white/20 hover:border-white/50 transition-all"
-              >
-                <div className="p-6">
-                  <div className="flex items-center gap-2 mb-2">
-                    <span className="px-3 py-1 bg-white/20 text-white rounded-full text-sm">
-                      {categories.find(c => c.id === item.category)?.name || item.category}
-                    </span>
-                  </div>
-                  <h3 className="text-xl font-bold text-white mb-4">{item.question}</h3>
-                  <div 
-                    className="prose prose-invert max-w-none"
-                    dangerouslySetInnerHTML={{ __html: item.answer }}
-                  />
-                </div>
-              </motion.div>
-            ))
-          ) : (
+          {filteredQuestions.map((question, index) => (
             <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="text-center py-12 backdrop-blur-lg bg-white/10 rounded-2xl border border-white/20"
+              key={question.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 * index }}
+              className="bg-slate-800/50 backdrop-blur-sm rounded-lg border border-slate-700 p-6"
             >
-               <BookOpen className="w-16 h-16 mx-auto text-white/70 mb-4" />
-              <h3 className="text-xl font-medium text-white">No questions found</h3>
-              <p className="text-white/70 mt-2">Try adjusting your search or category filter</p>
+              {/* Question Header */}
+              <div className="flex items-start justify-between mb-4">
+                <h3 className="text-xl font-semibold text-white mb-2">
+                  {question.question}
+                </h3>
+                <span className={`px-3 py-1 rounded-full text-xs font-medium border ${getDifficultyColor(question.difficulty)}`}>
+                  {question.difficulty}
+                </span>
+              </div>
+
+              {/* Explanation */}
+              <div className="mb-4">
+                <p className="text-gray-300 mb-3">{question.explanation}</p>
+                <div className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-lg p-4 border border-blue-500/20">
+                  <p className="text-blue-200">
+                    <span className="font-medium text-blue-300">Hinglish:</span> {question.hinglish}
+                  </p>
+                </div>
+              </div>
+
+              {/* Code Example */}
+              <div className="mb-4">
+                <h4 className="text-lg font-medium text-white mb-2">Code Example:</h4>
+                <CodeBlock 
+                  code={question.code} 
+                  language="javascript" 
+                  id={`code-${question.id}`}
+                />
+              </div>
+
+              {/* Use Case */}
+              <div className="bg-slate-700/50 rounded-lg p-4">
+                <h4 className="text-lg font-medium text-white mb-2">Real-world Use Case:</h4>
+                <p className="text-gray-300">{question.useCase}</p>
+              </div>
             </motion.div>
-          )}
+          ))}
         </div>
 
-        {/* More content indicator */}
-        {filteredQuestions.length > 0 && (
+        {/* No Results */}
+        {filteredQuestions.length === 0 && (
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
             transition={{ delay: 0.5 }}
             className="text-center mt-12"
           >
-            <p className="text-white/60">More questions are being added regularly...</p>
+            <p className="text-white/60">No questions found matching your search...</p>
           </motion.div>
         )}
       </div>
