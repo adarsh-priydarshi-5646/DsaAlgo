@@ -5,7 +5,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import toast from 'react-hot-toast';
 import useAuthStore from '../../store/authStore';
 
-const EditProfileModal = ({ open, onClose, initial }) => {
+const EditProfileModal = ({ open, onClose, initial, onProfileUpdate }) => {
   const { updateProfile } = useAuthStore();
 
   const schema = yup.object({
@@ -30,10 +30,24 @@ const EditProfileModal = ({ open, onClose, initial }) => {
   });
 
   const onSubmit = async (data) => {
-    const res = await updateProfile(data);
-    if (res?.success) {
-      toast.success('Profile updated');
-      onClose?.();
+    try {
+      const res = await updateProfile(data);
+      if (res?.success) {
+        toast.success('Profile updated successfully!');
+        
+        // Notify parent component to refresh data
+        if (onProfileUpdate) {
+          onProfileUpdate(data);
+        }
+        
+        // Close modal after a short delay to show success message
+        setTimeout(() => {
+          onClose?.();
+        }, 1500);
+      }
+    } catch (error) {
+      console.error('Profile update failed:', error);
+      toast.error('Failed to update profile. Please try again.');
     }
   };
 

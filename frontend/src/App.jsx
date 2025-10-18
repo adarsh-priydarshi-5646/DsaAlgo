@@ -10,6 +10,7 @@ import Dashboard from './components/Dashboard';
 import ProblemList from './components/ProblemList';
 import ProblemDetail from './components/ProblemDetail';
 import Playground from './pages/Playground';
+import TestPlayground from './pages/TestPlayground';
 import Leaderboard from './pages/Leaderboard';
 import Learn from './pages/Learn';
 import Profile from './components/Profile';
@@ -182,11 +183,9 @@ function App() {
             <Route
               path="/playground"
               element={
-                <ProtectedRoute>
-                  <ProtectedLayout>
-                    <Playground />
-                  </ProtectedLayout>
-                </ProtectedRoute>
+                <ProtectedLayout>
+                  <Playground />
+                </ProtectedLayout>
               }
             />
             <Route

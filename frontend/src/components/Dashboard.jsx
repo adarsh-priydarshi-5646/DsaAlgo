@@ -18,7 +18,47 @@ import {
   Users,
   ChevronRight,
   BarChart3,
-  PieChart
+  PieChart,
+  Database,
+  Hash,
+  TreePine,
+  Network,
+  Layers,
+  ArrowUpDown,
+  Grid3x3,
+  Shuffle,
+  Boxes,
+  Binary,
+  Cpu,
+  GitBranch,
+  Repeat,
+  Search,
+  Zap as Lightning,
+  Calculator,
+  Route,
+  Workflow,
+  Share2,
+  Merge,
+  Split,
+  Filter,
+  Map,
+  Sparkles,
+  Puzzle,
+  Compass,
+  Infinity,
+  Scissors,
+  FlaskConical,
+  Gauge,
+  Orbit,
+  Hexagon,
+  Triangle,
+  Square,
+  Circle,
+  Diamond,
+  Atom,
+  Waves,
+  Radar,
+  Crosshair
 } from 'lucide-react';
 import {
   ResponsiveContainer,
@@ -115,12 +155,22 @@ const Dashboard = () => {
 
   // All useMemo hooks next
   const mockCategories = useMemo(() => [
-    { id: 1, name: 'Arrays', description: 'Master array manipulation and algorithms', problemCount: 45 },
-    { id: 2, name: 'Strings', description: 'String processing and pattern matching', problemCount: 32 },
-    { id: 3, name: 'Trees', description: 'Binary trees, BST, and tree traversals', problemCount: 38 },
-    { id: 4, name: 'Graphs', description: 'Graph algorithms and traversal techniques', problemCount: 28 },
-    { id: 5, name: 'Dynamic Programming', description: 'Optimization problems and memoization', problemCount: 42 },
-    { id: 6, name: 'Sorting', description: 'Sorting algorithms and their applications', problemCount: 25 }
+    { id: 1, name: 'Arrays', description: 'Master array manipulation and algorithms', problemCount: 45, icon: Database, color: 'from-blue-500 to-cyan-500' },
+    { id: 2, name: 'Strings', description: 'String processing and pattern matching', problemCount: 32, icon: Hash, color: 'from-green-500 to-emerald-500' },
+    { id: 3, name: 'Trees', description: 'Binary trees, BST, and tree traversals', problemCount: 38, icon: GitBranch, color: 'from-teal-500 to-green-500' },
+    { id: 4, name: 'Graphs', description: 'Graph algorithms and traversal techniques', problemCount: 28, icon: Network, color: 'from-indigo-500 to-purple-500' },
+    { id: 5, name: 'Dynamic Programming', description: 'Optimization problems and memoization', problemCount: 42, icon: Brain, color: 'from-yellow-500 to-orange-500' },
+    { id: 6, name: 'Sorting', description: 'Sorting algorithms and their applications', problemCount: 25, icon: ArrowUpDown, color: 'from-purple-500 to-pink-500' },
+    { id: 7, name: 'Linked Lists', description: 'Linked data structures and operations', problemCount: 30, icon: Workflow, color: 'from-pink-500 to-rose-500' },
+    { id: 8, name: 'Stack & Queue', description: 'LIFO and FIFO data structures', problemCount: 22, icon: Layers, color: 'from-orange-500 to-red-500' },
+    { id: 9, name: 'Binary Search', description: 'Efficient searching algorithms', problemCount: 18, icon: Crosshair, color: 'from-emerald-500 to-teal-500' },
+    { id: 10, name: 'Recursion', description: 'Recursive problem solving techniques', problemCount: 26, icon: Infinity, color: 'from-violet-500 to-purple-500' },
+    { id: 11, name: 'Backtracking', description: 'Systematic solution space exploration', problemCount: 20, icon: Compass, color: 'from-cyan-500 to-blue-500' },
+    { id: 12, name: 'Greedy', description: 'Optimal local choice algorithms', problemCount: 24, icon: Diamond, color: 'from-amber-500 to-yellow-500' },
+    { id: 13, name: 'Heap', description: 'Priority queue and heap operations', problemCount: 16, icon: Triangle, color: 'from-red-500 to-pink-500' },
+    { id: 14, name: 'Bit Manipulation', description: 'Bitwise operations and tricks', problemCount: 14, icon: Atom, color: 'from-gray-500 to-slate-500' },
+    { id: 15, name: 'Math', description: 'Mathematical algorithms and formulas', problemCount: 19, icon: FlaskConical, color: 'from-indigo-500 to-blue-500' },
+    { id: 16, name: 'Two Pointers', description: 'Efficient array traversal technique', problemCount: 21, icon: Scissors, color: 'from-teal-500 to-cyan-500' }
   ], []);
 
   // Dynamic stats based on user progress
@@ -358,7 +408,7 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="min-h-screen pt-20 px-4 pb-8">
+    <div className="min-h-screen pt-24 px-4 pb-8">
       <div className="max-w-7xl mx-auto">
         {/* Welcome Section */}
         <motion.div
@@ -391,69 +441,6 @@ const Dashboard = () => {
                     <div className="flex items-center gap-2 bg-gradient-to-r from-purple-500/10 to-pink-500/10 px-3 py-1 rounded-full border border-purple-500/20">
                       <div className="w-2 h-2 bg-purple-400 rounded-full animate-pulse"></div>
                       <span className="text-purple-300 font-medium">Skill Building</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="bg-gradient-to-br from-purple-500/10 via-blue-500/10 to-cyan-500/10 rounded-xl p-8 border border-purple-500/30 backdrop-blur-sm shadow-2xl">
-                <div className="flex items-start gap-6">
-                  <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-blue-500 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg">
-                    <Brain className="w-8 h-8 text-white" />
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="text-2xl font-bold text-white mb-4 bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent flex items-center gap-3">
-                      <Zap className="w-6 h-6 text-purple-400" />
-                      DSA-Algo Learning Platform
-                    </h3>
-                    <p className="text-gray-300 text-base leading-relaxed mb-6">
-                      Transform your coding journey with our comprehensive <span className="text-purple-400 font-semibold">Data Structures & Algorithms</span> platform. 
-                      Whether you're preparing for <span className="text-blue-400 font-semibold">FAANG interviews</span> or mastering competitive programming, 
-                      we provide the perfect blend of theory and practice to accelerate your learning.
-                    </p>
-                    
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                      <div className="bg-gradient-to-r from-green-500/10 to-emerald-500/10 rounded-xl p-4 border border-green-500/20 hover:border-green-500/40 transition-all">
-                        <div className="flex items-center gap-3 mb-2">
-                          <Code className="w-5 h-5 text-green-400" />
-                          <span className="text-white font-semibold text-sm">500+ Problems</span>
-                        </div>
-                        <p className="text-gray-400 text-sm">Hand-picked coding challenges from easy to expert level</p>
-                      </div>
-                      
-                      <div className="bg-gradient-to-r from-blue-500/10 to-cyan-500/10 rounded-xl p-4 border border-blue-500/20 hover:border-blue-500/40 transition-all">
-                        <div className="flex items-center gap-3 mb-2">
-                          <BookOpen className="w-5 h-5 text-blue-400" />
-                          <span className="text-white font-semibold text-sm">Interactive Learning</span>
-                        </div>
-                        <p className="text-gray-400 text-sm">Visual explanations with step-by-step solutions</p>
-                      </div>
-                      
-                      <div className="bg-gradient-to-r from-yellow-500/10 to-orange-500/10 rounded-xl p-4 border border-yellow-500/20 hover:border-yellow-500/40 transition-all">
-                        <div className="flex items-center gap-3 mb-2">
-                          <Trophy className="w-5 h-5 text-yellow-400" />
-                          <span className="text-white font-semibold text-sm">Progress Tracking</span>
-                        </div>
-                        <p className="text-gray-400 text-sm">Advanced analytics and performance insights</p>
-                      </div>
-                    </div>
-                    
-                    <div className="flex flex-wrap items-center gap-6 text-sm">
-                      <div className="flex items-center gap-2">
-                        <Target className="w-4 h-4 text-green-400" />
-                        <span className="text-gray-300">Arrays & Strings</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Activity className="w-4 h-4 text-blue-400" />
-                        <span className="text-gray-300">Trees & Graphs</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Brain className="w-4 h-4 text-purple-400" />
-                        <span className="text-gray-300">Dynamic Programming</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Zap className="w-4 h-4 text-yellow-400" />
-                        <span className="text-gray-300">System Design</span>
-                      </div>
                     </div>
                   </div>
                 </div>
@@ -520,282 +507,6 @@ const Dashboard = () => {
           ))}
         </div>
 
-        {/* Main Content Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-8">
-          {/* Enhanced Weekly Progress Chart */}
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.3 }}
-            className="lg:col-span-2 backdrop-blur-lg bg-white/10 rounded-2xl p-4 border border-white/20 hover:border-blue-500/30 transition-all"
-          >
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="text-xl font-semibold text-white flex items-center gap-2">
-                <BarChart3 className="w-5 h-5 text-blue-400" />
-                Weekly Activity
-              </h3>
-              <div className="flex items-center gap-4 text-sm">
-                <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
-                  <span className="text-gray-400">Problems Solved</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 bg-purple-500 rounded-full"></div>
-                  <span className="text-gray-400">Submissions</span>
-                </div>
-              </div>
-            </div>
-            <div className="h-64">
-              {weeklyData && weeklyData.length > 0 ? (
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={weeklyData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(148, 163, 184, 0.1)" />
-                    <XAxis 
-                      dataKey="day" 
-                      stroke="#9CA3AF"
-                      fontSize={12}
-                      tickLine={false}
-                      axisLine={false}
-                    />
-                    <YAxis 
-                      stroke="#9CA3AF"
-                      fontSize={12}
-                      tickLine={false}
-                      axisLine={false}
-                    />
-                    <Tooltip 
-                      contentStyle={{
-                        backgroundColor: 'rgba(15, 23, 42, 0.95)',
-                        border: '1px solid rgba(148, 163, 184, 0.2)',
-                        borderRadius: '12px',
-                        color: '#fff',
-                        boxShadow: '0 10px 25px rgba(0, 0, 0, 0.3)'
-                      }}
-                      cursor={{ fill: 'rgba(139, 92, 246, 0.1)' }}
-                    />
-                    <Bar 
-                      dataKey="problems" 
-                      fill="#3B82F6" 
-                      radius={[4, 4, 0, 0]}
-                      name="Problems Solved"
-                    />
-                    <Bar 
-                      dataKey="submissions" 
-                      fill="#8B5CF6" 
-                      radius={[4, 4, 0, 0]}
-                      name="Total Submissions"
-                    />
-                  </BarChart>
-                </ResponsiveContainer>
-              ) : (
-                <div className="flex items-center justify-center h-full text-gray-400">
-                  <div className="text-center">
-                    <BarChart3 className="w-12 h-12 mx-auto mb-2 opacity-50" />
-                    <p>No activity data available</p>
-                  </div>
-                </div>
-              )}
-            </div>
-          </motion.div>
-
-          {/* Enhanced Difficulty Breakdown */}
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.4 }}
-            className="lg:col-span-2 backdrop-blur-lg bg-white/10 rounded-2xl p-4 border border-white/20 hover:border-green-500/30 transition-all"
-          >
-            <h3 className="text-xl font-semibold text-white mb-6 flex items-center gap-2">
-              <PieChart className="w-5 h-5 text-green-400" />
-              Difficulty Distribution
-            </h3>
-            <div className="h-48 mb-4">
-              {difficultyData && difficultyData.length > 0 && difficultyData.some(d => d.value > 0) ? (
-                <ResponsiveContainer width="100%" height="100%">
-                  <RechartsPieChart>
-                    <Pie
-                      data={difficultyData}
-                      cx="50%"
-                      cy="50%"
-                      innerRadius={35}
-                      outerRadius={75}
-                      paddingAngle={3}
-                      dataKey="value"
-                    >
-                      {difficultyData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.color} />
-                      ))}
-                    </Pie>
-                    <Tooltip 
-                      contentStyle={{
-                        backgroundColor: 'rgba(15, 23, 42, 0.95)',
-                        border: '1px solid rgba(148, 163, 184, 0.2)',
-                        borderRadius: '12px',
-                        color: '#fff',
-                        boxShadow: '0 10px 25px rgba(0, 0, 0, 0.3)'
-                      }}
-                    />
-                  </RechartsPieChart>
-                </ResponsiveContainer>
-              ) : (
-                <div className="flex items-center justify-center h-full text-gray-400">
-                  <div className="text-center">
-                    <PieChart className="w-12 h-12 mx-auto mb-2 opacity-50" />
-                    <p>Start solving problems to see difficulty breakdown</p>
-                  </div>
-                </div>
-              )}
-            </div>
-            <div className="space-y-3">
-              {difficultyData.map((item) => {
-                const total = difficultyData.reduce((sum, d) => sum + d.value, 0);
-                const percentage = total > 0 ? Math.round((item.value / total) * 100) : 0;
-                return (
-                  <div key={item.name} className="flex items-center justify-between p-2 bg-white/5 rounded-lg">
-                    <div className="flex items-center gap-3">
-                      <div 
-                        className="w-4 h-4 rounded-full shadow-lg"
-                        style={{ backgroundColor: item.color }}
-                      ></div>
-                      <span className="text-white font-medium">{item.name}</span>
-                    </div>
-                    <div className="text-right">
-                      <div className="text-white font-bold">{item.value}</div>
-                      <div className="text-gray-400 text-xs">{percentage}%</div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </motion.div>
-        </div>
-
-        {/* Additional Charts Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-          {/* Monthly Progress Trend */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
-            className="backdrop-blur-lg bg-white/10 rounded-2xl p-6 border border-white/20 hover:border-purple-500/30 transition-all"
-          >
-            <h3 className="text-xl font-semibold text-white mb-6 flex items-center gap-2">
-              <TrendingUp className="w-5 h-5 text-purple-400" />
-              Monthly Progress Trend
-            </h3>
-            <div className="h-64">
-              <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={monthlyData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
-                  <defs>
-                    <linearGradient id="solvedGradient" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#10B981" stopOpacity={0.3}/>
-                      <stop offset="95%" stopColor="#10B981" stopOpacity={0}/>
-                    </linearGradient>
-                    <linearGradient id="attemptedGradient" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#8B5CF6" stopOpacity={0.3}/>
-                      <stop offset="95%" stopColor="#8B5CF6" stopOpacity={0}/>
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(148, 163, 184, 0.1)" />
-                  <XAxis 
-                    dataKey="month" 
-                    stroke="#9CA3AF"
-                    fontSize={12}
-                    tickLine={false}
-                    axisLine={false}
-                  />
-                  <YAxis 
-                    stroke="#9CA3AF"
-                    fontSize={12}
-                    tickLine={false}
-                    axisLine={false}
-                  />
-                  <Tooltip 
-                    contentStyle={{
-                      backgroundColor: 'rgba(15, 23, 42, 0.95)',
-                      border: '1px solid rgba(148, 163, 184, 0.2)',
-                      borderRadius: '12px',
-                      color: '#fff',
-                      boxShadow: '0 10px 25px rgba(0, 0, 0, 0.3)'
-                    }}
-                  />
-                  <Area
-                    type="monotone"
-                    dataKey="attempted"
-                    stroke="#8B5CF6"
-                    fillOpacity={1}
-                    fill="url(#attemptedGradient)"
-                    strokeWidth={2}
-                    name="Attempted"
-                  />
-                  <Area
-                    type="monotone"
-                    dataKey="solved"
-                    stroke="#10B981"
-                    fillOpacity={1}
-                    fill="url(#solvedGradient)"
-                    strokeWidth={2}
-                    name="Solved"
-                  />
-                </AreaChart>
-              </ResponsiveContainer>
-            </div>
-          </motion.div>
-
-          {/* Language Distribution */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6 }}
-            className="backdrop-blur-lg bg-white/10 rounded-2xl p-6 border border-white/20 hover:border-yellow-500/30 transition-all"
-          >
-            <h3 className="text-xl font-semibold text-white mb-6 flex items-center gap-2">
-              <Code className="w-5 h-5 text-yellow-400" />
-              Language Preferences
-            </h3>
-            <div className="h-48 mb-4">
-              <ResponsiveContainer width="100%" height="100%">
-                <RechartsPieChart>
-                  <Pie
-                    data={languageData}
-                    cx="50%"
-                    cy="50%"
-                    outerRadius={70}
-                    paddingAngle={2}
-                    dataKey="value"
-                  >
-                    {languageData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.color} />
-                    ))}
-                  </Pie>
-                  <Tooltip 
-                    contentStyle={{
-                      backgroundColor: 'rgba(15, 23, 42, 0.95)',
-                      border: '1px solid rgba(148, 163, 184, 0.2)',
-                      borderRadius: '12px',
-                      color: '#fff',
-                      boxShadow: '0 10px 25px rgba(0, 0, 0, 0.3)'
-                    }}
-                  />
-                </RechartsPieChart>
-              </ResponsiveContainer>
-            </div>
-            <div className="grid grid-cols-2 gap-3">
-              {languageData.map((item) => (
-                <div key={item.name} className="flex items-center gap-2 p-2 bg-white/5 rounded-lg">
-                  <div 
-                    className="w-3 h-3 rounded-full"
-                    style={{ backgroundColor: item.color }}
-                  ></div>
-                  <div className="flex-1">
-                    <div className="text-white text-sm font-medium">{item.name}</div>
-                    <div className="text-gray-400 text-xs">{item.value}%</div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </motion.div>
-        </div>
 
         {/* Categories Grid */}
         <motion.div
@@ -818,7 +529,37 @@ const Dashboard = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {(categories && categories.length > 0 ? categories : mockCategories).slice(0, 6).map((category, index) => (
+            {(categories && categories.length > 0 ? categories : mockCategories).slice(0, 6).map((category, index) => {
+              // Map category names to icons for backend categories
+              const getIconForCategory = (categoryName) => {
+                const iconMap = {
+                  'Arrays': Database,
+                  'Strings': Hash,
+                  'Trees': GitBranch,
+                  'Graphs': Network,
+                  'Dynamic Programming': Brain,
+                  'Sorting': ArrowUpDown,
+                  'Sorting & Searching': ArrowUpDown,
+                  'Linked Lists': Workflow,
+                  'Stack & Queue': Layers,
+                  'Binary Search': Crosshair,
+                  'Recursion': Infinity,
+                  'Backtracking': Compass,
+                  'Greedy': Diamond,
+                  'Heap': Triangle,
+                  'Bit Manipulation': Atom,
+                  'Math': FlaskConical,
+                  'Two Pointers': Scissors
+                };
+                return iconMap[categoryName] || Code;
+              };
+              
+              const displayCategory = {
+                ...category,
+                icon: category.icon || getIconForCategory(category.name)
+              };
+              
+              return (
               <motion.div
                 key={category.id}
                 initial={{ opacity: 0, y: 20 }}
@@ -830,9 +571,13 @@ const Dashboard = () => {
                 <Link to={`/problems?category=${category.name}`}>
                   <div className="flex items-center gap-4 mb-4">
                     <div 
-                      className="w-12 h-12 rounded-xl flex items-center justify-center bg-blue-600/20"
+                      className={`w-12 h-12 rounded-xl flex items-center justify-center bg-gradient-to-r ${displayCategory.color || 'from-blue-500 to-cyan-500'}/20`}
                     >
-                      <Code className="w-6 h-6 text-blue-400" />
+                      {displayCategory.icon ? (
+                        <displayCategory.icon className="w-6 h-6 text-white" />
+                      ) : (
+                        <Code className="w-6 h-6 text-blue-400" />
+                      )}
                     </div>
                     <div>
                       <h3 className="text-lg font-semibold text-white group-hover:text-purple-300 transition-colors">
@@ -846,7 +591,8 @@ const Dashboard = () => {
                   </p>
                 </Link>
               </motion.div>
-            ))}
+            );
+            })}
           </div>
         </motion.div>
 

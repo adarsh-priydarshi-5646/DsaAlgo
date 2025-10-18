@@ -54,6 +54,7 @@ app.use(helmet({
 // CORS configuration
 const allowedOrigins = [
   'http://localhost:3000',
+  'http://localhost:3001',
   'https://dsa-algo-chi.vercel.app',
   process.env.FRONTEND_URL
 ].filter(Boolean);

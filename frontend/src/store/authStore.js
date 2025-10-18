@@ -80,23 +80,26 @@ const useAuthStore = create(
       updateProfile: async (data) => {
         set({ isLoading: true });
         try {
+          console.log('Updating profile with data:', data);
+          
           const response = await authAPI.updateProfile(data);
+          console.log('Profile update response:', response.data);
+          
           const { user } = response.data;
           
           // Update localStorage with new user data
           localStorage.setItem('user', JSON.stringify(user));
           
+          // Update store state immediately
           set({ user, isLoading: false });
-          toast.success('Profile updated successfully!');
           
-          // Force refresh of profile data
-          window.location.reload();
+          console.log('Profile updated successfully in store');
           
-          return { success: true };
+          return { success: true, user };
         } catch (error) {
+          console.error('Profile update failed:', error);
           set({ isLoading: false });
-          const message = error.response?.data?.error || 'Update failed';
-          toast.error(message);
+          const message = error.response?.data?.error || error.message || 'Update failed';
           return { success: false, error: message };
         }
       },

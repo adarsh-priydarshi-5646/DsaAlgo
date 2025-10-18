@@ -1,5 +1,5 @@
 import React, { useEffect, useState, memo, useMemo } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { 
@@ -37,6 +37,7 @@ import useAuthStore from '../store/authStore';
 const Profile = () => {
   const { username } = useParams();
   const { user: currentUser } = useAuthStore();
+  const queryClient = useQueryClient();
   const [profile, setProfile] = useState(null);
   const [stats, setStats] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -130,7 +131,7 @@ const Profile = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen pt-20 px-4 pb-8">
+      <div className="min-h-screen pt-24 px-4 pb-8">
         <div className="max-w-7xl mx-auto">
           <div className="mb-8 p-8 rounded-2xl border border-white/10 bg-white/5 animate-pulse">
             <div className="h-8 w-1/3 bg-white/10 rounded mb-6"></div>
@@ -185,7 +186,7 @@ const Profile = () => {
   }));
 
   return (
-    <div className="min-h-screen pt-20 px-4 pb-8">
+    <div className="min-h-screen pt-24 px-4 pb-8">
       <div className="max-w-7xl mx-auto">
         {/* Enhanced Profile Header */}
         <motion.div
@@ -603,6 +604,24 @@ const Profile = () => {
         open={showEdit}
         onClose={() => setShowEdit(false)}
         initial={profile}
+        onProfileUpdate={(updatedData) => {
+          // Update local profile state immediately
+          setProfile(prev => ({ ...prev, ...updatedData }));
+          
+          // Invalidate React Query cache
+          queryClient.invalidateQueries(['userProfile', username]);
+          queryClient.invalidateQueries(['userStats', username]);
+          
+          // Also update auth store
+          if (currentUser?.username === username) {
+            useAuthStore.setState({ 
+              user: { ...currentUser, ...updatedData } 
+            });
+            localStorage.setItem('user', JSON.stringify({ ...currentUser, ...updatedData }));
+          }
+          
+          console.log('Profile updated successfully');
+        }}
       />
       <SettingsModal
         open={showSettings}
