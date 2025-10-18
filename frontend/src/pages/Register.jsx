@@ -24,7 +24,7 @@ const Register = () => {
     const { confirmPassword, ...userData } = data;
     const result = await registerUser(userData);
     
-    if (result.success) {
+    if (result && result.success) {
       navigate('/dashboard');
     }
   };
