@@ -1,4 +1,6 @@
 import express from 'express';
+import passport from 'passport';
+import jwt from 'jsonwebtoken';
 import { body, validationResult } from 'express-validator';
 import { authenticateToken } from '../middleware/auth.js';
 import {
@@ -59,5 +61,33 @@ router.get('/me', authenticateToken, getMe);
 router.put('/profile', authenticateToken, validateProfileUpdate, handleValidationErrors, updateProfile);
 router.put('/password', authenticateToken, validatePasswordChange, handleValidationErrors, changePassword);
 router.patch('/settings', authenticateToken, (req, res, next) => next(), updateSettings);
+
+// OAuth 2.0 - Google
+router.get('/oauth/google',
+  passport.authenticate('google', { scope: ['profile', 'email'], session: false })
+);
+
+router.get('/oauth/google/callback',
+  passport.authenticate('google', { failureRedirect: '/', session: false }),
+  async (req, res) => {
+    try {
+      const user = req.user;
+      const token = jwt.sign(
+        { userId: user.id },
+        process.env.JWT_SECRET,
+        { expiresIn: process.env.JWT_EXPIRES_IN || '7d' }
+      );
+
+      const frontend = process.env.FRONTEND_URL || 'http://localhost:3000';
+      const redirectUrl = `${frontend}/oauth/callback?token=${encodeURIComponent(token)}`;
+
+      // Redirect back to frontend with token
+      return res.redirect(302, redirectUrl);
+    } catch (err) {
+      console.error('OAuth callback error:', err);
+      return res.status(500).json({ error: 'OAuth processing failed' });
+    }
+  }
+);
 
 export default router;

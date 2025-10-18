@@ -11,6 +11,10 @@ import ProblemList from './components/ProblemList';
 import ProblemDetail from './components/ProblemDetail';
 import Leaderboard from './pages/Leaderboard';
 import Learn from './pages/Learn';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import OAuthCallback from './pages/OAuthCallback';
+import NotFound from './pages/NotFound';
 import Profile from './components/Profile';
 import Error404 from './components/Error404';
 import ErrorBoundary from './components/ErrorBoundary';
@@ -134,6 +138,14 @@ function App() {
                     <Login />
                   </PublicLayout>
                 </PublicRoute>
+              }
+            />
+            <Route
+              path="/oauth/callback"
+              element={
+                <PublicLayout>
+                  <OAuthCallback />
+                </PublicLayout>
               }
             />
             <Route

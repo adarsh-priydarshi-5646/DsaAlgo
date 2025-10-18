@@ -17,7 +17,7 @@ model User {
   username    String   @unique
   firstName   String?
   lastName    String?
-  avatar      String?
+  avatar      String?  @db.Text
   bio         String?
   preferences Json?
   password    String
@@ -30,6 +30,8 @@ model User {
   progress    Progress[]
   submissions Submission[]
   achievements Achievement[]
+  oauthProvider String?
+  oauthId       String?  @unique
   
   @@map("users")
 }
