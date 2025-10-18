@@ -83,8 +83,15 @@ const useAuthStore = create(
           const response = await authAPI.updateProfile(data);
           const { user } = response.data;
           
+          // Update localStorage with new user data
+          localStorage.setItem('user', JSON.stringify(user));
+          
           set({ user, isLoading: false });
           toast.success('Profile updated successfully!');
+          
+          // Force refresh of profile data
+          window.location.reload();
+          
           return { success: true };
         } catch (error) {
           set({ isLoading: false });

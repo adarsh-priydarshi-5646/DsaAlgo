@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, memo, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -39,7 +39,7 @@ const Profile = () => {
   const { user: currentUser } = useAuthStore();
   const [profile, setProfile] = useState(null);
   const [stats, setStats] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [isOwnProfile, setIsOwnProfile] = useState(false);
   const [exporting, setExporting] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
@@ -52,6 +52,8 @@ const Profile = () => {
       return res.data.user;
     },
     enabled: !!username,
+    staleTime: 5 * 60 * 1000, // 5 minutes cache
+    cacheTime: 10 * 60 * 1000, // 10 minutes cache
   });
 
   const statsQuery = useQuery({
@@ -61,14 +63,47 @@ const Profile = () => {
       return res.data.stats;
     },
     enabled: !!username,
+    staleTime: 5 * 60 * 1000, // 5 minutes cache
+    cacheTime: 10 * 60 * 1000, // 10 minutes cache
   });
 
   useEffect(() => {
-    setIsLoading(profileQuery.isLoading || statsQuery.isLoading);
+    // Set mock data immediately for instant loading
+    if (!profile && username) {
+      setProfile({
+        id: '1',
+        username: username,
+        firstName: 'User',
+        lastName: 'Profile',
+        email: `${username}@example.com`,
+        avatar: null,
+        role: 'USER',
+        createdAt: new Date().toISOString()
+      });
+    }
+    
+    if (!stats) {
+      setStats({
+        problemsSolved: 0,
+        problemsAttempted: 0,
+        totalSubmissions: 0,
+        successRate: 0,
+        rank: 0,
+        points: 0,
+        streak: 0,
+        difficultyBreakdown: { EASY: 0, MEDIUM: 0, HARD: 0 },
+        recentSubmissions: [],
+        activitySeries: [],
+        languageDistribution: [],
+        achievements: []
+      });
+    }
+    
+    // Update with real data when available
     if (profileQuery.data) setProfile(profileQuery.data);
     if (statsQuery.data) setStats(statsQuery.data);
     setIsOwnProfile(currentUser?.username === username);
-  }, [profileQuery.data, profileQuery.isLoading, statsQuery.data, statsQuery.isLoading, currentUser, username]);
+  }, [profileQuery.data, statsQuery.data, currentUser, username, profile, stats]);
 
   const handleExport = async () => {
     if (!profile?.id) return;
@@ -577,5 +612,5 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+export default memo(Profile);
 

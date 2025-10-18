@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, memo, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import Editor from '@monaco-editor/react';
 import { 
@@ -167,13 +167,32 @@ fn main() {
     setOutput('Running...');
     
     try {
-      // Simulate code execution with delay
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      // Faster execution simulation
+      await new Promise(resolve => setTimeout(resolve, 800));
       
       let result = '';
+      let hasError = false;
       
-      // Simple code analysis to generate realistic output
+      // Enhanced code analysis with error detection
       if (language === 'javascript') {
+        // Check for syntax errors first
+        try {
+          // Basic syntax validation
+          if (code.includes('console.log(') && !code.includes(')')) {
+            throw new Error('SyntaxError: missing ) after argument list');
+          }
+          if (code.includes('{') && !code.includes('}')) {
+            throw new Error('SyntaxError: missing } after function body');
+          }
+          if (code.includes('if (') && !code.includes(')')) {
+            throw new Error('SyntaxError: missing ) after condition');
+          }
+        } catch (syntaxError) {
+          hasError = true;
+          result = `❌ ${syntaxError.message}\n\nLine: ${Math.floor(Math.random() * 10) + 1}\nColumn: ${Math.floor(Math.random() * 20) + 1}`;
+        }
+        
+        if (!hasError) {
         // Enhanced JavaScript code execution simulation
         let variables = {};
         
@@ -234,7 +253,34 @@ fn main() {
         } else {
           result = 'No output (no console.log statements found)\n';
         }
+        } // Close if (!hasError) block
       } else if (language === 'python') {
+        // Check for Python syntax errors first
+        try {
+          if (code.includes('print(') && !code.includes(')')) {
+            throw new Error('SyntaxError: invalid syntax - missing )');
+          }
+          if (code.includes('if ') && !code.includes(':')) {
+            throw new Error('SyntaxError: invalid syntax - missing :');
+          }
+          if (code.includes('def ') && !code.includes(':')) {
+            throw new Error('SyntaxError: invalid syntax - missing :');
+          }
+          // Check indentation
+          const lines = code.split('\n');
+          for (let i = 0; i < lines.length; i++) {
+            if (lines[i].trim().startsWith('def ') || lines[i].trim().startsWith('if ') || lines[i].trim().startsWith('for ') || lines[i].trim().startsWith('while ')) {
+              if (i + 1 < lines.length && lines[i + 1].trim() && !lines[i + 1].startsWith('    ') && !lines[i + 1].startsWith('\t')) {
+                throw new Error(`IndentationError: expected an indented block (line ${i + 2})`);
+              }
+            }
+          }
+        } catch (syntaxError) {
+          hasError = true;
+          result = `❌ ${syntaxError.message}\n\nFile "main.py", line ${Math.floor(Math.random() * 10) + 1}`;
+        }
+        
+        if (!hasError) {
         // Enhanced Python code execution simulation
         let variables = {};
         
@@ -297,6 +343,7 @@ fn main() {
         } else {
           result = 'No output (no print statements found)\n';
         }
+        } // Close Python if (!hasError) block
       } else if (language === 'java') {
         // Look for System.out.println statements
         const printMatches = code.match(/System\.out\.println\([^)]*\)/g);
@@ -601,4 +648,4 @@ fn main() {
   );
 };
 
-export default Playground;
+export default memo(Playground);

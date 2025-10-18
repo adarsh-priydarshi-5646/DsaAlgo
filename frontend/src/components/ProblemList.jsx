@@ -612,20 +612,6 @@ const ProblemList = () => {
           </motion.div>
         ))}
 
-        {/* Show message when no topic is selected */}
-        {!selectedTopic && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-center py-20"
-          >
-            <BookOpen className="w-20 h-20 mx-auto text-gray-600 mb-6" />
-            <h3 className="text-2xl font-bold text-white mb-4">Select a DSA Topic</h3>
-            <p className="text-gray-400 text-lg max-w-md mx-auto">
-              Choose a topic from above to view related problems and start practicing.
-            </p>
-          </motion.div>
-        )}
 
         {/* Enhanced Pagination */}
         {pagination.pages > 1 && (

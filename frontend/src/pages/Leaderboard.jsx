@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, memo } from 'react';
 import { motion } from 'framer-motion';
 import { 
   Trophy, 
@@ -33,7 +33,7 @@ import { leaderboardAPI } from '../services/api';
 
 // Removed 3D component for better stability
 
-export default function Leaderboard() {
+function Leaderboard() {
   const { user } = useAuthStore();
   const { 
     leaderboard, 
@@ -116,21 +116,42 @@ export default function Leaderboard() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-12 relative"
+          className="mb-12 relative"
         >
           <div className="absolute top-0 right-0 w-32 h-32 hidden md:block">
             <div className="w-full h-full flex items-center justify-center">
-              <Trophy className="w-16 h-16 text-yellow-400" />
+              <motion.div
+                animate={{ 
+                  scale: [1, 1.1, 1],
+                  rotate: [0, 5, -5, 0],
+                  opacity: [0.7, 1, 0.7]
+                }}
+                transition={{ 
+                  duration: 3,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+              >
+                <Trophy className="w-16 h-16 text-yellow-400" />
+              </motion.div>
             </div>
           </div>
           
-          <h1 className="text-5xl font-bold bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 bg-clip-text text-transparent mb-4 flex items-center gap-3">
+          <h1 className="text-5xl font-bold bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 bg-clip-text text-transparent mb-6 flex items-center gap-3">
             <Trophy className="w-12 h-12 text-yellow-400" />
             Leaderboard
           </h1>
-          <p className="text-xl text-gray-300 max-w-2xl mx-auto">
-            Compete with the best minds in DSA. Climb the ranks and showcase your problem-solving skills!
-          </p>
+          
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="mb-8"
+          >
+            <p className="text-xl text-gray-300 leading-relaxed">
+              Compete with the best minds in DSA. Climb the ranks and showcase your problem-solving skills!
+            </p>
+          </motion.div>
         </motion.div>
 
         {/* Enhanced Stats Cards */}
@@ -438,4 +459,6 @@ export default function Leaderboard() {
       </div>
     </div>
   );
-} 
+}
+
+export default memo(Leaderboard);
