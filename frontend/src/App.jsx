@@ -36,12 +36,14 @@ const queryClient = new QueryClient({
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated } = useAuthStore();
+  console.log('ProtectedRoute - isAuthenticated:', isAuthenticated);
   return isAuthenticated ? children : <Navigate to="/login" replace />;
 };
 
 // Public Route Component (redirect if authenticated)
 const PublicRoute = ({ children }) => {
   const { isAuthenticated } = useAuthStore();
+  console.log('PublicRoute - isAuthenticated:', isAuthenticated);
   return !isAuthenticated ? children : <Navigate to="/dashboard" replace />;
 };
 
@@ -71,12 +73,14 @@ const PublicLayout = ({ children }) => {
 };
 
 function App() {
-  const { fetchUser, isAuthenticated, isLoading } = useAuthStore();
+  const { fetchUser, isAuthenticated, isLoading, user } = useAuthStore();
 
   useEffect(() => {
     // Check for existing token and fetch user data
     const token = localStorage.getItem('token');
+    console.log('App - Token exists:', !!token, 'isAuthenticated:', isAuthenticated, 'user:', user);
     if (token && !isAuthenticated) {
+      console.log('Fetching user data...');
       fetchUser();
     }
   }, [fetchUser, isAuthenticated]);
