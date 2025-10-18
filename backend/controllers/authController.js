@@ -9,7 +9,7 @@ const generateToken = (userId) => {
   });
 };
 
-// Register user
+// Register user - Fixed for production database schema
 export const register = async (req, res) => {
   try {
     const { email, username, password, firstName, lastName } = req.body;
@@ -360,7 +360,11 @@ export const changePassword = async (req, res) => {
 
     // Get user with password
     const user = await prisma.user.findUnique({
-      where: { id: req.userId }
+      where: { id: req.userId },
+      select: {
+        id: true,
+        password: true
+      }
     });
 
     if (!user) {
