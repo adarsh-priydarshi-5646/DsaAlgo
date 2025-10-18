@@ -17,6 +17,8 @@
 
 **🎯 Master Data Structures & Algorithms with Interactive Learning, Real-time Code Execution & Gamified Progress Tracking**
 
+**🤖 NEW: Automated Code Review Bot for Quality Assurance**
+
 [🌟 **Live Demo**](https://dsa-algo-chi.vercel.app) • [📖 **Documentation**](#-table-of-contents) • [🐛 **Report Bug**](https://github.com/adarsh-priydarshi-5646/DsaAlgo/issues) • [✨ **Request Feature**](https://github.com/adarsh-priydarshi-5646/DsaAlgo/issues)
 
 </div>
@@ -691,6 +693,36 @@ If this project helped you learn DSA concepts or inspired your own projects, ple
 ![GitHub forks](https://img.shields.io/github/forks/adarsh-priydarshi-5646/DsaAlgo?style=social)
 ![GitHub watchers](https://img.shields.io/github/watchers/adarsh-priydarshi-5646/DsaAlgo?style=social)
 ![GitHub last commit](https://img.shields.io/github/last-commit/adarsh-priydarshi-5646/DsaAlgo?style=social)
+
+---
+
+## 🤖 **Automated Code Review Bot**
+
+This repository includes an intelligent code review bot that automatically:
+
+### ✅ **Quality Checks**
+- **Linting**: ESLint validation for both frontend and backend
+- **Build Verification**: Ensures code compiles successfully
+- **Security Audit**: Scans for vulnerabilities and hardcoded credentials
+- **Code Standards**: Checks for console logs, TODOs, and best practices
+
+### 🔍 **Review Process**
+- **Automatic Reviews**: Every PR gets automatically reviewed
+- **Status Checks**: Required checks must pass before merging
+- **Detailed Feedback**: Comprehensive analysis with suggestions
+- **Branch Protection**: Prevents bad code from reaching main branch
+
+### 🛡️ **Branch Protection Rules**
+- Requires PR reviews before merging
+- Status checks must pass
+- Conversation resolution required
+- Auto-delete merged branches
+
+### 📋 **Setup Instructions**
+1. Enable branch protection rules (see `.github/branch-protection-rules.md`)
+2. Configure required status checks
+3. Set up CODEOWNERS for review assignments
+4. The bot will automatically review all new PRs
 
 ---
 
