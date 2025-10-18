@@ -17,10 +17,15 @@ const Login = () => {
   } = useForm();
 
   const onSubmit = async (data) => {
+    console.log('Form submitted with:', data);
     const result = await login(data);
+    console.log('Login result:', result);
     
     if (result && result.success) {
+      console.log('Redirecting to dashboard...');
       navigate('/dashboard');
+    } else {
+      console.log('Login failed:', result);
     }
   };
 
