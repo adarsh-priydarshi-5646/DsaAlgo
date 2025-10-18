@@ -203,7 +203,7 @@ export const exportUser = async (req, res) => {
       where: { id },
       select: {
         id: true, email: true, username: true, firstName: true, lastName: true,
-        avatar: true, bio: true, preferences: true, createdAt: true
+        avatar: true, createdAt: true
       }
     });
     if (!user) return res.status(404).json({ error: 'User not found' });

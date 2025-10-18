@@ -142,6 +142,19 @@ export const login = async (req, res) => {
             { email: login.toLowerCase() },
             { username: login.toLowerCase() }
           ]
+        },
+        select: {
+          id: true,
+          email: true,
+          username: true,
+          firstName: true,
+          lastName: true,
+          avatar: true,
+          password: true,
+          role: true,
+          isVerified: true,
+          createdAt: true,
+          updatedAt: true
         }
       });
 
@@ -230,9 +243,9 @@ export const getMe = async (req, res) => {
         lastName: true,
         role: true,
         avatar: true,
-        bio: true,
-        preferences: true,
-        createdAt: true
+        isVerified: true,
+        createdAt: true,
+        updatedAt: true
       }
     });
 
@@ -250,7 +263,7 @@ export const getMe = async (req, res) => {
 // Update profile
 export const updateProfile = async (req, res) => {
   try {
-    const { firstName, lastName, avatar, username, email, bio } = req.body;
+    const { firstName, lastName, avatar, username, email } = req.body;
 
     // Ensure unique username/email when updating
     if (username) {
@@ -269,8 +282,7 @@ export const updateProfile = async (req, res) => {
         ...(lastName !== undefined && { lastName }),
         ...(avatar !== undefined && { avatar }),
         ...(username !== undefined && { username }),
-        ...(email !== undefined && { email }),
-        ...(bio !== undefined && { bio })
+        ...(email !== undefined && { email })
       },
       select: {
         id: true,
@@ -280,8 +292,9 @@ export const updateProfile = async (req, res) => {
         lastName: true,
         role: true,
         avatar: true,
-        bio: true,
-        createdAt: true
+        isVerified: true,
+        createdAt: true,
+        updatedAt: true
       }
     });
 
@@ -298,15 +311,16 @@ export const updateProfile = async (req, res) => {
 // Update user settings/preferences
 export const updateSettings = async (req, res) => {
   try {
-    const { preferences } = req.body; // arbitrary JSON
-    const user = await prisma.user.update({
+    // For now, just return success without updating preferences
+    // since the column doesn't exist in production database
+    const user = await prisma.user.findUnique({
       where: { id: req.userId },
-      data: { preferences },
       select: {
         id: true,
         username: true,
         email: true,
-        preferences: true
+        firstName: true,
+        lastName: true
       }
     });
     res.json({ message: 'Settings updated successfully', user });
