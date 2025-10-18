@@ -21,10 +21,15 @@ const Login = () => {
       const result = await login(data);
       
       if (result && result.success) {
-        // Force navigation to dashboard
+        // Multiple navigation attempts to ensure redirect works
+        navigate('/dashboard', { replace: true });
+        
+        // Fallback navigation
         setTimeout(() => {
-          navigate('/dashboard', { replace: true });
-        }, 100);
+          if (window.location.pathname !== '/dashboard') {
+            window.location.href = '/dashboard';
+          }
+        }, 500);
       }
     } catch (error) {
       console.error('Login submission error:', error);

@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Canvas } from '@react-three/fiber';
-import { Float, Sphere } from '@react-three/drei';
 import { 
   Trophy, 
   Star, 
@@ -21,15 +19,7 @@ import useAuthStore from '../store/authStore';
 import useLeaderboardStore from '../store/leaderboardStore';
 import { leaderboardAPI } from '../services/api';
 
-function FloatingTrophy() {
-  return (
-    <Float speed={2} rotationIntensity={0.3} floatIntensity={0.5}>
-      <Sphere args={[0.3]} position={[0, 0, 0]}>
-        <meshStandardMaterial color="#FFD700" transparent opacity={0.7} />
-      </Sphere>
-    </Float>
-  );
-}
+// Removed 3D component for better stability
 
 export default function Leaderboard() {
   const { user } = useAuthStore();
@@ -92,11 +82,9 @@ export default function Leaderboard() {
           className="text-center mb-12 relative"
         >
           <div className="absolute top-0 right-0 w-32 h-32 hidden md:block">
-            <Canvas>
-              <ambientLight intensity={0.5} />
-              <directionalLight position={[10, 10, 5]} intensity={0.5} />
-              <FloatingTrophy />
-            </Canvas>
+            <div className="w-full h-full flex items-center justify-center">
+              <Trophy className="w-16 h-16 text-yellow-400 animate-bounce" />
+            </div>
           </div>
           
           <h1 className="text-5xl font-bold bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 bg-clip-text text-transparent mb-4 flex items-center gap-3">

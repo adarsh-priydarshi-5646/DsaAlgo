@@ -2,8 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Canvas } from '@react-three/fiber';
-import { Float, Sphere, Box } from '@react-three/drei';
 import { 
   User, 
   Trophy, 
@@ -34,15 +32,7 @@ import EditProfileModal from './Profile/EditProfileModal';
 import SettingsModal from './Profile/Settings';
 import useAuthStore from '../store/authStore';
 
-function FloatingProfile() {
-  return (
-    <Float speed={1.8} rotationIntensity={0.2} floatIntensity={0.6}>
-      <Sphere args={[0.4]} position={[0, 0, 0]}>
-        <meshStandardMaterial color="#10B981" transparent opacity={0.7} />
-      </Sphere>
-    </Float>
-  );
-}
+// Removed 3D component for better stability
 
 const Profile = () => {
   const { username } = useParams();
@@ -168,13 +158,11 @@ const Profile = () => {
           animate={{ opacity: 1, y: 0 }}
           className="relative mb-8"
         >
-          {/* 3D Background Element */}
+          {/* Background Element */}
           <div className="absolute top-0 right-0 w-32 h-32 hidden lg:block">
-            <Canvas>
-              <ambientLight intensity={0.5} />
-              <directionalLight position={[10, 10, 5]} intensity={0.5} />
-              <FloatingProfile />
-            </Canvas>
+            <div className="w-full h-full flex items-center justify-center">
+              <User className="w-16 h-16 text-green-400 animate-pulse" />
+            </div>
           </div>
 
           <div className="backdrop-blur-lg bg-white/10 rounded-2xl p-8 border border-white/20">

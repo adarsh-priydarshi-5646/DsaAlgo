@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Canvas } from '@react-three/fiber';
-import { Float, Sphere, Box } from '@react-three/drei';
 import { 
   Trophy, 
   Target, 
@@ -21,15 +19,7 @@ import useProblemStore from '../store/problemStore';
 import { usersAPI } from '../services/api';
 import DynamicIcon from '../utils/iconMapping.jsx';
 
-function FloatingStats() {
-  return (
-    <Float speed={2} rotationIntensity={0.2} floatIntensity={0.3}>
-      <Sphere args={[0.3]} position={[0, 0, 0]}>
-        <meshStandardMaterial color="#8B5CF6" transparent opacity={0.6} />
-      </Sphere>
-    </Float>
-  );
-}
+// Removed 3D component for better stability
 
 const Dashboard = () => {
   const { user } = useAuthStore();
@@ -178,11 +168,9 @@ const Dashboard = () => {
             </div>
             
             <div className="hidden md:block w-32 h-32">
-              <Canvas>
-                <ambientLight intensity={0.5} />
-                <directionalLight position={[10, 10, 5]} intensity={0.5} />
-                <FloatingStats />
-              </Canvas>
+              <div className="w-full h-full flex items-center justify-center">
+                <TrendingUp className="w-16 h-16 text-purple-400 animate-pulse" />
+              </div>
             </div>
           </div>
         </motion.div>
