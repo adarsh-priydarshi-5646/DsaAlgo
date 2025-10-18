@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { BookOpen, Search, Code, Database, Server, Globe, Lock, Layers, Star, Bookmark, BookmarkCheck, Palette, Shield, Key, Users, FileText, Zap, Terminal, Copy, Check, Rocket, Book, Lightbulb, ArrowLeft, Target, ArrowRight, CheckCircle, BarChart3 } from 'lucide-react';
+import { BookOpen, Search, Code, Database, Server, Globe, Lock, Layers, Star, Bookmark, BookmarkCheck, Palette, Shield, Key, Users, FileText, Zap, Terminal, Copy, Check, Rocket, Book, Lightbulb, ArrowLeft, Target } from 'lucide-react';
 
 const Learn = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -10,7 +10,6 @@ const Learn = () => {
   const [selectedQuestion, setSelectedQuestion] = useState(null);
   const [currentPage, setCurrentPage] = useState('home'); // 'home' or language id
   const [showLanguagePage, setShowLanguagePage] = useState(false);
-  const [completedQuestions, setCompletedQuestions] = useState(new Set());
 
   // Categories of interview questions
   const categories = [
@@ -31,16 +30,11 @@ const Learn = () => {
     { id: 'fullstack', name: 'Full Stack', icon: Users },
   ];
 
-  // Load bookmarks and completed questions from localStorage
+  // Load bookmarks from localStorage
   useEffect(() => {
     const savedBookmarks = localStorage.getItem('interviewBookmarks');
     if (savedBookmarks) {
       setBookmarkedItems(new Set(JSON.parse(savedBookmarks)));
-    }
-    
-    const savedCompleted = localStorage.getItem('completedQuestions');
-    if (savedCompleted) {
-      setCompletedQuestions(new Set(JSON.parse(savedCompleted)));
     }
   }, []);
 
@@ -56,12 +50,19 @@ const Learn = () => {
     localStorage.setItem('interviewBookmarks', JSON.stringify([...newBookmarks]));
   };
 
-  // Handle category change - show questions for selected topic
+  // Handle category change - open separate page for each language
   const handleCategoryChange = (categoryId) => {
-    setActiveCategory(categoryId);
-    setSelectedQuestion(null);
-    setCurrentPage('home');
-    setShowLanguagePage(false);
+    if (categoryId === 'all') {
+      setCurrentPage('home');
+      setShowLanguagePage(false);
+      setActiveCategory('all');
+      setSelectedQuestion(null);
+    } else {
+      setCurrentPage(categoryId);
+      setShowLanguagePage(true);
+      setActiveCategory(categoryId);
+      setSelectedQuestion(null);
+    }
   };
 
   // Go back to home page
@@ -81,53 +82,6 @@ const Learn = () => {
     } catch (err) {
       console.error('Failed to copy code:', err);
     }
-  };
-
-  // Mark question as completed
-  const markQuestionCompleted = (questionId) => {
-    const newCompleted = new Set(completedQuestions);
-    newCompleted.add(questionId);
-    setCompletedQuestions(newCompleted);
-    localStorage.setItem('completedQuestions', JSON.stringify([...newCompleted]));
-  };
-
-  // Get current category questions
-  const getCurrentCategoryQuestions = () => {
-    return interviewQuestions.filter(q => q.category === activeCategory);
-  };
-
-  // Get current question index
-  const getCurrentQuestionIndex = () => {
-    const categoryQuestions = getCurrentCategoryQuestions();
-    return categoryQuestions.findIndex(q => q.id === selectedQuestion?.id);
-  };
-
-  // Navigate to next question
-  const goToNextQuestion = () => {
-    const categoryQuestions = getCurrentCategoryQuestions();
-    const currentIndex = getCurrentQuestionIndex();
-    if (currentIndex < categoryQuestions.length - 1) {
-      const nextQuestion = categoryQuestions[currentIndex + 1];
-      setSelectedQuestion(nextQuestion);
-      markQuestionCompleted(selectedQuestion.id);
-    }
-  };
-
-  // Navigate to previous question
-  const goToPreviousQuestion = () => {
-    const categoryQuestions = getCurrentCategoryQuestions();
-    const currentIndex = getCurrentQuestionIndex();
-    if (currentIndex > 0) {
-      const prevQuestion = categoryQuestions[currentIndex - 1];
-      setSelectedQuestion(prevQuestion);
-    }
-  };
-
-  // Calculate progress percentage
-  const getProgressPercentage = () => {
-    const categoryQuestions = getCurrentCategoryQuestions();
-    const completedInCategory = categoryQuestions.filter(q => completedQuestions.has(q.id)).length;
-    return categoryQuestions.length > 0 ? (completedInCategory / categoryQuestions.length) * 100 : 0;
   };
 
 
@@ -309,11 +263,10 @@ const Learn = () => {
               </div>
             </div>
 
-            {/* Basic Example */}
+            {/* 2️⃣ Basic Example */}
             <div className="bg-slate-800/50 rounded-2xl p-8 border border-slate-700/50">
               <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
-                <span className="w-8 h-8 bg-purple-500 text-white rounded-full flex items-center justify-center text-lg font-bold">2</span>
-                <span className="text-purple-400">Basic Closure Example</span>
+                2️⃣ <span className="text-purple-400">Basic Closure Example</span>
               </h2>
 
               <div className="mb-6">
@@ -1310,192 +1263,6 @@ async function processFile() {
           </div>
         );
       
-      case 50: // JavaScript - Data Types (Basic)
-        return (
-          <div className="space-y-10">
-            {/* Topic Header */}
-            <div className="bg-gradient-to-r from-blue-600/10 to-purple-600/10 border border-blue-500/30 rounded-2xl p-8">
-              <h1 className="text-4xl font-bold text-white mb-4 flex items-center gap-3">
-                <Code className="w-10 h-10 text-blue-400" />
-                <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">JavaScript Data Types</span>
-              </h1>
-              <p className="text-slate-300 text-lg">Understanding primitive and non-primitive data types</p>
-            </div>
-
-            {/* Definition Section */}
-            <div className="bg-slate-800/50 rounded-2xl p-8 border border-slate-700/50">
-              <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
-                <span className="w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center text-lg font-bold">1</span>
-                <span className="text-blue-400">Definition</span>
-              </h2>
-              
-              <div className="space-y-6">
-                <div className="bg-slate-700/30 rounded-xl p-6">
-                  <h3 className="text-lg font-bold text-green-400 mb-3 flex items-center gap-2">
-                    <Book className="w-5 h-5" />
-                    English:
-                  </h3>
-                  <div className="text-slate-200 leading-relaxed space-y-2">
-                    <p>JavaScript has <span className="px-2 py-1 bg-blue-500/20 text-blue-300 rounded font-semibold">8 data types</span> divided into two categories:</p>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                      <div className="bg-green-900/20 rounded-lg p-4 border border-green-500/30">
-                        <h4 className="text-green-300 font-bold mb-2 flex items-center gap-2">
-                          <Zap className="w-4 h-4" />
-                          Primitive Types (7):
-                        </h4>
-                        <ul className="text-sm space-y-1">
-                          <li><code className="text-yellow-300">string</code> - Text data</li>
-                          <li><code className="text-yellow-300">number</code> - Numeric values</li>
-                          <li><code className="text-yellow-300">boolean</code> - true/false</li>
-                          <li><code className="text-yellow-300">undefined</code> - Declared but not assigned</li>
-                          <li><code className="text-yellow-300">null</code> - Intentionally empty</li>
-                          <li><code className="text-yellow-300">symbol</code> - Unique identifier</li>
-                          <li><code className="text-yellow-300">bigint</code> - Large integers</li>
-                        </ul>
-                      </div>
-                      <div className="bg-purple-900/20 rounded-lg p-4 border border-purple-500/30">
-                        <h4 className="text-purple-300 font-bold mb-2 flex items-center gap-2">
-                          <Database className="w-4 h-4" />
-                          Non-Primitive (1):
-                        </h4>
-                        <ul className="text-sm space-y-1">
-                          <li><code className="text-yellow-300">object</code> - Complex data structures</li>
-                          <li className="text-xs text-slate-400">Includes: arrays, functions, objects, dates</li>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="bg-blue-900/20 rounded-xl p-6 border border-blue-500/30">
-                  <h3 className="text-lg font-bold text-blue-300 mb-3 flex items-center gap-2">
-                    <Book className="w-5 h-5" />
-                    Hinglish:
-                  </h3>
-                  <p className="text-slate-200 leading-relaxed">
-                    JavaScript mein 8 data types hain - 7 primitive (basic) aur 1 non-primitive (complex). Primitive types directly value store karte hain, jabki objects reference store karte hain.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Examples Section */}
-            <div className="bg-slate-800/50 rounded-2xl p-8 border border-slate-700/50">
-              <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
-                <span className="w-8 h-8 bg-purple-500 text-white rounded-full flex items-center justify-center text-lg font-bold">2</span>
-                <span className="text-purple-400">Data Type Examples</span>
-              </h2>
-
-              <div className="mb-6">
-                <h3 className="text-lg font-bold text-yellow-400 mb-3">Primitive Types:</h3>
-                <CodeBlock 
-                  language="javascript" 
-                  title="Primitive Data Types"
-                  id="primitive-types"
-                  code={`// String
-let name = "John Doe";
-let message = 'Hello World';
-
-// Number
-let age = 25;
-let price = 99.99;
-let infinity = Infinity;
-
-// Boolean
-let isActive = true;
-let isComplete = false;
-
-// Undefined
-let undefinedVar;
-console.log(undefinedVar); // undefined
-
-// Null
-let emptyValue = null;
-
-// Symbol (ES6+)
-let id = Symbol('id');
-let anotherId = Symbol('id');
-console.log(id === anotherId); // false
-
-// BigInt (ES2020+)
-let bigNumber = 1234567890123456789012345678901234567890n;`}
-                />
-              </div>
-
-              <div className="mb-6">
-                <h3 className="text-lg font-bold text-cyan-400 mb-3">Non-Primitive Types:</h3>
-                <CodeBlock 
-                  language="javascript" 
-                  title="Non-Primitive Data Types"
-                  id="non-primitive-types"
-                  code={`// Object
-let person = {
-  name: "John",
-  age: 30,
-  city: "New York"
-};
-
-// Array (special type of object)
-let numbers = [1, 2, 3, 4, 5];
-let mixed = [1, "hello", true, null];
-
-// Function (special type of object)
-function greet() {
-  return "Hello!";
-}
-
-// Date (built-in object)
-let now = new Date();
-
-// Check types
-console.log(typeof person);   // "object"
-console.log(typeof numbers);  // "object"
-console.log(typeof greet);    // "function"
-console.log(typeof now);      // "object"`}
-                />
-              </div>
-            </div>
-
-            {/* Type Checking Section */}
-            <div className="bg-slate-800/50 rounded-2xl p-8 border border-slate-700/50">
-              <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
-                <span className="w-8 h-8 bg-green-500 text-white rounded-full flex items-center justify-center text-lg font-bold">3</span>
-                <span className="text-green-400">Type Checking Methods</span>
-              </h2>
-
-              <CodeBlock 
-                language="javascript" 
-                title="Type Checking in JavaScript"
-                id="type-checking"
-                code={`// Using typeof operator
-console.log(typeof "hello");        // "string"
-console.log(typeof 42);             // "number"
-console.log(typeof true);           // "boolean"
-console.log(typeof undefined);      // "undefined"
-console.log(typeof null);           // "object" (known quirk!)
-console.log(typeof Symbol('id'));   // "symbol"
-console.log(typeof 123n);           // "bigint"
-console.log(typeof {});             // "object"
-console.log(typeof []);             // "object"
-console.log(typeof function(){});   // "function"
-
-// Better type checking methods
-console.log(Array.isArray([]));           // true
-console.log(Object.prototype.toString.call([])); // "[object Array]"
-console.log(null === null);               // true (for null check)
-
-// Check for specific object types
-console.log(new Date() instanceof Date);  // true
-console.log(/regex/ instanceof RegExp);   // true`}
-              />
-            </div>
-
-            <InterviewTip>
-              <p><strong>Key Interview Points:</strong> Remember that <code>typeof null</code> returns "object" (historical bug). Use <code>Array.isArray()</code> to check arrays. Primitive types are immutable and passed by value, while objects are mutable and passed by reference.</p>
-            </InterviewTip>
-          </div>
-        );
-
       default:
         return <div className="text-slate-400">Content not available</div>;
     }
@@ -1532,27 +1299,6 @@ console.log(/regex/ instanceof RegExp);   // true`}
       question: 'What are Promises and async/await in JavaScript?',
       content: getQuestionContent(5)
     },
-    {
-      id: 50,
-      category: 'javascript',
-      difficulty: 'basic',
-      question: 'What are JavaScript data types?',
-      content: getQuestionContent(50)
-    },
-    {
-      id: 51,
-      category: 'javascript',
-      difficulty: 'intermediate',
-      question: 'What is the difference between let, const, and var?',
-      content: { explanation: 'var has function scope, let and const have block scope. const cannot be reassigned after declaration.' }
-    },
-    {
-      id: 52,
-      category: 'javascript',
-      difficulty: 'advanced',
-      question: 'What are JavaScript modules and how do they work?',
-      content: { explanation: 'Modules allow you to break up your code into separate files and import/export functionality between them.' }
-    },
 
     // React Questions (Basic to Advanced)
     {
@@ -1575,27 +1321,6 @@ console.log(/regex/ instanceof RegExp);   // true`}
       difficulty: 'advanced',
       question: 'What is React Context API and when to use it?',
       content: getQuestionContent(7)
-    },
-    {
-      id: 53,
-      category: 'react',
-      difficulty: 'basic',
-      question: 'What is JSX and how does it work?',
-      content: { explanation: 'JSX is a syntax extension for JavaScript that allows you to write HTML-like code in React components.' }
-    },
-    {
-      id: 54,
-      category: 'react',
-      difficulty: 'intermediate',
-      question: 'What are React props and how to use them?',
-      content: { explanation: 'Props are arguments passed into React components to pass data from parent to child components.' }
-    },
-    {
-      id: 55,
-      category: 'react',
-      difficulty: 'advanced',
-      question: 'What is React Router and how to implement routing?',
-      content: { explanation: 'React Router is a library for handling routing in React applications, allowing navigation between different components.' }
     },
 
     // HTML Questions (Basic to Advanced)
@@ -1636,27 +1361,6 @@ console.log(/regex/ instanceof RegExp);   // true`}
       question: 'What is CSS Grid and how is it different from Flexbox?',
       content: getQuestionContent(12)
     },
-    {
-      id: 59,
-      category: 'css',
-      difficulty: 'basic',
-      question: 'What are CSS selectors and their types?',
-      content: { explanation: 'CSS selectors are patterns used to select HTML elements. Types include element, class, ID, attribute, and pseudo selectors.' }
-    },
-    {
-      id: 60,
-      category: 'css',
-      difficulty: 'intermediate',
-      question: 'What is CSS positioning and its values?',
-      content: { explanation: 'CSS position property specifies how an element is positioned. Values include static, relative, absolute, fixed, and sticky.' }
-    },
-    {
-      id: 61,
-      category: 'css',
-      difficulty: 'advanced',
-      question: 'What are CSS animations and transitions?',
-      content: { explanation: 'CSS animations allow you to animate HTML elements without JavaScript. Transitions provide smooth changes between property values.' }
-    },
 
     // Node.js Questions (Basic to Advanced)
     {
@@ -1679,27 +1383,6 @@ console.log(/regex/ instanceof RegExp);   // true`}
       difficulty: 'advanced',
       question: 'What is clustering in Node.js and why use it?',
       content: getQuestionContent(15)
-    },
-    {
-      id: 56,
-      category: 'node',
-      difficulty: 'basic',
-      question: 'What is npm and how to manage packages?',
-      content: { explanation: 'npm (Node Package Manager) is a package manager for JavaScript that allows you to install, update, and manage dependencies.' }
-    },
-    {
-      id: 57,
-      category: 'node',
-      difficulty: 'intermediate',
-      question: 'What is the Event Loop in Node.js?',
-      content: { explanation: 'The Event Loop is what allows Node.js to perform non-blocking I/O operations by offloading operations to the system kernel.' }
-    },
-    {
-      id: 58,
-      category: 'node',
-      difficulty: 'advanced',
-      question: 'What are Streams in Node.js and their types?',
-      content: { explanation: 'Streams are objects that let you read data from a source or write data to a destination in a continuous fashion.' }
     },
 
     // Express Questions (Basic to Advanced)
@@ -2022,176 +1705,73 @@ console.log(/regex/ instanceof RegExp);   // true`}
   if (showLanguagePage) {
     return <LanguagePage language={currentPage} />;
   }
+          </div>
+        </motion.div>
 
-  return (
-    <div className="min-h-screen pt-20 pb-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white relative overflow-hidden">
-      {/* Background decoration */}
-      <div className="absolute inset-0 bg-gradient-to-br from-purple-900/10 via-transparent to-blue-900/10 pointer-events-none z-0"></div>
-      <div className="absolute top-0 left-1/4 w-96 h-96 bg-purple-600/5 rounded-full blur-3xl z-0"></div>
-      <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-600/5 rounded-full blur-3xl z-0"></div>
-      
-      <div className="max-w-7xl mx-auto relative z-20">
-        {/* Enhanced Header with better spacing */}
-        <motion.div
+        {/* Search Bar */}
+        <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="text-center mb-12 px-4"
+          className="mb-12 max-w-4xl mx-auto"
         >
-          <div className="flex flex-col items-center gap-6 mb-8">
-            <div className="w-20 h-20 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-3xl flex items-center justify-center shadow-2xl">
-              <BookOpen className="w-10 h-10 text-white" />
-            </div>
-            <div>
-              <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-blue-400 via-cyan-400 to-teal-400 bg-clip-text text-transparent mb-4">
-                Full-Stack Interview Prep
-              </h1>
-              <p className="text-lg md:text-xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
-                Master <span className="text-blue-400 font-semibold">Full-Stack Web Development</span> with comprehensive interview questions, 
-                <span className="text-cyan-400 font-semibold"> practical code examples</span>, and detailed explanations.
-              </p>
-            </div>
-          </div>
-          
-          <div className="flex flex-wrap items-center justify-center gap-6 text-sm text-gray-400">
-            <div className="flex items-center gap-2">
-              <Code className="w-4 h-4 text-blue-400" />
-              <span className="font-medium">Interactive Code Examples</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Lightbulb className="w-4 h-4 text-cyan-400" />
-              <span className="font-medium">Real Interview Questions</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Book className="w-4 h-4 text-teal-400" />
-              <span className="font-medium">Detailed Explanations</span>
+          <div className="relative">
+            <Search className="absolute left-5 top-1/2 transform -translate-y-1/2 text-slate-400 w-6 h-6" />
+            <input
+              type="text"
+              placeholder="Search interview questions, topics, or technologies..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full bg-slate-800/70 backdrop-blur-sm border border-slate-600/50 rounded-2xl py-5 pl-14 pr-20 text-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all duration-300 shadow-2xl"
+            />
+            <div className="absolute right-5 top-1/2 transform -translate-y-1/2">
+              <kbd className="px-3 py-2 bg-slate-700/80 rounded-lg text-xs text-slate-400 font-mono border border-slate-600/50">⌘K</kbd>
             </div>
           </div>
         </motion.div>
 
-        {/* Progress Bar and Navigation - Replaces Search Bar */}
-        {activeCategory !== 'all' && (
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mb-12 max-w-4xl mx-auto px-4"
-          >
-            <div className="bg-slate-800/30 backdrop-blur-sm rounded-2xl border border-slate-700/50 p-6">
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-3">
-                  {categories.find(c => c.id === activeCategory)?.icon && (
-                    <div className="w-10 h-10 bg-blue-600/20 rounded-lg flex items-center justify-center">
-                      {React.createElement(categories.find(c => c.id === activeCategory).icon, { 
-                        className: "w-5 h-5 text-blue-400" 
-                      })}
-                    </div>
-                  )}
-                  <div>
-                    <h3 className="text-lg font-bold text-white">
-                      {categories.find(c => c.id === activeCategory)?.name} Progress
-                    </h3>
-                    <p className="text-sm text-slate-400">
-                      {getCurrentCategoryQuestions().filter(q => completedQuestions.has(q.id)).length} of {getCurrentCategoryQuestions().length} questions completed
-                    </p>
-                  </div>
-                </div>
-                <div className="text-right">
-                  <div className="text-2xl font-bold text-blue-400">
-                    {Math.round(getProgressPercentage())}%
-                  </div>
-                  <div className="text-xs text-slate-400">Complete</div>
-                </div>
-              </div>
-              
-              <div className="w-full bg-slate-700 rounded-full h-3 mb-4">
-                <div 
-                  className="bg-gradient-to-r from-blue-500 to-cyan-500 h-3 rounded-full transition-all duration-500 relative"
-                  style={{ width: `${getProgressPercentage()}%` }}
+        {/* Categories */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+          className="mb-16"
+        >
+          <div className="overflow-x-auto pb-6">
+            <div className="flex gap-4 min-w-max px-4">
+              {categories.map((category, index) => (
+                <motion.button
+                  key={category.id}
+                  onClick={() => handleCategoryChange(category.id)}
+                  className={`flex items-center gap-3 px-6 py-4 rounded-2xl transition-all duration-300 whitespace-nowrap ${
+                    activeCategory === category.id
+                      ? 'bg-gradient-to-r from-blue-600 to-cyan-600 text-white shadow-xl shadow-blue-500/25 scale-105'
+                      : 'bg-slate-800/70 backdrop-blur-sm text-slate-300 hover:text-white hover:bg-slate-700/70 border border-slate-700/50'
+                  }`}
+                  whileHover={{ scale: activeCategory === category.id ? 1.05 : 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: index * 0.05 }}
                 >
-                  <div className="absolute right-0 top-0 w-3 h-3 bg-white rounded-full shadow-lg"></div>
-                </div>
-              </div>
-              
-              <div className="flex items-center justify-between">
-                <span className="flex items-center gap-1 text-xs text-slate-400">
-                  <CheckCircle className="w-3 h-3 text-green-400" />
-                  {getCurrentCategoryQuestions().filter(q => completedQuestions.has(q.id)).length} completed
-                </span>
-                
-                {selectedQuestion && (
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={goToPreviousQuestion}
-                      disabled={getCurrentQuestionIndex() === 0}
-                      className={`flex items-center gap-1 px-3 py-1 rounded-lg text-xs transition-all ${
-                        getCurrentQuestionIndex() === 0
-                          ? 'bg-slate-700/30 text-slate-500 cursor-not-allowed'
-                          : 'bg-slate-700 hover:bg-slate-600 text-white'
-                      }`}
-                    >
-                      <ArrowLeft className="w-3 h-3" />
-                      Prev
-                    </button>
-                    
-                    <span className="text-xs text-slate-400 px-2">
-                      {getCurrentQuestionIndex() + 1} / {getCurrentCategoryQuestions().length}
-                    </span>
-                    
-                    <button
-                      onClick={goToNextQuestion}
-                      disabled={getCurrentQuestionIndex() === getCurrentCategoryQuestions().length - 1}
-                      className={`flex items-center gap-1 px-3 py-1 rounded-lg text-xs transition-all ${
-                        getCurrentQuestionIndex() === getCurrentCategoryQuestions().length - 1
-                          ? 'bg-slate-700/30 text-slate-500 cursor-not-allowed'
-                          : 'bg-blue-600 hover:bg-blue-700 text-white'
-                      }`}
-                    >
-                      Next
-                      <ArrowRight className="w-3 h-3" />
-                    </button>
-                  </div>
-                )}
-                
-                <span className="flex items-center gap-1 text-xs text-slate-400">
-                  <BarChart3 className="w-3 h-3" />
-                  {getCurrentCategoryQuestions().length - getCurrentCategoryQuestions().filter(q => completedQuestions.has(q.id)).length} remaining
-                </span>
-              </div>
-            </div>
-          </motion.div>
-        )}
-
-
-        {/* Main Content Area with proper spacing */}
-        <div className="flex gap-8 mt-8">
-          {/* Sidebar - Scrollable independently - shifted up */}
-          <div className="w-80 flex-shrink-0">
-            <div className="sticky top-2 max-h-[calc(100vh-6rem)] overflow-y-auto bg-slate-800/30 backdrop-blur-sm rounded-2xl border border-slate-700/50 p-6">
-              <h3 className="text-lg font-semibold text-white mb-4 text-center">Topics</h3>
-              <div className="space-y-2">
-                {categories.map((category) => {
-                  const Icon = category.icon;
-                  return (
-                    <button
-                      key={category.id}
-                      onClick={() => handleCategoryChange(category.id)}
-                      className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all text-left ${
-                        activeCategory === category.id
-                          ? 'bg-blue-600/30 text-blue-300 border border-blue-500/30'
-                          : 'hover:bg-slate-700/50 text-slate-300 hover:text-white'
-                      }`}
-                    >
-                      <Icon className="w-5 h-5 flex-shrink-0" />
-                      <span className="font-medium">{category.name}</span>
-                    </button>
-                  );
-                })}
-              </div>
+                  <category.icon className="w-5 h-5" />
+                  <span className="font-semibold">{category.name}</span>
+                  {activeCategory === category.id && (
+                    <motion.div
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      className="w-2 h-2 bg-white rounded-full shadow-lg"
+                    />
+                  )}
+                </motion.button>
+              ))}
             </div>
           </div>
+        </motion.div>
 
-          {/* Content Area - Scrollable independently */}
-          <div className="flex-1 min-w-0 max-h-[calc(100vh-6rem)] overflow-y-auto pr-4">
+        {/* Main Content Area */}
+        <div className="flex gap-6">
+          {/* Content Area */}
+          <div className="flex-1">
             {/* Selected Question Display */}
             {selectedQuestion ? (
               <motion.div
@@ -2236,7 +1816,7 @@ console.log(/regex/ instanceof RegExp);   // true`}
                     </div>
                   </div>
                   
-                  <div className="question-content mb-8">
+                  <div className="question-content">
                     {selectedQuestion.content || (
                       <div 
                         className="prose prose-invert max-w-none"
@@ -2244,129 +1824,35 @@ console.log(/regex/ instanceof RegExp);   // true`}
                       />
                     )}
                   </div>
-
-                  {/* Progress Bar */}
-                  <div className="mb-6">
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm font-medium text-slate-300 flex items-center gap-2">
-                        <BarChart3 className="w-4 h-4" />
-                        Topic Progress
-                      </span>
-                      <span className="text-sm text-slate-400">
-                        {Math.round(getProgressPercentage())}% Complete
-                      </span>
-                    </div>
-                    <div className="w-full bg-slate-700 rounded-full h-2">
-                      <div 
-                        className="bg-gradient-to-r from-blue-500 to-cyan-500 h-2 rounded-full transition-all duration-500"
-                        style={{ width: `${getProgressPercentage()}%` }}
-                      ></div>
-                    </div>
-                    <div className="flex items-center justify-between mt-2 text-xs text-slate-400">
-                      <span>{getCurrentCategoryQuestions().filter(q => completedQuestions.has(q.id)).length} completed</span>
-                      <span>{getCurrentCategoryQuestions().length} total questions</span>
-                    </div>
-                  </div>
-
-                  {/* Navigation Controls */}
-                  <div className="flex items-center justify-between pt-6 border-t border-slate-700/50">
-                    <button
-                      onClick={goToPreviousQuestion}
-                      disabled={getCurrentQuestionIndex() === 0}
-                      className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all ${
-                        getCurrentQuestionIndex() === 0
-                          ? 'bg-slate-700/30 text-slate-500 cursor-not-allowed'
-                          : 'bg-slate-700 hover:bg-slate-600 text-white'
-                      }`}
-                    >
-                      <ArrowLeft className="w-4 h-4" />
-                      Previous
-                    </button>
-
-                    <div className="flex items-center gap-3">
-                      <button
-                        onClick={() => markQuestionCompleted(selectedQuestion.id)}
-                        className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all ${
-                          completedQuestions.has(selectedQuestion.id)
-                            ? 'bg-green-600 text-white'
-                            : 'bg-green-600/20 hover:bg-green-600/30 text-green-400'
-                        }`}
-                      >
-                        <CheckCircle className="w-4 h-4" />
-                        {completedQuestions.has(selectedQuestion.id) ? 'Completed' : 'Mark Complete'}
-                      </button>
-
-                      <span className="text-sm text-slate-400">
-                        {getCurrentQuestionIndex() + 1} of {getCurrentCategoryQuestions().length}
-                      </span>
-                    </div>
-
-                    <button
-                      onClick={goToNextQuestion}
-                      disabled={getCurrentQuestionIndex() === getCurrentCategoryQuestions().length - 1}
-                      className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all ${
-                        getCurrentQuestionIndex() === getCurrentCategoryQuestions().length - 1
-                          ? 'bg-slate-700/30 text-slate-500 cursor-not-allowed'
-                          : 'bg-blue-600 hover:bg-blue-700 text-white'
-                      }`}
-                    >
-                      Next
-                      <ArrowRight className="w-4 h-4" />
-                    </button>
-                  </div>
-                </div>
-              </motion.div>
-            ) : activeCategory === 'all' ? (
-              /* Show message when no specific category is selected */
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="text-center py-20"
-              >
-                <BookOpen className="w-20 h-20 mx-auto text-slate-600 mb-6" />
-                <h3 className="text-2xl font-bold text-slate-400 mb-4">Select a Topic to Get Started</h3>
-                <p className="text-slate-500 mb-8">Choose a technology from the sidebar to view interview questions and practice materials.</p>
-                <div className="flex flex-wrap justify-center gap-3">
-                  {categories.slice(1, 6).map((category) => {
-                    const Icon = category.icon;
-                    return (
-                      <button
-                        key={category.id}
-                        onClick={() => handleCategoryChange(category.id)}
-                        className="flex items-center gap-2 px-4 py-2 bg-slate-800/50 hover:bg-slate-700/50 text-slate-300 hover:text-white rounded-lg transition-all"
-                      >
-                        <Icon className="w-4 h-4" />
-                        <span>{category.name}</span>
-                      </button>
-                    );
-                  })}
                 </div>
               </motion.div>
             ) : (
-              /* Questions Display for Selected Category */
-              <div className="space-y-6 pb-8">
+              /* All Questions Display */
+              <div className="space-y-8">
                 {filteredQuestions.length > 0 ? (
                   filteredQuestions.map((item, index) => (
                     <motion.div
                       key={item.id}
-                      initial={{ opacity: 0, y: 20 }}
+                      initial={{ opacity: 0, y: 30 }}
                       animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: index * 0.1 }}
+                      transition={{ duration: 0.5, delay: index * 0.1 }}
+                      className="bg-slate-800/70 backdrop-blur-sm border border-slate-700/50 rounded-2xl overflow-hidden shadow-2xl hover:shadow-blue-500/10 transition-all duration-300 hover:border-blue-500/30 cursor-pointer"
                       onClick={() => setSelectedQuestion(item)}
-                      className="bg-slate-800/70 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-8 hover:border-blue-500/50 transition-all duration-300 cursor-pointer group hover:shadow-2xl hover:shadow-blue-500/10"
                     >
-                      <div className="text-center mb-6">
-                        <div className="flex items-center justify-center gap-3 mb-4">
-                          <span className="px-4 py-2 bg-gradient-to-r from-blue-600/30 to-cyan-600/30 text-blue-300 rounded-full text-sm font-medium border border-blue-500/30">
-                            {categories.find(c => c.id === item.category)?.name || item.category}
-                          </span>
-                          {categories.find(c => c.id === item.category)?.icon && (
-                            <div className="w-8 h-8 bg-blue-600/20 rounded-lg flex items-center justify-center">
-                              {React.createElement(categories.find(c => c.id === item.category).icon, { 
-                                className: "w-4 h-4 text-blue-400" 
-                              })}
-                            </div>
-                          )}
+                      <div className="p-8">
+                        <div className="flex items-center justify-between mb-6">
+                          <div className="flex items-center gap-3">
+                            <span className="px-4 py-2 bg-gradient-to-r from-blue-600/30 to-cyan-600/30 text-blue-300 rounded-full text-sm font-medium border border-blue-500/30">
+                              {categories.find(c => c.id === item.category)?.name || item.category}
+                            </span>
+                            {categories.find(c => c.id === item.category)?.icon && (
+                              <div className="w-8 h-8 bg-blue-600/20 rounded-lg flex items-center justify-center">
+                                {React.createElement(categories.find(c => c.id === item.category).icon, { 
+                                  className: "w-4 h-4 text-blue-400" 
+                                })}
+                              </div>
+                            )}
+                          </div>
                           <button
                             onClick={(e) => {
                               e.stopPropagation();
@@ -2381,17 +1867,14 @@ console.log(/regex/ instanceof RegExp);   // true`}
                           </button>
                         </div>
                         
-                        <h3 className="text-2xl font-bold text-white leading-tight mb-4 text-center">{item.question}</h3>
-                        
-                        <div className="flex items-center justify-center gap-4 mb-4">
-                          {item.difficulty && (
-                            <span className={`px-3 py-1 rounded-full text-xs font-medium border ${getDifficultyColor(item.difficulty)}`}>
-                              {item.difficulty.toUpperCase()}
-                            </span>
-                          )}
-                          <div className="flex items-center gap-1 text-slate-400 text-sm">
-                            <Target className="w-4 h-4" />
-                            <span>Interview Question</span>
+                        <div className="flex items-start justify-between mb-4">
+                          <div className="flex-1">
+                            <h3 className="text-2xl font-bold text-white leading-tight mb-3">{item.question}</h3>
+                            {item.difficulty && (
+                              <span className={`px-3 py-1 rounded-full text-xs font-medium border ${getDifficultyColor(item.difficulty)}`}>
+                                {item.difficulty.toUpperCase()}
+                              </span>
+                            )}
                           </div>
                         </div>
                         
