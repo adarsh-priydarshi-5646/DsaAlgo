@@ -14,8 +14,6 @@ export const register = async (req, res) => {
   try {
     const { email, username, password, firstName, lastName } = req.body;
 
-    console.log('Register attempt:', { email, username, firstName, lastName });
-
     // Validation
     if (!email || !username || !password || !firstName || !lastName) {
       return res.status(400).json({ 
@@ -73,8 +71,6 @@ export const register = async (req, res) => {
         }
       });
 
-      console.log('User created successfully:', user.id);
-
       // Generate token
       const token = generateToken(user.id);
 
@@ -108,15 +104,7 @@ export const register = async (req, res) => {
     }
   } catch (error) {
     console.error('Register error:', error);
-    console.error('Error details:', {
-      message: error.message,
-      code: error.code,
-      meta: error.meta
-    });
-    res.status(500).json({ 
-      error: 'Internal server error',
-      details: process.env.NODE_ENV === 'development' ? error.message : undefined
-    });
+    res.status(500).json({ error: 'Internal server error' });
   }
 };
 
@@ -124,8 +112,6 @@ export const register = async (req, res) => {
 export const login = async (req, res) => {
   try {
     const { login, password } = req.body;
-
-    console.log('Login attempt:', { login });
 
     // Validation
     if (!login || !password) {
@@ -146,7 +132,6 @@ export const login = async (req, res) => {
       });
 
       if (!user) {
-        console.log('User not found:', login);
         return res.status(401).json({ 
           error: 'Invalid credentials' 
         });
@@ -155,13 +140,10 @@ export const login = async (req, res) => {
       // Check password
       const isPasswordValid = await bcrypt.compare(password, user.password);
       if (!isPasswordValid) {
-        console.log('Invalid password for user:', user.id);
         return res.status(401).json({ 
           error: 'Invalid credentials' 
         });
       }
-
-      console.log('Login successful for user:', user.id);
 
       // Generate token
       const token = generateToken(user.id);
@@ -205,15 +187,7 @@ export const login = async (req, res) => {
     }
   } catch (error) {
     console.error('Login error:', error);
-    console.error('Error details:', {
-      message: error.message,
-      code: error.code,
-      meta: error.meta
-    });
-    res.status(500).json({ 
-      error: 'Internal server error',
-      details: process.env.NODE_ENV === 'development' ? error.message : undefined
-    });
+    res.status(500).json({ error: 'Internal server error' });
   }
 };
 
