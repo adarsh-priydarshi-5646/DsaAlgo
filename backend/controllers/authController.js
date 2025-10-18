@@ -37,6 +37,11 @@ export const register = async (req, res) => {
             { email: email.toLowerCase() },
             { username: username.toLowerCase() }
           ]
+        },
+        select: {
+          id: true,
+          email: true,
+          username: true
         }
       });
 
@@ -267,11 +272,17 @@ export const updateProfile = async (req, res) => {
 
     // Ensure unique username/email when updating
     if (username) {
-      const exists = await prisma.user.findFirst({ where: { username, NOT: { id: req.userId } } });
+      const exists = await prisma.user.findFirst({ 
+        where: { username, NOT: { id: req.userId } },
+        select: { id: true }
+      });
       if (exists) return res.status(400).json({ error: 'Username already taken' });
     }
     if (email) {
-      const exists = await prisma.user.findFirst({ where: { email, NOT: { id: req.userId } } });
+      const exists = await prisma.user.findFirst({ 
+        where: { email, NOT: { id: req.userId } },
+        select: { id: true }
+      });
       if (exists) return res.status(400).json({ error: 'Email already registered' });
     }
 
