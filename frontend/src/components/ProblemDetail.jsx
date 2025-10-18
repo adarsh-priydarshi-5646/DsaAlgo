@@ -37,6 +37,9 @@ import {
   GitCompare,
   Star,
   ThumbsUp,
+  Code2,
+  Type,
+  TestTube,
   Share2,
   Bookmark,
   Filter,
@@ -432,7 +435,13 @@ public:
     setTheme(theme === 'dark' ? 'light' : 'dark');
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    // Prevent page reload
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    
     if (!code.trim()) {
       setConsoleOutput(prev => [...prev, {
         type: 'error',
@@ -903,43 +912,23 @@ public:
             }`}>
               {currentProblem?.difficulty || 'Medium'}
             </span>
-            <span className="text-green-400 text-sm flex items-center gap-1">
-              <CheckCircle className="w-4 h-4" />
-              Solved
-            </span>
+            {/* Only show solved status if actually solved */}
+            {currentProblem?.solved && (
+              <span className="text-green-400 text-sm flex items-center gap-1">
+                <CheckCircle className="w-4 h-4" />
+                Solved
+              </span>
+            )}
           </div>
         </div>
         
         <div className="flex items-center gap-3">
-          <div className="flex items-center gap-4 text-sm text-gray-400">
-            <div className="flex items-center gap-1">
-              <Users className="w-4 h-4" />
-              <span>10.1K</span>
-            </div>
-            <div className="flex items-center gap-1">
-              <TrendingUp className="w-4 h-4" />
-              <span>197</span>
-            </div>
-            <div className="flex items-center gap-1">
-              <Star className="w-4 h-4" />
-              <span>94 Online</span>
-            </div>
-          </div>
-          
-          <div className="h-4 w-px bg-gray-600"></div>
-          
           <div className="flex items-center gap-2">
-            <button className="px-3 py-1 bg-orange-500 hover:bg-orange-600 text-white text-sm rounded transition-colors">
-              Premium
-            </button>
             <button 
               onClick={toggleTheme}
               className="p-2 rounded hover:bg-gray-700 transition-colors"
             >
               {theme === 'dark' ? <Sun className="w-4 h-4 text-gray-400" /> : <Moon className="w-4 h-4 text-gray-400" />}
-            </button>
-            <button className="p-2 rounded hover:bg-gray-700 transition-colors">
-              <Settings className="w-4 h-4 text-gray-400" />
             </button>
           </div>
         </div>
@@ -1307,35 +1296,40 @@ public:
           className="flex flex-col right-panel bg-gray-900"
           style={{ width: `${100 - leftPanelWidth}%` }}
         >
-          {/* LeetCode-style Code Header */}
-          <div className="px-4 py-2 bg-gray-800 border-b border-gray-700">
+          {/* Enhanced Code Header */}
+          <div className="px-4 py-3 bg-gradient-to-r from-gray-800 to-gray-700 border-b border-gray-600">
             <div className="flex items-center justify-between mb-3">
               {/* Language and Settings */}
-              <div className="flex items-center gap-3">
-                <select
-                  value={language}
-                  onChange={(e) => setLanguage(e.target.value)}
-                  className="bg-gray-700 border border-gray-600 rounded px-3 py-1.5 text-white text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 min-w-[120px]"
-                >
-                  <option value="javascript">JavaScript</option>
-                  <option value="python">Python3</option>
-                  <option value="java">Java</option>
-                  <option value="cpp">C++</option>
-                </select>
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2">
+                  <Code2 className="w-4 h-4 text-blue-400" />
+                  <span className="text-sm text-gray-300 font-medium">Language:</span>
+                  <select
+                    value={language}
+                    onChange={(e) => setLanguage(e.target.value)}
+                    className="bg-gray-700 border border-gray-500 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 min-w-[140px] shadow-lg"
+                  >
+                    <option value="javascript">JavaScript</option>
+                    <option value="python">Python3</option>
+                    <option value="java">Java</option>
+                    <option value="cpp">C++</option>
+                  </select>
+                </div>
                 
-                {/* Font Size Controls */}
-                <div className="flex items-center gap-2 bg-gray-700 rounded px-2 py-1">
-                  <span className="text-xs text-gray-400">Font:</span>
+                {/* Enhanced Font Size Controls */}
+                <div className="flex items-center gap-2 bg-gray-700 rounded-lg px-3 py-2 border border-gray-500">
+                  <Type className="w-3 h-3 text-green-400" />
+                  <span className="text-xs text-gray-300 font-medium">Size:</span>
                   <button
                     onClick={() => setFontSize(Math.max(10, fontSize - 1))}
-                    className="w-6 h-6 bg-gray-600 hover:bg-gray-500 rounded text-white text-xs flex items-center justify-center"
+                    className="w-7 h-7 bg-gray-600 hover:bg-gray-500 rounded-lg text-white text-sm flex items-center justify-center transition-colors shadow-md"
                   >
-                    -
+                    −
                   </button>
-                  <span className="text-xs text-white w-6 text-center">{fontSize}</span>
+                  <span className="text-sm text-white w-8 text-center font-mono">{fontSize}</span>
                   <button
                     onClick={() => setFontSize(Math.min(24, fontSize + 1))}
-                    className="w-6 h-6 bg-gray-600 hover:bg-gray-500 rounded text-white text-xs flex items-center justify-center"
+                    className="w-7 h-7 bg-gray-600 hover:bg-gray-500 rounded-lg text-white text-sm flex items-center justify-center transition-colors shadow-md"
                   >
                     +
                   </button>
@@ -1345,6 +1339,7 @@ public:
               {/* Action Buttons */}
               <div className="flex items-center gap-2">
                 <motion.button
+                  type="button"
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={handleRunCode}
@@ -1365,6 +1360,7 @@ public:
                 </motion.button>
 
                 <motion.button
+                  type="button"
                   whileHover={{ scale: allTestsPassed && testResults.length > 0 && code.trim() ? 1.02 : 1 }}
                   whileTap={{ scale: allTestsPassed && testResults.length > 0 && code.trim() ? 0.98 : 1 }}
                   onClick={handleSubmit}
@@ -1533,31 +1529,43 @@ public:
               </div>
             </div>
             
-            {/* LeetCode-style Bottom Panel Tabs */}
-            <div className="px-4 py-2 bg-gray-800 border-b border-gray-700">
+            {/* Enhanced Bottom Panel Tabs */}
+            <div className="px-4 py-3 bg-gradient-to-r from-gray-800 to-gray-700 border-b border-gray-600">
               <div className="flex items-center justify-between">
-                <div className="flex gap-0">
+                <div className="flex gap-1">
                   {[
-                    { key: 'testcases', label: 'Testcase', icon: null },
-                    { key: 'result', label: 'Test Result', icon: null }
+                    { key: 'testcases', label: 'Test Cases', icon: TestTube },
+                    { key: 'result', label: 'Results', icon: BarChart3 }
                   ].map((tab) => (
                     <button
                       key={tab.key}
                       onClick={() => setActiveTestTab(tab.key)}
-                      className={`px-4 py-2 text-sm font-medium transition-colors border-b-2 ${
+                      className={`flex items-center gap-2 px-4 py-2 text-sm font-medium transition-all rounded-lg border-2 ${
                         activeTestTab === tab.key
-                          ? 'text-white border-orange-500 bg-gray-700/50'
-                          : 'text-gray-400 hover:text-white border-transparent hover:bg-gray-700/30'
+                          ? 'text-white border-blue-500 bg-blue-600/20 shadow-lg'
+                          : 'text-gray-400 hover:text-white border-transparent hover:bg-gray-600/50'
                       }`}
                     >
+                      <tab.icon className="w-4 h-4" />
                       {tab.label}
                     </button>
                   ))}
                 </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-xs text-gray-400">
-                    {testResults.length > 0 && `${testResults.filter(r => r.passed).length}/${testResults.length} passed`}
-                  </span>
+                <div className="flex items-center gap-3">
+                  {testResults.length > 0 && (
+                    <div className="flex items-center gap-2">
+                      <div className={`w-3 h-3 rounded-full ${allTestsPassed ? 'bg-green-400' : 'bg-red-400'}`}></div>
+                      <span className={`text-sm font-medium ${allTestsPassed ? 'text-green-400' : 'text-red-400'}`}>
+                        {testResults.filter(r => r.passed).length}/{testResults.length} passed
+                      </span>
+                    </div>
+                  )}
+                  <button
+                    onClick={() => setTestResults([])}
+                    className="text-xs text-gray-400 hover:text-white px-2 py-1 rounded hover:bg-gray-600/50 transition-colors"
+                  >
+                    Clear Results
+                  </button>
                 </div>
               </div>
             </div>

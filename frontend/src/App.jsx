@@ -9,6 +9,8 @@ import Register from './pages/Register';
 import Dashboard from './components/Dashboard';
 import ProblemList from './components/ProblemList';
 import ProblemDetail from './components/ProblemDetail';
+import Playground from './pages/Playground';
+import TestPlayground from './pages/TestPlayground';
 import Leaderboard from './pages/Leaderboard';
 import Learn from './pages/Learn';
 import Login from './pages/Login';
@@ -188,6 +190,14 @@ function App() {
                     <ProblemDetail />
                   </ProtectedLayout>
                 </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/playground"
+              element={
+                <ProtectedLayout>
+                  <Playground />
+                </ProtectedLayout>
               }
             />
             <Route

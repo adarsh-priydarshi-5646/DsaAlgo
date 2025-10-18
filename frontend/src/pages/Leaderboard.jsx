@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, memo } from 'react';
 import { motion } from 'framer-motion';
 import { 
   Trophy, 
@@ -33,7 +33,7 @@ import { leaderboardAPI } from '../services/api';
 
 // Removed 3D component for better stability
 
-export default function Leaderboard() {
+function Leaderboard() {
   const { user } = useAuthStore();
   const { 
     leaderboard, 
@@ -110,27 +110,48 @@ export default function Leaderboard() {
   // Use the already filtered data from above
 
   return (
-    <div className="min-h-screen pt-20 px-4 pb-8">
+    <div className="min-h-screen pt-24 px-4 pb-8">
       <div className="max-w-7xl mx-auto">
         {/* Header with 3D Element */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-12 relative"
+          className="mb-12 relative"
         >
           <div className="absolute top-0 right-0 w-32 h-32 hidden md:block">
             <div className="w-full h-full flex items-center justify-center">
-              <Trophy className="w-16 h-16 text-yellow-400 animate-bounce" />
+              <motion.div
+                animate={{ 
+                  scale: [1, 1.1, 1],
+                  rotate: [0, 5, -5, 0],
+                  opacity: [0.7, 1, 0.7]
+                }}
+                transition={{ 
+                  duration: 3,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+              >
+                <Trophy className="w-16 h-16 text-yellow-400" />
+              </motion.div>
             </div>
           </div>
           
-          <h1 className="text-5xl font-bold bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 bg-clip-text text-transparent mb-4 flex items-center gap-3">
+          <h1 className="text-5xl font-bold bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 bg-clip-text text-transparent mb-6 flex items-center gap-3">
             <Trophy className="w-12 h-12 text-yellow-400" />
             Leaderboard
           </h1>
-          <p className="text-xl text-gray-300 max-w-2xl mx-auto">
-            Compete with the best minds in DSA. Climb the ranks and showcase your problem-solving skills!
-          </p>
+          
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="mb-8"
+          >
+            <p className="text-xl text-gray-300 leading-relaxed">
+              Compete with the best minds in DSA. Climb the ranks and showcase your problem-solving skills!
+            </p>
+          </motion.div>
         </motion.div>
 
         {/* Enhanced Stats Cards */}
@@ -435,114 +456,9 @@ export default function Leaderboard() {
           )}
         </motion.div>
 
-        {/* Enhanced Weekly Challenges */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6 }}
-          className="mt-12"
-        >
-          <div className="flex items-center justify-between mb-8">
-            <h2 className="text-3xl font-bold text-white flex items-center gap-3">
-              <Calendar className="w-8 h-8 text-purple-400" />
-              Weekly Challenges
-            </h2>
-            <div className="flex items-center gap-2 text-sm text-gray-400">
-              <Zap className="w-4 h-4" />
-              <span>2 active challenges</span>
-            </div>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {[
-              {
-                title: 'Dynamic Programming Marathon',
-                description: 'Solve 10 DP problems to earn 500 bonus points!',
-                participants: 1234,
-                timeLeft: '3 days',
-                difficulty: 'Hard',
-                reward: '500 XP',
-                progress: 30,
-                icon: Brain,
-                color: 'from-red-500 to-pink-500'
-              },
-              {
-                title: 'Array Mastery Challenge',
-                description: 'Complete 15 array problems in optimal time complexity.',
-                participants: 856,
-                timeLeft: '5 days',
-                difficulty: 'Medium',
-                reward: '300 XP',
-                progress: 60,
-                icon: Code,
-                color: 'from-blue-500 to-cyan-500'
-              }
-            ].map((challenge, index) => (
-              <motion.div
-                key={challenge.title}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.7 + index * 0.1 }}
-                className="backdrop-blur-lg bg-white/10 rounded-2xl p-6 border border-white/20 hover:border-purple-500/50 transition-all"
-              >
-                <div className="flex items-start justify-between mb-4">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-2">
-                      <div className={`w-10 h-10 bg-gradient-to-r ${challenge.color} rounded-xl flex items-center justify-center`}>
-                        <challenge.icon className="w-5 h-5 text-white" />
-                      </div>
-                      <h3 className="text-xl font-semibold text-white">{challenge.title}</h3>
-                    </div>
-                    <p className="text-gray-300 mb-4">{challenge.description}</p>
-                    
-                    {/* Progress Bar */}
-                    <div className="mb-4">
-                      <div className="flex items-center justify-between text-sm text-gray-400 mb-2">
-                        <span>Your Progress</span>
-                        <span>{challenge.progress}%</span>
-                      </div>
-                      <div className="w-full bg-gray-700 rounded-full h-2">
-                        <div 
-                          className={`bg-gradient-to-r ${challenge.color} h-2 rounded-full transition-all duration-300`}
-                          style={{ width: `${challenge.progress}%` }}
-                        ></div>
-                      </div>
-                    </div>
-                    
-                    <div className="flex items-center gap-4 text-sm text-gray-400 mb-4">
-                      <div className="flex items-center gap-1">
-                        <Clock className="w-4 h-4" />
-                        {challenge.timeLeft}
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <Users className="w-4 h-4" />
-                        {challenge.participants} joined
-                      </div>
-                    </div>
-                    
-                    <div className="flex gap-2">
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${getDifficultyColor(challenge.difficulty)} bg-current/10`}>
-                        {challenge.difficulty}
-                      </span>
-                      <span className="px-3 py-1 bg-purple-500/20 text-purple-400 rounded-full text-xs font-medium">
-                        {challenge.reward}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-                
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="w-full bg-gradient-to-r from-purple-500 to-blue-500 text-white py-3 px-6 rounded-lg font-medium hover:from-purple-600 hover:to-blue-600 transition-all"
-                >
-                  Join Challenge
-                </motion.button>
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
       </div>
     </div>
   );
-} 
+}
+
+export default memo(Leaderboard);

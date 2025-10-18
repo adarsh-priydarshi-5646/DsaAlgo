@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useForm } from 'react-hook-form';
-import { Eye, EyeOff, Mail, Lock, LogIn } from 'lucide-react';
+import { Eye, EyeOff, Mail, Lock, LogIn, Code, Zap, Shield } from 'lucide-react';
 import useAuthStore from '../store/authStore';
 
 const Login = () => {
@@ -37,7 +37,57 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 py-12">
+    <div className="min-h-screen flex items-center justify-center px-4 py-12 relative">
+      {/* Enhanced Background */}
+      <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-purple-900 to-blue-900"></div>
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(120,119,198,0.1),transparent)]"></div>
+      
+      <div className="relative z-10 max-w-6xl w-full flex items-center justify-between gap-12">
+        {/* Left Side - Features */}
+        <motion.div
+          initial={{ opacity: 0, x: -50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.8 }}
+          className="hidden lg:block flex-1"
+        >
+          <div className="space-y-8">
+            <div>
+              <h1 className="text-5xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent mb-4">
+                Master DSA
+              </h1>
+              <p className="text-xl text-gray-300 leading-relaxed">
+                Join thousands of developers improving their problem-solving skills
+              </p>
+            </div>
+            
+            <div className="space-y-6">
+              {[
+                { icon: Code, title: 'Interactive Coding', desc: 'Practice with real-time feedback' },
+                { icon: Zap, title: 'Fast Learning', desc: 'Optimized learning paths' },
+                { icon: Shield, title: 'Secure Platform', desc: 'Your progress is safe with us' }
+              ].map((feature, index) => (
+                <motion.div
+                  key={feature.title}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3 + index * 0.1 }}
+                  className="flex items-center gap-4"
+                >
+                  <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl flex items-center justify-center">
+                    <feature.icon className="w-6 h-6 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-semibold text-white">{feature.title}</h3>
+                    <p className="text-gray-400">{feature.desc}</p>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Right Side - Login Form */}
+        <div className="flex-1 max-w-md">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -190,6 +240,8 @@ const Login = () => {
           </p>
         </motion.div>
       </motion.div>
+        </div>
+      </div>
     </div>
   );
 };

@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import React, { useEffect, useState, memo, useMemo } from 'react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { 
@@ -37,9 +37,10 @@ import useAuthStore from '../store/authStore';
 const Profile = () => {
   const { username } = useParams();
   const { user: currentUser } = useAuthStore();
+  const queryClient = useQueryClient();
   const [profile, setProfile] = useState(null);
   const [stats, setStats] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [isOwnProfile, setIsOwnProfile] = useState(false);
   const [exporting, setExporting] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
@@ -52,6 +53,8 @@ const Profile = () => {
       return res.data.user;
     },
     enabled: !!username,
+    staleTime: 5 * 60 * 1000, // 5 minutes cache
+    cacheTime: 10 * 60 * 1000, // 10 minutes cache
   });
 
   const statsQuery = useQuery({
@@ -61,14 +64,47 @@ const Profile = () => {
       return res.data.stats;
     },
     enabled: !!username,
+    staleTime: 5 * 60 * 1000, // 5 minutes cache
+    cacheTime: 10 * 60 * 1000, // 10 minutes cache
   });
 
   useEffect(() => {
-    setIsLoading(profileQuery.isLoading || statsQuery.isLoading);
+    // Set mock data immediately for instant loading
+    if (!profile && username) {
+      setProfile({
+        id: '1',
+        username: username,
+        firstName: 'User',
+        lastName: 'Profile',
+        email: `${username}@example.com`,
+        avatar: null,
+        role: 'USER',
+        createdAt: new Date().toISOString()
+      });
+    }
+    
+    if (!stats) {
+      setStats({
+        problemsSolved: 0,
+        problemsAttempted: 0,
+        totalSubmissions: 0,
+        successRate: 0,
+        rank: 0,
+        points: 0,
+        streak: 0,
+        difficultyBreakdown: { EASY: 0, MEDIUM: 0, HARD: 0 },
+        recentSubmissions: [],
+        activitySeries: [],
+        languageDistribution: [],
+        achievements: []
+      });
+    }
+    
+    // Update with real data when available
     if (profileQuery.data) setProfile(profileQuery.data);
     if (statsQuery.data) setStats(statsQuery.data);
     setIsOwnProfile(currentUser?.username === username);
-  }, [profileQuery.data, profileQuery.isLoading, statsQuery.data, statsQuery.isLoading, currentUser, username]);
+  }, [profileQuery.data, statsQuery.data, currentUser, username, profile, stats]);
 
   const handleExport = async () => {
     if (!profile?.id) return;
@@ -95,7 +131,7 @@ const Profile = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen pt-20 px-4 pb-8">
+      <div className="min-h-screen pt-24 px-4 pb-8">
         <div className="max-w-7xl mx-auto">
           <div className="mb-8 p-8 rounded-2xl border border-white/10 bg-white/5 animate-pulse">
             <div className="h-8 w-1/3 bg-white/10 rounded mb-6"></div>
@@ -150,7 +186,7 @@ const Profile = () => {
   }));
 
   return (
-    <div className="min-h-screen pt-20 px-4 pb-8">
+    <div className="min-h-screen pt-24 px-4 pb-8">
       <div className="max-w-7xl mx-auto">
         {/* Enhanced Profile Header */}
         <motion.div
@@ -568,6 +604,24 @@ const Profile = () => {
         open={showEdit}
         onClose={() => setShowEdit(false)}
         initial={profile}
+        onProfileUpdate={(updatedData) => {
+          // Update local profile state immediately
+          setProfile(prev => ({ ...prev, ...updatedData }));
+          
+          // Invalidate React Query cache
+          queryClient.invalidateQueries(['userProfile', username]);
+          queryClient.invalidateQueries(['userStats', username]);
+          
+          // Also update auth store
+          if (currentUser?.username === username) {
+            useAuthStore.setState({ 
+              user: { ...currentUser, ...updatedData } 
+            });
+            localStorage.setItem('user', JSON.stringify({ ...currentUser, ...updatedData }));
+          }
+          
+          console.log('Profile updated successfully');
+        }}
       />
       <SettingsModal
         open={showSettings}
@@ -577,5 +631,5 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+export default memo(Profile);
 
