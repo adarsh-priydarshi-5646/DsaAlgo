@@ -130,12 +130,37 @@ export const login = async (req, res) => {
   try {
     const { login, password } = req.body;
 
-    console.log('Login attempt:', { login });
+    console.log('Login attempt:', { login, environment: process.env.NODE_ENV });
 
     // Validation
     if (!login || !password) {
       return res.status(400).json({ 
         error: 'Email/username and password are required' 
+      });
+    }
+
+    // Enhanced demo login for production testing
+    if (login.toLowerCase() === 'demo@example.com' && password === 'demo123') {
+      const mockUserId = `demo_${Date.now()}`;
+      const mockUser = {
+        id: mockUserId,
+        email: 'demo@example.com',
+        username: 'demo',
+        firstName: 'Demo',
+        lastName: 'User',
+        role: 'USER',
+        isVerified: true,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      };
+
+      const token = generateToken(mockUserId);
+      console.log('Demo login successful');
+
+      return res.json({
+        message: 'Login successful (demo mode)',
+        user: mockUser,
+        token
       });
     }
 
@@ -202,32 +227,13 @@ export const login = async (req, res) => {
       });
     } catch (dbError) {
       console.error('Database error during login:', dbError);
+      console.error('Database URL exists:', !!process.env.DATABASE_URL);
       
-      // Fallback: Demo login for testing
-      if (login.toLowerCase() === 'demo@example.com' && password === 'demo123') {
-        const mockUserId = `demo_${Date.now()}`;
-        const mockUser = {
-          id: mockUserId,
-          email: 'demo@example.com',
-          username: 'demo',
-          firstName: 'Demo',
-          lastName: 'User',
-          role: 'USER',
-          createdAt: new Date().toISOString()
-        };
-
-        const token = generateToken(mockUserId);
-
-        res.json({
-          message: 'Login successful (demo mode)',
-          user: mockUser,
-          token
-        });
-      } else {
-        return res.status(401).json({ 
-          error: 'Invalid credentials or database unavailable' 
-        });
-      }
+      return res.status(500).json({ 
+        error: 'Database connection failed',
+        message: 'Please try again later or use demo login (demo@example.com / demo123)',
+        details: process.env.NODE_ENV === 'development' ? dbError.message : undefined
+      });
     }
   } catch (error) {
     console.error('Login error:', error);

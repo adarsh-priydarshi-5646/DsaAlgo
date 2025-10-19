@@ -24,7 +24,8 @@ const Login = () => {
       const errorMessages = {
         oauth_failed: 'Google OAuth authentication failed. Please try again.',
         oauth_no_user: 'No user information received from Google. Please try again.',
-        oauth_processing_failed: 'Failed to process OAuth login. Please try again.'
+        oauth_processing_failed: 'Failed to process OAuth login. Please try again.',
+        oauth_not_configured: 'Google OAuth is not configured. Please use email/password login or try demo account (demo@example.com / demo123).'
       };
       setOauthError(errorMessages[error] || 'OAuth authentication failed. Please try again.');
     }
@@ -137,6 +138,13 @@ const Login = () => {
                 <p className="text-sm text-red-300">{oauthError}</p>
               </div>
             )}
+            
+            {/* Demo Account Info */}
+            <div className="mb-4 p-3 bg-blue-500/20 border border-blue-500/30 rounded-lg">
+              <p className="text-sm text-blue-300 font-medium mb-1">Demo Account Available:</p>
+              <p className="text-xs text-blue-200">Email: demo@example.com</p>
+              <p className="text-xs text-blue-200">Password: demo123</p>
+            </div>
             {/* Email */}
             <div className="mb-4">
               <label className="block text-sm font-medium text-gray-300 mb-2">
@@ -273,10 +281,11 @@ const Login = () => {
                 console.log(`🌐 Current hostname: ${window.location.hostname}`);
                 window.location.href = url;
               }}
-              className="w-full mb-4 bg-white text-gray-800 py-3 px-4 rounded-lg font-medium hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-900 transition-all flex items-center justify-center gap-2"
+              className="w-full mb-4 bg-white text-gray-800 py-3 px-4 rounded-lg font-medium hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-900 transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              disabled={oauthError && oauthError.includes('not configured')}
             >
               <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" className="w-5 h-5" />
-              Continue with Google
+              {oauthError && oauthError.includes('not configured') ? 'Google OAuth Unavailable' : 'Continue with Google'}
             </button>
           </div>
 
@@ -289,6 +298,13 @@ const Login = () => {
               Sign up
             </Link>
           </p>
+          
+          {/* Production Status Info */}
+          <div className="mt-4 p-2 bg-gray-800/50 rounded-lg">
+            <p className="text-xs text-gray-400 text-center">
+              Production Status: Backend Running ✅ | Database Issues ⚠️ | OAuth Setup Required 🔧
+            </p>
+          </div>
         </motion.div>
       </motion.div>
         </div>

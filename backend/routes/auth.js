@@ -71,6 +71,16 @@ const clientSecret = isDevelopment
   ? process.env.GOOGLE_CLIENT_SECRET_DEV 
   : process.env.GOOGLE_CLIENT_SECRET_PROD;
 
+console.log('🔍 OAuth Configuration Check:');
+console.log(`   Environment: ${process.env.NODE_ENV}`);
+console.log(`   isDevelopment: ${isDevelopment}`);
+console.log(`   Client ID exists: ${!!clientID}`);
+console.log(`   Client Secret exists: ${!!clientSecret}`);
+console.log(`   GOOGLE_CLIENT_ID_DEV exists: ${!!process.env.GOOGLE_CLIENT_ID_DEV}`);
+console.log(`   GOOGLE_CLIENT_ID_PROD exists: ${!!process.env.GOOGLE_CLIENT_ID_PROD}`);
+console.log(`   GOOGLE_CLIENT_SECRET_DEV exists: ${!!process.env.GOOGLE_CLIENT_SECRET_DEV}`);
+console.log(`   GOOGLE_CLIENT_SECRET_PROD exists: ${!!process.env.GOOGLE_CLIENT_SECRET_PROD}`);
+
 // OAuth 2.0 - Google (only if configured)
 if (clientID && clientSecret) {
   router.get('/oauth/google',
@@ -127,19 +137,24 @@ if (clientID && clientSecret) {
     }
   );
 } else {
+  console.log('❌ Google OAuth not configured - missing credentials');
+  
   // Fallback routes when Google OAuth is not configured
   router.get('/oauth/google', (req, res) => {
-    res.status(503).json({ 
-      error: `Google OAuth is not configured for ${process.env.NODE_ENV} environment`,
-      environment: process.env.NODE_ENV 
-    });
+    const frontendURL = isDevelopment 
+      ? process.env.FRONTEND_URL_DEV || 'http://localhost:3000'
+      : process.env.FRONTEND_URL_PROD || 'https://dsa-algo-chi.vercel.app';
+    
+    console.log('OAuth attempt with missing credentials, redirecting to login with error');
+    res.redirect(`${frontendURL}/login?error=oauth_not_configured`);
   });
 
   router.get('/oauth/google/callback', (req, res) => {
-    res.status(503).json({ 
-      error: `Google OAuth is not configured for ${process.env.NODE_ENV} environment`,
-      environment: process.env.NODE_ENV 
-    });
+    const frontendURL = isDevelopment 
+      ? process.env.FRONTEND_URL_DEV || 'http://localhost:3000'
+      : process.env.FRONTEND_URL_PROD || 'https://dsa-algo-chi.vercel.app';
+    
+    res.redirect(`${frontendURL}/login?error=oauth_not_configured`);
   });
 }
 
