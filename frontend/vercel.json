@@ -1,51 +1,7 @@
 {
   "rewrites": [
     {
-      "source": "/oauth/callback",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/register",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/login",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/dashboard",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/problems",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/problems/(.*)",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/profile",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/profile/(.*)",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/leaderboard",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/learn",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/playground",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/((?!api|_next|_static|favicon.ico|robots.txt|sitemap.xml).*)",
+      "source": "/(.*)",
       "destination": "/index.html"
     }
   ],
@@ -78,9 +34,5 @@
     }
   ],
   "cleanUrls": true,
-  "trailingSlash": false,
-  "buildCommand": "npm run build",
-  "outputDirectory": "dist",
-  "installCommand": "npm install",
-  "devCommand": "npm run dev"
+  "trailingSlash": false
 }

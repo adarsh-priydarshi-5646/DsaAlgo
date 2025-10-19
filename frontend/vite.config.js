@@ -4,9 +4,7 @@ import react from '@vitejs/plugin-react'
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
-  define: {
-    'import.meta.env.VITE_API_URL': JSON.stringify('http://localhost:5001/api')
-  },
+  // Remove hardcoded API URL - let environment detection handle it
   server: {
     port: 3000,
     open: true,

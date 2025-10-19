@@ -29,6 +29,29 @@ const getApiUrl = () => {
 const API_BASE_URL = import.meta.env.VITE_API_URL || getApiUrl();
 
 console.log(`🌐 API Base URL: ${API_BASE_URL}`);
+console.log(`🌐 Current hostname: ${window.location.hostname}`);
+console.log(`🌐 Current protocol: ${window.location.protocol}`);
+console.log(`🌐 Environment: ${import.meta.env.MODE}`);
+
+// Test API connectivity
+const testApiConnectivity = async () => {
+  try {
+    const response = await fetch(`${API_BASE_URL.replace('/api', '')}/health`, {
+      method: 'GET',
+      mode: 'cors'
+    });
+    if (response.ok) {
+      console.log('✅ API connectivity test passed');
+    } else {
+      console.warn('⚠️ API connectivity test failed:', response.status);
+    }
+  } catch (error) {
+    console.error('❌ API connectivity test error:', error.message);
+  }
+};
+
+// Run connectivity test
+testApiConnectivity();
 
 // Create axios instance
 const api = axios.create({
@@ -36,6 +59,8 @@ const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+  timeout: 30000, // 30 second timeout
+  withCredentials: true, // Include credentials for CORS
 });
 
 // Request interceptor to add auth token
@@ -56,11 +81,39 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   (error) => {
+    console.error('API Error:', {
+      message: error.message,
+      status: error.response?.status,
+      statusText: error.response?.statusText,
+      data: error.response?.data,
+      config: {
+        method: error.config?.method,
+        url: error.config?.url,
+        baseURL: error.config?.baseURL
+      }
+    });
+    
+    // Handle network errors
+    if (!error.response) {
+      console.error('Network Error - No response received');
+      // Don't redirect on network errors, let the component handle it
+      return Promise.reject({
+        ...error,
+        message: 'Network error - please check your connection and try again'
+      });
+    }
+    
+    // Handle 401 errors
     if (error.response?.status === 401) {
+      console.log('Unauthorized - clearing auth state');
       localStorage.removeItem('token');
       localStorage.removeItem('user');
-      window.location.href = '/login';
+      // Only redirect if not already on login page
+      if (window.location.pathname !== '/login' && window.location.pathname !== '/oauth/callback') {
+        window.location.href = '/login';
+      }
     }
+    
     return Promise.reject(error);
   }
 );

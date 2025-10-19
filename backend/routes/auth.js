@@ -100,7 +100,7 @@ if (clientID && clientSecret) {
           console.error('No user found in OAuth callback');
           const frontendURL = isDevelopment 
             ? process.env.FRONTEND_URL_DEV || 'http://localhost:3000'
-            : process.env.FRONTEND_URL_PROD;
+            : process.env.FRONTEND_URL_PROD || 'https://dsa-algo-chi.vercel.app';
           return res.redirect(`${frontendURL}/login?error=oauth_no_user`);
         }
 
@@ -110,10 +110,10 @@ if (clientID && clientSecret) {
           { expiresIn: process.env.JWT_EXPIRES_IN || '7d' }
         );
 
-        // Environment-specific frontend URL
+        // Environment-specific frontend URL with proper fallback
         const frontendURL = isDevelopment 
           ? process.env.FRONTEND_URL_DEV || 'http://localhost:3001'
-          : process.env.FRONTEND_URL_PROD;
+          : process.env.FRONTEND_URL_PROD || 'https://dsa-algo-chi.vercel.app';
         
         const redirectUrl = `${frontendURL}/oauth/callback?token=${encodeURIComponent(token)}`;
 
@@ -131,7 +131,7 @@ if (clientID && clientSecret) {
         console.error('OAuth callback error:', err);
         const frontendURL = isDevelopment 
           ? process.env.FRONTEND_URL_DEV || 'http://localhost:3001'
-          : process.env.FRONTEND_URL_PROD;
+          : process.env.FRONTEND_URL_PROD || 'https://dsa-algo-chi.vercel.app';
         return res.redirect(`${frontendURL}/login?error=oauth_processing_failed`);
       }
     }

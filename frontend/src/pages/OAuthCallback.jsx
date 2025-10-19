@@ -6,7 +6,7 @@ import toast from 'react-hot-toast';
 const OAuthCallback = () => {
   const navigate = useNavigate();
   const { fetchUser } = useAuthStore();
-  const [status, setStatus] = useState('Processing...');
+  const [status, setStatus] = useState('Processing OAuth callback...');
 
   useEffect(() => {
     const handleOAuthCallback = async () => {
@@ -16,8 +16,9 @@ const OAuthCallback = () => {
         const token = params.get('token');
         const error = params.get('error');
         
-        console.log('🔍 OAuth Callback - Token:', token ? 'Present' : 'Missing');
+        console.log('🔍 OAuth Callback - Token:', token ? `Present (${token.substring(0, 20)}...)` : 'Missing');
         console.log('🔍 OAuth Callback - Error:', error || 'None');
+        console.log('🔍 OAuth Callback - All params:', Object.fromEntries(params));
 
         if (error) {
           setStatus('Authentication failed');
@@ -30,45 +31,75 @@ const OAuthCallback = () => {
           setStatus('Saving authentication...');
           localStorage.setItem('token', token);
           
-          setStatus('Loading user profile...');
+          // First, try to decode the token to get user info
           try {
-            await fetchUser();
-            setStatus('Success! Redirecting...');
-            toast.success('Login successful!');
-            setTimeout(() => navigate('/dashboard', { replace: true }), 1000);
-          } catch (fetchError) {
-            console.error('Failed to fetch user:', fetchError);
-            setStatus('Setting up your session...');
+            const payload = JSON.parse(atob(token.split('.')[1]));
+            console.log('🔍 Decoded token payload:', payload);
             
-            // Fallback: manually set authentication state
+            // Create a basic user object from token
+            const basicUser = {
+              id: payload.userId,
+              email: 'oauth-user@example.com',
+              username: 'OAuth User',
+              firstName: 'OAuth',
+              lastName: 'User',
+              role: 'USER',
+              isVerified: true
+            };
+            
+            // Set auth state immediately for faster UX
+            useAuthStore.setState({
+              user: basicUser,
+              token,
+              isAuthenticated: true,
+              isLoading: false
+            });
+            
+            localStorage.setItem('user', JSON.stringify(basicUser));
+            
+            setStatus('Loading your profile...');
+            
+            // Try to fetch full user profile in background
             try {
-              // Decode JWT to get user info (basic implementation)
-              const payload = JSON.parse(atob(token.split('.')[1]));
-              const fallbackUser = {
-                id: payload.userId,
-                email: 'user@example.com', // Will be updated when API is available
-                username: 'User'
-              };
-              
-              // Set auth state manually
-              useAuthStore.setState({
-                user: fallbackUser,
-                token,
-                isAuthenticated: true,
-                isLoading: false
-              });
-              
-              localStorage.setItem('user', JSON.stringify(fallbackUser));
-              
-              setStatus('Success! Redirecting...');
-              toast.success('Login successful!');
-              setTimeout(() => navigate('/dashboard', { replace: true }), 1000);
-            } catch (decodeError) {
-              console.error('Failed to decode token:', decodeError);
-              setStatus('Authentication successful, redirecting...');
-              // Even if we can't decode, still redirect - user has valid token
-              setTimeout(() => navigate('/dashboard', { replace: true }), 2000);
+              await fetchUser();
+              console.log('✅ Successfully fetched full user profile');
+            } catch (fetchError) {
+              console.warn('⚠️ Could not fetch full profile, using basic info:', fetchError);
+              // Continue with basic user info - this is not a blocking error
             }
+            
+            setStatus('Success! Redirecting to dashboard...');
+            toast.success('Login successful! Welcome back!');
+            
+            // Redirect to dashboard
+            setTimeout(() => {
+              navigate('/dashboard', { replace: true });
+            }, 1500);
+            
+          } catch (decodeError) {
+            console.error('Failed to decode token:', decodeError);
+            setStatus('Processing authentication...');
+            
+            // Even if we can't decode, set basic auth state
+            useAuthStore.setState({
+              user: {
+                id: 'oauth-user',
+                email: 'oauth-user@example.com',
+                username: 'OAuth User'
+              },
+              token,
+              isAuthenticated: true,
+              isLoading: false
+            });
+            
+            localStorage.setItem('user', JSON.stringify({
+              id: 'oauth-user',
+              email: 'oauth-user@example.com',
+              username: 'OAuth User'
+            }));
+            
+            toast.success('Authentication successful!');
+            setTimeout(() => navigate('/dashboard', { replace: true }), 2000);
           }
         } else {
           setStatus('No authentication token received');

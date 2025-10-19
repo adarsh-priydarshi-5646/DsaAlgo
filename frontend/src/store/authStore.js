@@ -15,8 +15,11 @@ const useAuthStore = create(
       login: async (credentials) => {
         set({ isLoading: true });
         try {
+          console.log('🔄 Attempting login with:', { login: credentials.login });
           const response = await authAPI.login(credentials);
           const { user, token } = response.data;
+          
+          console.log('✅ Login successful:', { userId: user.id, email: user.email });
           
           // Store token and update state
           localStorage.setItem('token', token);
@@ -33,7 +36,20 @@ const useAuthStore = create(
           return { success: true, user, token };
         } catch (error) {
           set({ isLoading: false });
-          const message = error.response?.data?.error || error.message || 'Login failed';
+          console.error('❌ Login failed:', error);
+          
+          let message = 'Login failed';
+          
+          if (!error.response) {
+            message = 'Network error - please check your connection';
+          } else if (error.response?.data?.error) {
+            message = error.response.data.error;
+          } else if (error.response?.data?.message) {
+            message = error.response.data.message;
+          } else if (error.message) {
+            message = error.message;
+          }
+          
           toast.error(message);
           return { success: false, error: message };
         }
@@ -42,8 +58,11 @@ const useAuthStore = create(
       register: async (userData) => {
         set({ isLoading: true });
         try {
+          console.log('🔄 Attempting registration for:', { email: userData.email, username: userData.username });
           const response = await authAPI.register(userData);
           const { user, token } = response.data;
+          
+          console.log('✅ Registration successful:', { userId: user.id, email: user.email });
           
           // Store token and user data
           localStorage.setItem('token', token);
@@ -60,7 +79,24 @@ const useAuthStore = create(
           return { success: true, user, token };
         } catch (error) {
           set({ isLoading: false });
-          const message = error.response?.data?.error || 'Registration failed';
+          console.error('❌ Registration failed:', error);
+          
+          let message = 'Registration failed';
+          
+          if (!error.response) {
+            message = 'Network error - please check your connection';
+          } else if (error.response?.data?.error) {
+            message = error.response.data.error;
+          } else if (error.response?.data?.details) {
+            // Handle validation errors
+            const details = error.response.data.details;
+            if (Array.isArray(details) && details.length > 0) {
+              message = details[0].msg || details[0].message || message;
+            }
+          } else if (error.message) {
+            message = error.message;
+          }
+          
           toast.error(message);
           return { success: false, error: message };
         }
@@ -106,12 +142,21 @@ const useAuthStore = create(
 
       fetchUser: async () => {
         const token = localStorage.getItem('token');
-        if (!token) return;
+        if (!token) {
+          console.log('🔍 No token found, skipping fetchUser');
+          return;
+        }
 
         set({ isLoading: true });
         try {
+          console.log('🔄 Fetching user profile...');
           const response = await authAPI.getMe();
           const { user } = response.data;
+          
+          console.log('✅ User profile fetched:', { userId: user.id, email: user.email });
+          
+          // Update localStorage with fresh user data
+          localStorage.setItem('user', JSON.stringify(user));
           
           set({ 
             user, 
@@ -119,14 +164,25 @@ const useAuthStore = create(
             isAuthenticated: true, 
             isLoading: false 
           });
-        } catch {
-          localStorage.removeItem('token');
-          set({ 
-            user: null, 
-            token: null, 
-            isAuthenticated: false, 
-            isLoading: false 
-          });
+        } catch (error) {
+          console.error('❌ Failed to fetch user:', error);
+          
+          // Only clear auth state if it's a 401 error
+          if (error.response?.status === 401) {
+            console.log('🔄 Token invalid, clearing auth state');
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            set({ 
+              user: null, 
+              token: null, 
+              isAuthenticated: false, 
+              isLoading: false 
+            });
+          } else {
+            // For network errors, keep existing auth state
+            console.log('⚠️ Network error, keeping existing auth state');
+            set({ isLoading: false });
+          }
         }
       },
 
