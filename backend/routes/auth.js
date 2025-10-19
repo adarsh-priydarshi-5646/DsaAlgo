@@ -115,7 +115,8 @@ if (clientID && clientSecret) {
           ? process.env.FRONTEND_URL_DEV || 'http://localhost:3001'
           : process.env.FRONTEND_URL_PROD || 'https://dsa-algo-chi.vercel.app';
         
-        const redirectUrl = `${frontendURL}/oauth/callback?token=${encodeURIComponent(token)}`;
+        // Use main page redirect with token (bypasses broken SPA routing)
+        const redirectUrl = `${frontendURL}/?oauth_token=${encodeURIComponent(token)}&oauth_success=true`;
 
         console.log(`🔄 OAuth redirect to: ${redirectUrl}`);
         console.log(`👤 User: ${user.email} (ID: ${user.id})`);
@@ -125,7 +126,7 @@ if (clientID && clientSecret) {
         console.log(`🔍 FRONTEND_URL_PROD: ${process.env.FRONTEND_URL_PROD}`);
         console.log(`🔍 Final frontendURL: ${frontendURL}`);
         
-        // Redirect back to frontend with token
+        // Redirect to main page with OAuth token
         return res.redirect(302, redirectUrl);
       } catch (err) {
         console.error('OAuth callback error:', err);

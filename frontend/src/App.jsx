@@ -78,6 +78,45 @@ function App() {
   const { fetchUser, isAuthenticated, isLoading, user } = useAuthStore();
 
   useEffect(() => {
+    // Check for OAuth token in URL (fallback for broken routing)
+    const urlParams = new URLSearchParams(window.location.search);
+    const hashParams = new URLSearchParams(window.location.hash.substring(1));
+    const oauthToken = urlParams.get('oauth_token') || hashParams.get('token');
+    
+    if (oauthToken) {
+      console.log('🔄 OAuth token found in URL, processing...');
+      localStorage.setItem('token', oauthToken);
+      
+      // Create basic user from token
+      try {
+        const payload = JSON.parse(atob(oauthToken.split('.')[1]));
+        const basicUser = {
+          id: payload.userId,
+          email: 'oauth-user@example.com',
+          username: 'OAuth User',
+          firstName: 'OAuth',
+          lastName: 'User',
+          role: 'USER',
+          isVerified: true
+        };
+        
+        localStorage.setItem('user', JSON.stringify(basicUser));
+        useAuthStore.setState({
+          user: basicUser,
+          token: oauthToken,
+          isAuthenticated: true,
+          isLoading: false
+        });
+        
+        // Clean URL and redirect to dashboard
+        window.history.replaceState({}, document.title, '/dashboard');
+        console.log('✅ OAuth login successful, redirecting to dashboard');
+      } catch (error) {
+        console.error('Failed to process OAuth token:', error);
+      }
+      return;
+    }
+    
     // Check for existing token and fetch user data
     const token = localStorage.getItem('token');
     const storedUser = localStorage.getItem('user');
