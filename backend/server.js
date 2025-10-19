@@ -17,6 +17,28 @@ import leaderboardRoutes from './routes/leaderboard.js';
 
 // Load environment variables
 dotenv.config();
+
+// Smart environment detection
+const isRenderProduction = process.env.RENDER || process.env.RAILWAY || process.env.HEROKU;
+const isLocalDevelopment = !isRenderProduction && (
+  process.env.NODE_ENV !== 'production' || 
+  process.env.PORT === '5001' ||
+  !process.env.DATABASE_URL?.includes('supabase')
+);
+
+// Override NODE_ENV based on detection
+if (isLocalDevelopment) {
+  process.env.NODE_ENV = 'development';
+  console.log('🔧 Auto-detected: LOCAL DEVELOPMENT MODE');
+  console.log(`   📍 Port: ${process.env.PORT || 5001}`);
+  console.log(`   🗄️  Database: ${process.env.DATABASE_URL ? 'Connected' : 'Not configured'}`);
+} else {
+  process.env.NODE_ENV = 'production';
+  console.log('🚀 Auto-detected: PRODUCTION MODE');
+  console.log(`   🌐 Platform: ${process.env.RENDER ? 'Render' : 'Unknown'}`);
+  console.log(`   🗄️  Database: ${process.env.DATABASE_URL ? 'Connected' : 'Not configured'}`);
+}
+
 configurePassport();
 
 // Check required environment variables

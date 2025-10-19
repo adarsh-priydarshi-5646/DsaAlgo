@@ -1,13 +1,28 @@
 import axios from 'axios';
 
-// Environment-based API URL configuration
+// Smart environment detection for API URL
 const getApiUrl = () => {
-  const nodeEnv = import.meta.env.VITE_NODE_ENV || import.meta.env.MODE || 'development';
+  // Check if running on Vercel production
+  const isVercelProduction = window.location.hostname === 'dsa-algo-chi.vercel.app';
+  // Check if running locally
+  const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
   
-  if (nodeEnv === 'production') {
-    return import.meta.env.VITE_API_URL_PROD || 'https://dsaalgo.onrender.com/api';
+  if (isVercelProduction) {
+    console.log('🚀 Auto-detected: VERCEL PRODUCTION - Using production API');
+    return 'https://dsaalgo.onrender.com/api';
+  } else if (isLocalhost) {
+    console.log('🔧 Auto-detected: LOCAL DEVELOPMENT - Using local API');
+    return 'http://localhost:5001/api';
   } else {
-    return import.meta.env.VITE_API_URL_DEV || 'http://localhost:5001/api';
+    // Fallback to environment variables
+    const nodeEnv = import.meta.env.VITE_NODE_ENV || import.meta.env.MODE || 'development';
+    console.log(`🔍 Environment fallback: ${nodeEnv}`);
+    
+    if (nodeEnv === 'production') {
+      return import.meta.env.VITE_API_URL_PROD || 'https://dsaalgo.onrender.com/api';
+    } else {
+      return import.meta.env.VITE_API_URL_DEV || 'http://localhost:5001/api';
+    }
   }
 };
 
