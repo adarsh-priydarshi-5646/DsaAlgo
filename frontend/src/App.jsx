@@ -87,33 +87,49 @@ function App() {
       console.log('🔄 OAuth token found in URL, processing...');
       localStorage.setItem('token', oauthToken);
       
-      // Create basic user from token
-      try {
-        const payload = JSON.parse(atob(oauthToken.split('.')[1]));
-        const basicUser = {
-          id: payload.userId,
-          email: 'oauth-user@example.com',
-          username: 'OAuth User',
-          firstName: 'OAuth',
-          lastName: 'User',
-          role: 'USER',
-          isVerified: true
-        };
-        
-        localStorage.setItem('user', JSON.stringify(basicUser));
-        useAuthStore.setState({
-          user: basicUser,
-          token: oauthToken,
-          isAuthenticated: true,
-          isLoading: false
-        });
-        
+      // Set token first, then fetch real user profile
+      useAuthStore.setState({
+        token: oauthToken,
+        isAuthenticated: true,
+        isLoading: true
+      });
+      
+      // Fetch actual user profile from backend
+      fetchUser().then(() => {
+        console.log('✅ OAuth login successful, user profile fetched');
         // Clean URL and redirect to dashboard
         window.history.replaceState({}, document.title, '/dashboard');
-        console.log('✅ OAuth login successful, redirecting to dashboard');
-      } catch (error) {
-        console.error('Failed to process OAuth token:', error);
-      }
+      }).catch((error) => {
+        console.error('Failed to fetch user profile after OAuth:', error);
+        
+        // Fallback: Create basic user from token if API fails
+        try {
+          const payload = JSON.parse(atob(oauthToken.split('.')[1]));
+          const fallbackUser = {
+            id: payload.userId,
+            email: 'oauth-user@example.com',
+            username: 'OAuth User',
+            firstName: 'OAuth',
+            lastName: 'User',
+            role: 'USER',
+            isVerified: true
+          };
+          
+          localStorage.setItem('user', JSON.stringify(fallbackUser));
+          useAuthStore.setState({
+            user: fallbackUser,
+            token: oauthToken,
+            isAuthenticated: true,
+            isLoading: false
+          });
+          
+          console.log('⚠️ Using fallback user data for OAuth');
+          window.history.replaceState({}, document.title, '/dashboard');
+        } catch (decodeError) {
+          console.error('Failed to decode token:', decodeError);
+        }
+      });
+      
       return;
     }
     
