@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
@@ -16,13 +16,27 @@ import {
   Terminal
 } from 'lucide-react';
 import useAuthStore from '../store/authStore';
+import useNotificationStore from '../store/notificationStore';
+import NotificationDropdown from './NotificationDropdown';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const [showNotifications, setShowNotifications] = useState(false);
   const { user, logout } = useAuthStore();
+  const { unreadCount, fetchNotifications } = useNotificationStore();
   const location = useLocation();
   const navigate = useNavigate();
+  
+  // Fetch notifications when component mounts
+  useEffect(() => {
+    if (user) {
+      fetchNotifications();
+      // Refresh notifications every 5 minutes
+      const interval = setInterval(fetchNotifications, 5 * 60 * 1000);
+      return () => clearInterval(interval);
+    }
+  }, [user, fetchNotifications]);
 
   const handleLogout = () => {
     logout();
@@ -82,14 +96,30 @@ const Navbar = () => {
           {/* User Menu */}
           <div className="hidden md:flex items-center gap-4">
             {/* Notifications */}
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="relative p-2 text-gray-300 hover:text-white transition-colors"
-            >
-              <Bell className="w-5 h-5" />
-              <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full"></span>
-            </motion.button>
+            <div className="relative">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => setShowNotifications(!showNotifications)}
+                className="relative p-2 text-gray-300 hover:text-white transition-colors"
+              >
+                <Bell className="w-5 h-5" />
+                {unreadCount > 0 && (
+                  <motion.span
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    className="absolute -top-1 -right-1 min-w-[18px] h-[18px] bg-red-500 text-white text-xs rounded-full flex items-center justify-center font-medium"
+                  >
+                    {unreadCount > 99 ? '99+' : unreadCount}
+                  </motion.span>
+                )}
+              </motion.button>
+              
+              <NotificationDropdown 
+                isOpen={showNotifications} 
+                onClose={() => setShowNotifications(false)} 
+              />
+            </div>
 
             {/* User Profile */}
             <div className="relative">
@@ -221,11 +251,14 @@ const Navbar = () => {
         </AnimatePresence>
       </div>
 
-      {/* Click outside to close user menu */}
-      {showUserMenu && (
+      {/* Click outside to close menus */}
+      {(showUserMenu || showNotifications) && (
         <div
           className="fixed inset-0 z-40"
-          onClick={() => setShowUserMenu(false)}
+          onClick={() => {
+            setShowUserMenu(false);
+            setShowNotifications(false);
+          }}
         />
       )}
     </motion.nav>

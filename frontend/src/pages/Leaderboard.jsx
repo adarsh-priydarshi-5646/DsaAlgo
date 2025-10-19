@@ -159,15 +159,15 @@ function Leaderboard() {
           {[
             {
               title: 'Total Participants',
-              value: metadata?.totalUsers || '1,234',
-              subtitle: '+12% this week',
+              value: metadata?.totalUsers || 0,
+              subtitle: 'Registered users',
               icon: Users,
               color: 'from-blue-500 to-cyan-500',
               trend: 'up'
             },
             {
               title: 'Problems Solved',
-              value: metadata?.totalProblems || '15.2K',
+              value: metadata?.totalProblems || 0,
               subtitle: 'Across all users',
               icon: Code,
               color: 'from-green-500 to-emerald-500',
@@ -175,7 +175,7 @@ function Leaderboard() {
             },
             {
               title: 'Total Submissions',
-              value: metadata?.totalSubmissions || '50K+',
+              value: metadata?.recentSubmissions || metadata?.totalSubmissions || 0,
               subtitle: 'Last 30 days',
               icon: Activity,
               color: 'from-purple-500 to-pink-500',
@@ -183,8 +183,8 @@ function Leaderboard() {
             },
             {
               title: 'Active Now',
-              value: '234',
-              subtitle: 'Online users',
+              value: metadata?.activeUsers || 0,
+              subtitle: 'Active in 24h',
               icon: Zap,
               color: 'from-orange-500 to-red-500',
               trend: 'stable'

@@ -155,22 +155,22 @@ const Dashboard = () => {
 
   // All useMemo hooks next
   const mockCategories = useMemo(() => [
-    { id: 1, name: 'Arrays', description: 'Master array manipulation and algorithms', problemCount: 45, icon: Database, color: 'from-blue-500 to-cyan-500' },
+    { id: 1, name: 'Arrays', description: 'Master array manipulation and algorithms', problemCount: 45, icon: Grid3x3, color: 'from-blue-500 to-cyan-500' },
     { id: 2, name: 'Strings', description: 'String processing and pattern matching', problemCount: 32, icon: Hash, color: 'from-green-500 to-emerald-500' },
-    { id: 3, name: 'Trees', description: 'Binary trees, BST, and tree traversals', problemCount: 38, icon: GitBranch, color: 'from-teal-500 to-green-500' },
+    { id: 3, name: 'Trees', description: 'Binary trees, BST, and tree traversals', problemCount: 38, icon: TreePine, color: 'from-teal-500 to-green-500' },
     { id: 4, name: 'Graphs', description: 'Graph algorithms and traversal techniques', problemCount: 28, icon: Network, color: 'from-indigo-500 to-purple-500' },
     { id: 5, name: 'Dynamic Programming', description: 'Optimization problems and memoization', problemCount: 42, icon: Brain, color: 'from-yellow-500 to-orange-500' },
     { id: 6, name: 'Sorting', description: 'Sorting algorithms and their applications', problemCount: 25, icon: ArrowUpDown, color: 'from-purple-500 to-pink-500' },
-    { id: 7, name: 'Linked Lists', description: 'Linked data structures and operations', problemCount: 30, icon: Workflow, color: 'from-pink-500 to-rose-500' },
+    { id: 7, name: 'Linked Lists', description: 'Linked data structures and operations', problemCount: 30, icon: GitBranch, color: 'from-pink-500 to-rose-500' },
     { id: 8, name: 'Stack & Queue', description: 'LIFO and FIFO data structures', problemCount: 22, icon: Layers, color: 'from-orange-500 to-red-500' },
-    { id: 9, name: 'Binary Search', description: 'Efficient searching algorithms', problemCount: 18, icon: Crosshair, color: 'from-emerald-500 to-teal-500' },
-    { id: 10, name: 'Recursion', description: 'Recursive problem solving techniques', problemCount: 26, icon: Infinity, color: 'from-violet-500 to-purple-500' },
-    { id: 11, name: 'Backtracking', description: 'Systematic solution space exploration', problemCount: 20, icon: Compass, color: 'from-cyan-500 to-blue-500' },
-    { id: 12, name: 'Greedy', description: 'Optimal local choice algorithms', problemCount: 24, icon: Diamond, color: 'from-amber-500 to-yellow-500' },
+    { id: 9, name: 'Binary Search', description: 'Efficient searching algorithms', problemCount: 18, icon: Search, color: 'from-emerald-500 to-teal-500' },
+    { id: 10, name: 'Recursion', description: 'Recursive problem solving techniques', problemCount: 26, icon: Repeat, color: 'from-violet-500 to-purple-500' },
+    { id: 11, name: 'Backtracking', description: 'Systematic solution space exploration', problemCount: 20, icon: Route, color: 'from-cyan-500 to-blue-500' },
+    { id: 12, name: 'Greedy', description: 'Optimal local choice algorithms', problemCount: 24, icon: Zap, color: 'from-amber-500 to-yellow-500' },
     { id: 13, name: 'Heap', description: 'Priority queue and heap operations', problemCount: 16, icon: Triangle, color: 'from-red-500 to-pink-500' },
-    { id: 14, name: 'Bit Manipulation', description: 'Bitwise operations and tricks', problemCount: 14, icon: Atom, color: 'from-gray-500 to-slate-500' },
-    { id: 15, name: 'Math', description: 'Mathematical algorithms and formulas', problemCount: 19, icon: FlaskConical, color: 'from-indigo-500 to-blue-500' },
-    { id: 16, name: 'Two Pointers', description: 'Efficient array traversal technique', problemCount: 21, icon: Scissors, color: 'from-teal-500 to-cyan-500' }
+    { id: 14, name: 'Bit Manipulation', description: 'Bitwise operations and tricks', problemCount: 14, icon: Binary, color: 'from-gray-500 to-slate-500' },
+    { id: 15, name: 'Math', description: 'Mathematical algorithms and formulas', problemCount: 19, icon: Calculator, color: 'from-indigo-500 to-blue-500' },
+    { id: 16, name: 'Two Pointers', description: 'Efficient array traversal technique', problemCount: 21, icon: Split, color: 'from-teal-500 to-cyan-500' }
   ], []);
 
   // Dynamic stats based on user progress
@@ -533,30 +533,32 @@ const Dashboard = () => {
               // Map category names to icons for backend categories
               const getIconForCategory = (categoryName) => {
                 const iconMap = {
-                  'Arrays': Database,
+                  'Arrays': Grid3x3,
                   'Strings': Hash,
-                  'Trees': GitBranch,
+                  'Trees': TreePine,
                   'Graphs': Network,
                   'Dynamic Programming': Brain,
                   'Sorting': ArrowUpDown,
-                  'Sorting & Searching': ArrowUpDown,
-                  'Linked Lists': Workflow,
+                  'Sorting & Searching': Search,
+                  'Linked Lists': GitBranch,
                   'Stack & Queue': Layers,
-                  'Binary Search': Crosshair,
-                  'Recursion': Infinity,
-                  'Backtracking': Compass,
-                  'Greedy': Diamond,
+                  'Binary Search': Search,
+                  'Recursion': Repeat,
+                  'Backtracking': Route,
+                  'Greedy': Zap,
                   'Heap': Triangle,
-                  'Bit Manipulation': Atom,
-                  'Math': FlaskConical,
-                  'Two Pointers': Scissors
+                  'Bit Manipulation': Binary,
+                  'Math': Calculator,
+                  'Two Pointers': Split
                 };
                 return iconMap[categoryName] || Code;
               };
               
+              // Always use getIconForCategory for consistent icons
+              const categoryIcon = getIconForCategory(category.name);
               const displayCategory = {
                 ...category,
-                icon: category.icon || getIconForCategory(category.name)
+                icon: categoryIcon
               };
               
               return (

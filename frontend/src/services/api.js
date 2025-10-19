@@ -158,4 +158,23 @@ export const leaderboardAPI = {
   getUserRank: (username) => api.get(`/leaderboard/user/${username}`),
 };
 
+// Submission API
+export const submissionAPI = {
+  submit: (data) => api.post('/submissions/submit', data),
+  getUserSubmissions: (params) => api.get('/submissions/user', { params }),
+  getSubmissionDetails: (submissionId) => api.get(`/submissions/${submissionId}`),
+  getProblemStats: (problemId) => api.get(`/submissions/stats/${problemId}`),
+};
+
+// Owner API
+export const ownerAPI = {
+  login: (credentials) => api.post('/owner/login', credentials),
+  getDashboardStats: () => api.get('/owner/dashboard/stats'),
+  createProblem: (problemData) => api.post('/owner/problems', problemData),
+  updateProblem: (problemId, data) => api.put(`/owner/problems/${problemId}`, data),
+  deleteProblem: (problemId) => api.delete(`/owner/problems/${problemId}`),
+  getAllUsers: (params) => api.get('/owner/users', { params }),
+  updateUser: (userId, data) => api.put(`/owner/users/${userId}`, data),
+};
+
 export default api;

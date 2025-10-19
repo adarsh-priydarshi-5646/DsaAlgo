@@ -14,6 +14,8 @@ import problemRoutes from './routes/problems.js';
 import userRoutes from './routes/users.js';
 import progressRoutes from './routes/progress.js';
 import leaderboardRoutes from './routes/leaderboard.js';
+import submissionRoutes from './routes/submissions.js';
+import ownerRoutes from './routes/owner.js';
 
 // Load environment variables
 dotenv.config();
@@ -146,6 +148,8 @@ app.use('/api/problems',problemRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/progress', progressRoutes);
 app.use('/api/leaderboard', leaderboardRoutes);
+app.use('/api/submissions', submissionRoutes);
+app.use('/api/owner', ownerRoutes);
 
 // Root endpoint
 app.get('/', (req, res) => {

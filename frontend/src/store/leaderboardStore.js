@@ -21,39 +21,8 @@ const useLeaderboardStore = create((set, get) => ({
   },
 
   fetchLeaderboard: async (params = {}) => {
-    // Generate mock data immediately for instant loading
-    const mockLeaderboard = Array.from({ length: 20 }, (_, i) => ({
-      rank: i + 1,
-      user: {
-        id: `user-${i + 1}`,
-        username: `user${i + 1}`,
-        firstName: `User`,
-        lastName: `${i + 1}`,
-        avatar: null
-      },
-      score: Math.max(1000 - i * 50 + Math.floor(Math.random() * 100), 10),
-      problemsSolved: Math.max(50 - i * 2 + Math.floor(Math.random() * 10), 1),
-      totalSubmissions: Math.max(100 - i * 4 + Math.floor(Math.random() * 20), 5),
-      successRate: Math.max(95 - i * 2 + Math.floor(Math.random() * 10), 20),
-      lastActive: new Date(Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000).toISOString()
-    }));
-
-    const mockMetadata = {
-      totalUsers: 1250,
-      totalPages: 25,
-      currentPage: 1,
-      hasNext: true,
-      hasPrev: false
-    };
-
-    // Set mock data immediately
-    set({
-      leaderboard: mockLeaderboard,
-      metadata: mockMetadata,
-      isLoading: false
-    });
-
-    // Fetch real data in background
+    set({ isLoading: true });
+    
     try {
       const { filters } = get();
       const queryParams = {
@@ -74,15 +43,25 @@ const useLeaderboardStore = create((set, get) => ({
       
       const { leaderboard, metadata } = response.data;
 
-      // Update with real data when available
+      // Update with real data
       set({
         leaderboard,
-        metadata
+        metadata,
+        isLoading: false
       });
     } catch (error) {
       console.error('Failed to fetch leaderboard:', error);
-      // Keep mock data if API fails
-      console.log('Using mock leaderboard data due to API failure');
+      // Set empty data if API fails
+      set({
+        leaderboard: [],
+        metadata: {
+          totalUsers: 0,
+          totalProblems: 0,
+          totalSubmissions: 0,
+          activeUsers: 0
+        },
+        isLoading: false
+      });
     }
   },
 

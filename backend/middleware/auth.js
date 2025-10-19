@@ -43,7 +43,7 @@ export const authenticateToken = async (req, res, next) => {
       username: 'user',
       firstName: 'Test',
       lastName: 'User',
-      role: 'USER'
+      role: decoded.role || 'USER'
     };
     
     next();
@@ -56,6 +56,13 @@ export const authenticateToken = async (req, res, next) => {
 export const requireAdmin = (req, res, next) => {
   if (req.user && req.user.role !== 'ADMIN') {
     return res.status(403).json({ error: 'Admin access required' });
+  }
+  next();
+};
+
+export const requireOwner = (req, res, next) => {
+  if (!req.user || req.user.role !== 'OWNER') {
+    return res.status(403).json({ error: 'Owner access required' });
   }
   next();
 };

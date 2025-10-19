@@ -9,13 +9,14 @@ import Register from './pages/Register';
 import Dashboard from './components/Dashboard';
 import ProblemList from './components/ProblemList';
 import ProblemDetail from './components/ProblemDetail';
-import Playground from './pages/Playground';
-import TestPlayground from './pages/TestPlayground';
+import Profile from './components/Profile';
 import Leaderboard from './pages/Leaderboard';
 import Learn from './pages/Learn';
+import Playground from './pages/Playground';
 import OAuthCallback from './pages/OAuthCallback';
+import OwnerLogin from './pages/OwnerLogin';
+import OwnerDashboard from './pages/OwnerDashboard';
 import NotFound from './pages/NotFound';
-import Profile from './components/Profile';
 import Error404 from './components/Error404';
 import ErrorBoundary from './components/ErrorBoundary';
 import Navbar from './components/Navbar';
@@ -211,6 +212,24 @@ function App() {
                     <Register />
                   </PublicLayout>
                 </PublicRoute>
+              }
+            />
+
+            {/* Owner Routes */}
+            <Route
+              path="/owner/login"
+              element={
+                <PublicRoute>
+                  <OwnerLogin />
+                </PublicRoute>
+              }
+            />
+            <Route
+              path="/owner/dashboard"
+              element={
+                <ProtectedRoute>
+                  <OwnerDashboard />
+                </ProtectedRoute>
               }
             />
 

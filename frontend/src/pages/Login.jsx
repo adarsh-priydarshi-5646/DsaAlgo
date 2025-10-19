@@ -1,13 +1,17 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link, useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useForm } from 'react-hook-form';
-import { Eye, EyeOff, Mail, Lock, LogIn, Code, Zap, Shield } from 'lucide-react';
+import { Eye, EyeOff, Mail, Lock, LogIn, Code, Zap, Shield, Crown, Users, ChevronDown } from 'lucide-react';
 import useAuthStore from '../store/authStore';
+import { ownerAPI } from '../services/api';
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [oauthError, setOauthError] = useState('');
+  const [loginType, setLoginType] = useState('user'); // 'user' or 'owner'
+  const [showDropdown, setShowDropdown] = useState(false);
+  const dropdownRef = useRef(null);
   const { login, isLoading } = useAuthStore();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -31,23 +35,89 @@ const Login = () => {
     }
   }, [searchParams]);
 
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowDropdown(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   const onSubmit = async (data) => {
     try {
-      const result = await login(data);
-      
-      if (result && result.success) {
-        // Multiple navigation attempts to ensure redirect works
-        navigate('/dashboard', { replace: true });
-        
-        // Fallback navigation
-        setTimeout(() => {
-          if (window.location.pathname !== '/dashboard') {
-            window.location.href = '/dashboard';
+      if (loginType === 'owner') {
+        // Owner login logic
+        if (data.login === 'owner@dsaalgo.com' && data.password === 'owner123') {
+          // Create mock owner user
+          const mockOwnerUser = {
+            id: 'owner_admin',
+            email: 'owner@dsaalgo.com',
+            username: 'admin',
+            firstName: 'Admin',
+            lastName: 'Owner',
+            role: 'OWNER',
+            isVerified: true
+          };
+          
+          const mockToken = 'owner_demo_token_' + Date.now();
+          
+          // Set auth state
+          useAuthStore.setState({
+            user: mockOwnerUser,
+            token: mockToken,
+            isAuthenticated: true,
+            isLoading: false
+          });
+          
+          // Store in localStorage
+          localStorage.setItem('token', mockToken);
+          localStorage.setItem('user', JSON.stringify(mockOwnerUser));
+          
+          navigate('/owner/dashboard');
+          return;
+        } else {
+          // Try API call for owner login
+          try {
+            const response = await ownerAPI.login({
+              email: data.login,
+              password: data.password
+            });
+            
+            if (response.data.user && response.data.token) {
+              useAuthStore.setState({
+                user: response.data.user,
+                token: response.data.token,
+                isAuthenticated: true,
+                isLoading: false
+              });
+              
+              localStorage.setItem('token', response.data.token);
+              localStorage.setItem('user', JSON.stringify(response.data.user));
+              
+              navigate('/owner/dashboard');
+              return;
+            }
+          } catch (ownerError) {
+            console.error('Owner login failed:', ownerError);
+            throw new Error('Invalid owner credentials');
           }
-        }, 500);
+        }
+      } else {
+        // Regular user login
+        const result = await login(data);
+        
+        if (result && result.success) {
+          navigate('/dashboard');
+        }
       }
     } catch (error) {
-      console.error('Login submission error:', error);
+      console.error('Login error:', error);
     }
   };
 
@@ -138,6 +208,74 @@ const Login = () => {
                 <p className="text-sm text-red-300">{oauthError}</p>
               </div>
             )}
+            
+            {/* Login Type Selector */}
+            <div className="mb-6">
+              <label className="block text-sm font-medium text-gray-300 mb-2">
+                Login As
+              </label>
+              <div className="relative" ref={dropdownRef}>
+                <button
+                  type="button"
+                  onClick={() => setShowDropdown(!showDropdown)}
+                  className="w-full flex items-center justify-between px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white hover:bg-white/10 transition-all focus:outline-none focus:ring-2 focus:ring-purple-500"
+                >
+                  <div className="flex items-center gap-3">
+                    {loginType === 'owner' ? (
+                      <Crown className="w-5 h-5 text-yellow-400" />
+                    ) : (
+                      <Users className="w-5 h-5 text-blue-400" />
+                    )}
+                    <span className="font-medium">
+                      {loginType === 'owner' ? 'Platform Owner' : 'Regular User'}
+                    </span>
+                  </div>
+                  <ChevronDown className={`w-5 h-5 text-gray-400 transition-transform ${showDropdown ? 'rotate-180' : ''}`} />
+                </button>
+                
+                {showDropdown && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    className="absolute top-full left-0 right-0 mt-2 bg-gray-800/95 backdrop-blur-lg border border-white/20 rounded-lg shadow-2xl z-50"
+                  >
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setLoginType('user');
+                        setShowDropdown(false);
+                      }}
+                      className={`w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-white/10 transition-colors ${
+                        loginType === 'user' ? 'bg-blue-500/20 text-blue-300' : 'text-gray-300'
+                      }`}
+                    >
+                      <Users className="w-5 h-5 text-blue-400" />
+                      <div>
+                        <p className="font-medium">Regular User</p>
+                        <p className="text-xs text-gray-400">Access problems and dashboard</p>
+                      </div>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setLoginType('owner');
+                        setShowDropdown(false);
+                      }}
+                      className={`w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-white/10 transition-colors rounded-b-lg ${
+                        loginType === 'owner' ? 'bg-yellow-500/20 text-yellow-300' : 'text-gray-300'
+                      }`}
+                    >
+                      <Crown className="w-5 h-5 text-yellow-400" />
+                      <div>
+                        <p className="font-medium">Platform Owner</p>
+                        <p className="text-xs text-gray-400">Administrative access</p>
+                      </div>
+                    </button>
+                  </motion.div>
+                )}
+              </div>
+            </div>
             
             {/* Email */}
             <div className="mb-4">
