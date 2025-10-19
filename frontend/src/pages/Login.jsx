@@ -247,18 +247,30 @@ const Login = () => {
             <button
               type="button"
               onClick={() => {
-                // Environment-based API URL
-                const nodeEnv = import.meta.env.VITE_NODE_ENV || import.meta.env.MODE || 'development';
-                let apiUrl;
+                // Smart environment detection for OAuth URL
+                const isVercelProduction = window.location.hostname === 'dsa-algo-chi.vercel.app';
+                const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
                 
-                if (nodeEnv === 'production') {
-                  apiUrl = import.meta.env.VITE_API_URL_PROD || 'https://dsaalgo.onrender.com/api';
+                let apiUrl;
+                if (isVercelProduction) {
+                  apiUrl = 'https://dsaalgo.onrender.com/api';
+                  console.log('🚀 Production OAuth - Using production API');
+                } else if (isLocalhost) {
+                  apiUrl = 'http://localhost:5001/api';
+                  console.log('🔧 Local OAuth - Using local API');
                 } else {
-                  apiUrl = import.meta.env.VITE_API_URL_DEV || 'http://localhost:5001/api';
+                  // Fallback to environment variables
+                  const nodeEnv = import.meta.env.VITE_NODE_ENV || import.meta.env.MODE || 'development';
+                  if (nodeEnv === 'production') {
+                    apiUrl = 'https://dsaalgo.onrender.com/api';
+                  } else {
+                    apiUrl = 'http://localhost:5001/api';
+                  }
                 }
                 
                 const url = `${apiUrl.replace(/\/$/, '')}/auth/oauth/google`;
                 console.log(`🔗 OAuth URL: ${url}`);
+                console.log(`🌐 Current hostname: ${window.location.hostname}`);
                 window.location.href = url;
               }}
               className="w-full mb-4 bg-white text-gray-800 py-3 px-4 rounded-lg font-medium hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-900 transition-all flex items-center justify-center gap-2"
