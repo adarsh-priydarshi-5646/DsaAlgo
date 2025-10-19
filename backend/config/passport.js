@@ -20,7 +20,7 @@ const configurePassport = () => {
   // Get environment-specific URLs
   const backendURL = isDevelopment 
     ? process.env.BACKEND_URL_DEV || 'http://localhost:5001'
-    : process.env.BACKEND_URL_PROD;
+    : process.env.BACKEND_URL_PROD || 'https://dsaalgo.onrender.com';
   
   const callbackURL = `${backendURL}/api/auth/oauth/google/callback`;
   
