@@ -109,8 +109,11 @@ if (clientID && clientSecret) {
 
         console.log(`🔄 OAuth redirect to: ${redirectUrl}`);
         console.log(`👤 User: ${user.email} (ID: ${user.id})`);
-        console.log(`🔍 Frontend URL from env: ${process.env.FRONTEND_URL_DEV}`);
+        console.log(`🔍 NODE_ENV: ${process.env.NODE_ENV}`);
         console.log(`🔍 isDevelopment: ${isDevelopment}`);
+        console.log(`🔍 FRONTEND_URL_DEV: ${process.env.FRONTEND_URL_DEV}`);
+        console.log(`🔍 FRONTEND_URL_PROD: ${process.env.FRONTEND_URL_PROD}`);
+        console.log(`🔍 Final frontendURL: ${frontendURL}`);
         
         // Redirect back to frontend with token
         return res.redirect(302, redirectUrl);

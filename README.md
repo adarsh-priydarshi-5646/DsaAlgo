@@ -652,28 +652,75 @@ copies or substantial portions of the Software.
 
 ---
 
-## 👥 Authors
+## 👥 Contributors
 
 <div align="center">
 
-### 🎨 **Adarsh Priydarshi**
-*Lead Developer & Project Creator*
+### 🎨 **Project Creator & Lead Developer**
 
-[![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/adarsh-priydarshi-5646)
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://linkedin.com/in/adarsh-priydarshi)
-[![Email](https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:adarsh.priydarshi@example.com)
+<table>
+<tr>
+<td align="center">
+<a href="https://github.com/adarsh-priydarshi-5646">
+<img src="https://avatars.githubusercontent.com/u/180042153?v=4" width="100px;" alt="Adarsh Priydarshi"/>
+<br />
+<sub><b>Adarsh Priydarshi</b></sub>
+</a>
+<br />
+<a href="https://github.com/adarsh-priydarshi-5646/DsaAlgo/commits?author=adarsh-priydarshi-5646" title="Code">💻</a>
+<a href="#design-adarsh-priydarshi-5646" title="Design">🎨</a>
+<a href="#ideas-adarsh-priydarshi-5646" title="Ideas & Planning">🤔</a>
+<a href="#maintenance-adarsh-priydarshi-5646" title="Maintenance">🚧</a>
+</td>
+</tr>
+</table>
 
-*"Building the future of interactive learning, one algorithm at a time."*
+### 🌟 **All Contributors**
+
+We thank these amazing people who contributed to this project:
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+<table>
+  <tbody>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/adarsh-priydarshi-5646"><img src="https://avatars.githubusercontent.com/u/180042153?v=4?s=100" width="100px;" alt="Adarsh Priydarshi"/><br /><sub><b>Adarsh Priydarshi</b></sub></a><br /><a href="https://github.com/adarsh-priydarshi-5646/DsaAlgo/commits?author=adarsh-priydarshi-5646" title="Code">💻</a> <a href="#design-adarsh-priydarshi-5646" title="Design">🎨</a> <a href="#ideas-adarsh-priydarshi-5646" title="Ideas, Planning, & Feedback">🤔</a> <a href="#maintenance-adarsh-priydarshi-5646" title="Maintenance">🚧</a></td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
+### 📊 **Contribution Stats**
+
+![Contributors](https://contrib.rocks/image?repo=adarsh-priydarshi-5646/DsaAlgo)
+
+[![GitHub Contributors](https://img.shields.io/github/contributors/adarsh-priydarshi-5646/DsaAlgo?style=for-the-badge)](https://github.com/adarsh-priydarshi-5646/DsaAlgo/graphs/contributors)
+[![GitHub Commit Activity](https://img.shields.io/github/commit-activity/m/adarsh-priydarshi-5646/DsaAlgo?style=for-the-badge)](https://github.com/adarsh-priydarshi-5646/DsaAlgo/pulse)
+
+### 💝 **Special Recognition**
+
+> **Note**: Due to a recent repository restructuring for security improvements, some contributor history may not be visible in the current commit log. However, we deeply appreciate and acknowledge all past contributions to this project.
+
+**If you were a previous contributor and your work is not reflected here, please:**
+1. 🔄 **Create an issue** with details of your contributions
+2. 📧 **Contact us** at adarshpriydarshi5646@gmail.com
+3. 🤝 **We'll ensure proper attribution** in the next update
 
 </div>
 
 ### 🙏 Acknowledgments
 
 Special thanks to:
-- **Open Source Community** for amazing libraries and tools
-- **Contributors** who help improve this platform
-- **Users** who provide feedback and suggestions
-- **Education Technology** pioneers who inspire us
+- **🌟 All Contributors** who helped build this platform
+- **🔧 Open Source Community** for amazing libraries and tools
+- **👥 Beta Testers** who provided valuable feedback
+- **🎓 Education Technology** pioneers who inspire us
+- **💡 Algorithm Enthusiasts** who shared ideas and suggestions
 
 ---
 

@@ -55,10 +55,12 @@ app.use(helmet({
 }));
 
 // CORS configuration
+const isDevelopment = process.env.NODE_ENV === 'development';
 const allowedOrigins = [
   'http://localhost:3000',
   'http://localhost:3001',
   'https://dsa-algo-chi.vercel.app',
+  isDevelopment ? process.env.FRONTEND_URL_DEV : process.env.FRONTEND_URL_PROD,
   process.env.FRONTEND_URL
 ].filter(Boolean);
 
