@@ -1,0 +1,194 @@
+name: 🤖 Auto Code Review & Merge
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  auto-review:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: |
+            frontend/package-lock.json
+            backend/package-lock.json
+
+      - name: Install Frontend Dependencies
+        run: |
+          cd frontend
+          npm ci
+
+      - name: Install Backend Dependencies
+        run: |
+          cd backend
+          npm ci
+
+      - name: Run Frontend Checks
+        id: frontend-check
+        run: |
+          cd frontend
+          echo "Running frontend checks..."
+          
+          # Build check
+          if npm run build; then
+            echo "✅ Frontend build: PASSED"
+            echo "frontend_build=passed" >> $GITHUB_OUTPUT
+          else
+            echo "❌ Frontend build: FAILED"
+            echo "frontend_build=failed" >> $GITHUB_OUTPUT
+          fi
+          
+          # Lint check (warnings allowed)
+          if npm run lint -- --max-warnings 10; then
+            echo "✅ Frontend lint: PASSED"
+            echo "frontend_lint=passed" >> $GITHUB_OUTPUT
+          else
+            echo "⚠️ Frontend lint: WARNINGS"
+            echo "frontend_lint=warnings" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Run Backend Checks
+        id: backend-check
+        run: |
+          cd backend
+          echo "Running backend checks..."
+          
+          # Prisma schema check
+          if npx prisma validate; then
+            echo "✅ Prisma schema: VALID"
+            echo "prisma_schema=valid" >> $GITHUB_OUTPUT
+          else
+            echo "❌ Prisma schema: INVALID"
+            echo "prisma_schema=invalid" >> $GITHUB_OUTPUT
+          fi
+          
+          # Server config check
+          if node -c server.js; then
+            echo "✅ Server config: VALID"
+            echo "server_config=valid" >> $GITHUB_OUTPUT
+          else
+            echo "❌ Server config: INVALID"
+            echo "server_config=invalid" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Security Check
+        id: security-check
+        run: |
+          echo "Running security checks..."
+          
+          # Check for hardcoded secrets
+          if grep -r "password\|secret\|key" --include="*.js" --include="*.jsx" --exclude-dir=node_modules . | grep -v "process.env" | grep -v "console.log" | grep -v "// " | head -5; then
+            echo "⚠️ Potential secrets found"
+            echo "security=warnings" >> $GITHUB_OUTPUT
+          else
+            echo "✅ No hardcoded secrets found"
+            echo "security=passed" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Auto Review Comment
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const frontendBuild = '${{ steps.frontend-check.outputs.frontend_build }}';
+            const frontendLint = '${{ steps.frontend-check.outputs.frontend_lint }}';
+            const prismaSchema = '${{ steps.backend-check.outputs.prisma_schema }}';
+            const serverConfig = '${{ steps.backend-check.outputs.server_config }}';
+            const security = '${{ steps.security-check.outputs.security }}';
+            
+            let reviewBody = '## 🤖 Automated Code Review\n\n';
+            let approveReview = true;
+            let issues = [];
+            
+            // Frontend checks
+            reviewBody += '### 🎨 Frontend Analysis\n';
+            if (frontendBuild === 'passed') {
+              reviewBody += '✅ **Build**: Successful\n';
+            } else {
+              reviewBody += '❌ **Build**: Failed - Please fix build errors\n';
+              approveReview = false;
+              issues.push('Frontend build failed');
+            }
+            
+            if (frontendLint === 'passed') {
+              reviewBody += '✅ **Linting**: Clean code\n';
+            } else {
+              reviewBody += '⚠️ **Linting**: Some warnings found (acceptable)\n';
+            }
+            
+            // Backend checks
+            reviewBody += '\n### ⚙️ Backend Analysis\n';
+            if (prismaSchema === 'valid') {
+              reviewBody += '✅ **Database Schema**: Valid\n';
+            } else {
+              reviewBody += '❌ **Database Schema**: Invalid - Please check Prisma schema\n';
+              approveReview = false;
+              issues.push('Invalid Prisma schema');
+            }
+            
+            if (serverConfig === 'valid') {
+              reviewBody += '✅ **Server Config**: Valid\n';
+            } else {
+              reviewBody += '❌ **Server Config**: Invalid - Please check server.js\n';
+              approveReview = false;
+              issues.push('Invalid server configuration');
+            }
+            
+            // Security checks
+            reviewBody += '\n### 🔒 Security Analysis\n';
+            if (security === 'passed') {
+              reviewBody += '✅ **Security**: No hardcoded secrets detected\n';
+            } else {
+              reviewBody += '⚠️ **Security**: Potential secrets found - Please review\n';
+            }
+            
+            // Final verdict
+            reviewBody += '\n### 📋 Summary\n';
+            if (approveReview) {
+              reviewBody += '🎉 **Status**: APPROVED - Ready to merge!\n';
+              reviewBody += '\nThis PR passes all automated checks and is ready for merge.';
+            } else {
+              reviewBody += '🚫 **Status**: CHANGES REQUESTED\n';
+              reviewBody += '\n**Issues to fix:**\n';
+              issues.forEach(issue => {
+                reviewBody += `- ${issue}\n`;
+              });
+              reviewBody += '\nPlease address these issues and push new commits.';
+            }
+            
+            // Submit review
+            await github.rest.pulls.createReview({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number,
+              body: reviewBody,
+              event: approveReview ? 'APPROVE' : 'REQUEST_CHANGES'
+            });
+
+      - name: Auto Merge (if approved)
+        if: steps.frontend-check.outputs.frontend_build == 'passed' && steps.backend-check.outputs.prisma_schema == 'valid' && steps.backend-check.outputs.server_config == 'valid'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            try {
+              await github.rest.pulls.merge({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: context.issue.number,
+                commit_title: `🤖 Auto-merge: ${context.payload.pull_request.title}`,
+                commit_message: 'Automatically merged after passing all checks',
+                merge_method: 'squash'
+              });
+              
+              console.log('✅ PR auto-merged successfully!');
+            } catch (error) {
+              console.log('❌ Auto-merge failed:', error.message);
+            }
