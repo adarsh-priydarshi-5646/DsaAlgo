@@ -11,9 +11,13 @@ const OAuthCallback = () => {
   useEffect(() => {
     const handleOAuthCallback = async () => {
       try {
+        console.log('🔄 OAuth Callback - Current URL:', window.location.href);
         const params = new URLSearchParams(window.location.search);
         const token = params.get('token');
         const error = params.get('error');
+        
+        console.log('🔍 OAuth Callback - Token:', token ? 'Present' : 'Missing');
+        console.log('🔍 OAuth Callback - Error:', error || 'None');
 
         if (error) {
           setStatus('Authentication failed');

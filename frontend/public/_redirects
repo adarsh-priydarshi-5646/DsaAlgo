@@ -1,1 +1,12 @@
+/oauth/callback    /index.html   200
+/register    /index.html   200
+/login    /index.html   200
+/dashboard    /index.html   200
+/problems    /index.html   200
+/problems/*    /index.html   200
+/profile    /index.html   200
+/profile/*    /index.html   200
+/leaderboard    /index.html   200
+/learn    /index.html   200
+/playground    /index.html   200
 /*    /index.html   200
