@@ -34,9 +34,11 @@
 [![Backend API](https://img.shields.io/badge/⚡_Backend_API-Live-blue?style=for-the-badge)](https://dsaalgo.onrender.com)
 
 ### 📱 **Platform Preview**
+
 | Dashboard | Problem Solving | Leaderboard |
 |-----------|----------------|-------------|
-| ![Dashboard](https://via.placeholder.com/300x200/667eea/ffffff?text=Interactive+Dashboard) | ![Problem](https://via.placeholder.com/300x200/764ba2/ffffff?text=Code+Editor) | ![Leaderboard](https://via.placeholder.com/300x200/f093fb/ffffff?text=Global+Rankings) |
+| ![Dashboard](./assets/dashboard.png) | ![Problem](./assets/problem.png) | ![Leaderboard](./assets/leaderboard.png) |
+
 
 </div>
 
