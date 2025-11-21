@@ -33,11 +33,32 @@
 [![Frontend Demo](https://img.shields.io/badge/🌐_Frontend_Demo-Live-success?style=for-the-badge)](https://dsa-algo-chi.vercel.app)
 [![Backend API](https://img.shields.io/badge/⚡_Backend_API-Live-blue?style=for-the-badge)](https://dsaalgo.onrender.com)
 
-### 📱 **Platform Preview**
+<h3>📱 Platform Preview</h3>
 
-| Dashboard | Problem Solving | Leaderboard |
-|-----------|----------------|-------------|
-| ![Dashboard](./assets/dashboard.png) | ![Problem](./assets/problem.png) | ![Leaderboard](./assets/leaderboard.png) |
+<table>
+  <tr>
+    <th>Dashboard</th>
+    <th>Problem Solving</th>
+    <th>Leaderboard</th>
+  </tr>
+  <tr>
+    <td><img src="./assets/dashboard.png" width="500"/></td>
+    <td><img src="./assets/problem.png" width="500"/></td>
+    <td><img src="./assets/leaderboard.png" width="500"/></td>
+  </tr>
+  <tr>
+    <th>Learn</th>
+    <th>Playground</th>
+    <th>Profile</th>
+  </tr>
+  <tr>
+    <td><img src="./assets/learn.png" width="500"/></td>
+    <td><img src="./assets/playground.png" width=500"/></td>
+    <td><img src="./assets/profile.png" width="500"/></td>
+  </tr>
+</table>
+
+
 
 
 </div>
