@@ -41,7 +41,12 @@ jobs:
       run: |
         cd frontend
         npm run lint -- --max-warnings 10 || true
-
+    
+    - name: Run Frontend Tests
+      run: |
+        cd frontend
+        npm run test
+    
     # Backend Build & Validate
     - name: Install Backend Dependencies
       run: |
@@ -49,6 +54,8 @@ jobs:
         npm install
 
     - name: Validate Prisma Schema
+      env:
+        DIRECT_URL: ''
       run: |
         cd backend
         npx prisma validate

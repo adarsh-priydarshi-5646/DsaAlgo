@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { BookOpen, Search, Code, Database, Server, Globe, Lock, Layers, Star, Bookmark, BookmarkCheck, Palette, Shield, Key, Users, FileText, Zap, Terminal, Copy, Check, Rocket, Book, Lightbulb, ArrowLeft, Target, ArrowRight, CheckCircle, BarChart3 } from 'lucide-react';
+import { BookOpen, Search, Code, Database, Server, Globe, Lock, Layers, Star, Bookmark, BookmarkCheck, Palette, Shield, Key, Users, FileText, Zap, Terminal, Copy, Check, Rocket, Book, Lightbulb, ArrowLeft, Target, ArrowRight, CheckCircle, BarChart3, ChevronRight, Filter, CheckCircle2, PlayCircle, Cpu, Layout, Box } from 'lucide-react';
+import { getDifficultyColor } from '../utils/difficulty';
 import { allTopics, getTopicById } from '../content/topics';
 import { TopicRenderer } from '../content/topics/TopicRenderer';
 
@@ -2352,14 +2353,7 @@ console.log(/regex/ instanceof RegExp);   // true`}
     const languageQuestions = getQuestionsByLanguage(language);
     const languageInfo = categories.find(c => c.id === language);
 
-    const getDifficultyColor = (difficulty) => {
-      switch(difficulty) {
-        case 'basic': return 'border-green-500/50 text-green-400 bg-green-500/10';
-        case 'intermediate': return 'border-yellow-500/50 text-yellow-400 bg-yellow-500/10';
-        case 'advanced': return 'border-red-500/50 text-red-400 bg-red-500/10';
-        default: return 'border-slate-500/50 text-slate-400 bg-slate-500/10';
-      }
-    };
+
 
     return (
       <div className="h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white flex flex-col overflow-hidden">
