@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { BookOpen, Search, Code, Database, Server, Globe, Lock, Layers, Star, Bookmark, BookmarkCheck, Palette, Shield, Key, Users, FileText, Zap, Terminal, Copy, Check, Rocket, Book, Lightbulb, ArrowLeft, Target, ArrowRight, CheckCircle, BarChart3 } from 'lucide-react';
+import { BookOpen, Search, Code, Database, Server, Globe, Lock, Layers, Star, Bookmark, BookmarkCheck, Palette, Shield, Key, Users, FileText, Zap, Terminal, Copy, Check, Rocket, Book, Lightbulb, ArrowLeft, Target, ArrowRight, CheckCircle, BarChart3, ChevronRight, Filter, CheckCircle2, PlayCircle, Cpu, Layout, Box } from 'lucide-react';
+import { getDifficultyColor } from '../utils/difficulty';
+import { allTopics, getTopicById } from '../content/topics';
+import { TopicRenderer } from '../content/topics/TopicRenderer';
 
 const Learn = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -259,6 +262,13 @@ const Learn = () => {
 
   // Enhanced interview questions with React components
   const getQuestionContent = (questionId) => {
+    // First check if we have modular topic content
+    const modularTopic = getTopicById(questionId);
+    if (modularTopic) {
+      return <TopicRenderer topic={modularTopic} CodeBlock={CodeBlock} InterviewTip={InterviewTip} copiedCode={copiedCode} copyCode={copyCode} />;
+    }
+    
+    // Fallback to existing hardcoded content
     switch(questionId) {
       case 1: // JavaScript - Closure (Intermediate)
         return (
@@ -1544,14 +1554,463 @@ console.log(/regex/ instanceof RegExp);   // true`}
       category: 'javascript',
       difficulty: 'intermediate',
       question: 'What is the difference between let, const, and var?',
-      content: { explanation: 'var has function scope, let and const have block scope. const cannot be reassigned after declaration.' }
+      content: <div className="text-slate-300">var has function scope, let and const have block scope. const cannot be reassigned after declaration.</div>
     },
     {
       id: 52,
       category: 'javascript',
       difficulty: 'advanced',
       question: 'What are JavaScript modules and how do they work?',
-      content: { explanation: 'Modules allow you to break up your code into separate files and import/export functionality between them.' }
+      content: <div className="text-slate-300">Modules allow you to break up your code into separate files and import/export functionality between them.</div>
+    },
+    // New comprehensive JavaScript questions
+    {
+      id: 100,
+      category: 'javascript',
+      difficulty: 'basic',
+      question: 'What is the difference between === and ==?',
+      content: getQuestionContent(100)
+    },
+    {
+      id: 101,
+      category: 'javascript',
+      difficulty: 'basic',
+      question: 'What are First Class Functions in JavaScript?',
+      content: getQuestionContent(101)
+    },
+    {
+      id: 102,
+      category: 'javascript',
+      difficulty: 'basic',
+      question: 'What is the difference between let and var?',
+      content: getQuestionContent(102)
+    },
+    {
+      id: 103,
+      category: 'javascript',
+      difficulty: 'advanced',
+      question: 'What are Promises in JavaScript?',
+      content: getQuestionContent(103)
+    },
+    {
+      id: 104,
+      category: 'javascript',
+      difficulty: 'intermediate',
+      question: 'What are call, apply, and bind?',
+      content: getQuestionContent(104)
+    },
+    {
+      id: 105,
+      category: 'javascript',
+      difficulty: 'advanced',
+      question: 'What is Currying in JavaScript?',
+      content: getQuestionContent(105)
+    },
+    {
+      id: 106,
+      category: 'javascript',
+      difficulty: 'advanced',
+      question: 'What are Higher Order Functions?',
+      content: getQuestionContent(106)
+    },
+    {
+      id: 109,
+      category: 'javascript',
+      difficulty: 'basic',
+      question: 'What are Callbacks in JavaScript?',
+      content: getQuestionContent(109)
+    },
+    {
+      id: 110,
+      category: 'javascript',
+      difficulty: 'basic',
+      question: 'What is the difference between null and undefined?',
+      content: getQuestionContent(110)
+    },
+    {
+      id: 111,
+      category: 'javascript',
+      difficulty: 'intermediate',
+      question: 'What is IIFE in JavaScript?',
+      content: getQuestionContent(111)
+    },
+    {
+      id: 112,
+      category: 'javascript',
+      difficulty: 'basic',
+      question: 'What is setTimeout in JavaScript?',
+      content: getQuestionContent(112)
+    },
+    {
+      id: 113,
+      category: 'javascript',
+      difficulty: 'intermediate',
+      question: 'What is Event Bubbling?',
+      content: getQuestionContent(113)
+    },
+    {
+      id: 114,
+      category: 'javascript',
+      difficulty: 'basic',
+      question: 'What is JSON.stringify()?',
+      content: getQuestionContent(114)
+    },
+    {
+      id: 115,
+      category: 'javascript',
+      difficulty: 'basic',
+      question: 'What is Strict Mode in JavaScript?',
+      content: getQuestionContent(115)
+    },
+    {
+      id: 116,
+      category: 'javascript',
+      difficulty: 'intermediate',
+      question: 'What is Temporal Dead Zone?',
+      content: getQuestionContent(116)
+    },
+    {
+      id: 117,
+      category: 'javascript',
+      difficulty: 'intermediate',
+      question: 'What are different ways to create objects?',
+      content: getQuestionContent(117)
+    },
+    {
+      id: 118,
+      category: 'javascript',
+      difficulty: 'intermediate',
+      question: 'What are Closures in JavaScript?',
+      content: getQuestionContent(118)
+    },
+    {
+      id: 120,
+      category: 'javascript',
+      difficulty: 'advanced',
+      question: 'What is Prototype and Prototype Chain?',
+      content: getQuestionContent(120)
+    },
+    {
+      id: 122,
+      category: 'javascript',
+      difficulty: 'intermediate',
+      question: 'What is the Spread Operator?',
+      content: getQuestionContent(122)
+    },
+    {
+      id: 123,
+      category: 'javascript',
+      difficulty: 'basic',
+      question: 'What are Arrow Functions?',
+      content: getQuestionContent(123)
+    },
+    {
+      id: 125,
+      category: 'javascript',
+      difficulty: 'intermediate',
+      question: 'What is Event Delegation?',
+      content: getQuestionContent(125)
+    },
+    {
+      id: 128,
+      category: 'javascript',
+      difficulty: 'intermediate',
+      question: 'What is Destructuring?',
+      content: getQuestionContent(128)
+    },
+    {
+      id: 129,
+      category: 'javascript',
+      difficulty: 'advanced',
+      question: 'What is async/await?',
+      content: getQuestionContent(129)
+    },
+    {
+      id: 130,
+      category: 'javascript',
+      difficulty: 'advanced',
+      question: 'What are Promise.all, Promise.race, Promise.allSettled?',
+      content: getQuestionContent(130)
+    },
+    {
+      id: 131,
+      category: 'javascript',
+      difficulty: 'advanced',
+      question: 'Explain Event Loop with Microtasks and Macrotasks',
+      content: getQuestionContent(131)
+    },
+    {
+      id: 132,
+      category: 'javascript',
+      difficulty: 'intermediate',
+      question: 'Explain map, filter, and reduce',
+      content: getQuestionContent(132)
+    },
+    {
+      id: 133,
+      category: 'javascript',
+      difficulty: 'basic',
+      question: 'How does setInterval work?',
+      content: getQuestionContent(133)
+    },
+    {
+      id: 134,
+      category: 'javascript',
+      difficulty: 'intermediate',
+      question: 'Shallow Copy vs Deep Copy',
+      content: getQuestionContent(134)
+    },
+    {
+      id: 135,
+      category: 'javascript',
+      difficulty: 'basic',
+      question: 'What are Rest Parameters?',
+      content: getQuestionContent(135)
+    },
+    {
+      id: 136,
+      category: 'javascript',
+      difficulty: 'basic',
+      question: 'What are Template Literals?',
+      content: getQuestionContent(136)
+    },
+    {
+      id: 137,
+      category: 'javascript',
+      difficulty: 'basic',
+      question: 'How do Default Parameters work?',
+      content: getQuestionContent(137)
+    },
+    {
+      id: 138,
+      category: 'javascript',
+      difficulty: 'advanced',
+      question: 'What is the Symbol primitive type?',
+      content: getQuestionContent(138)
+    },
+    {
+      id: 139,
+      category: 'javascript',
+      difficulty: 'advanced',
+      question: 'What is Event Capturing?',
+      content: getQuestionContent(139)
+    },
+    {
+      id: 140,
+      category: 'javascript',
+      difficulty: 'basic',
+      question: 'What does preventDefault() do?',
+      content: getQuestionContent(140)
+    },
+    {
+      id: 141,
+      category: 'javascript',
+      difficulty: 'basic',
+      question: 'What does stopPropagation() do?',
+      content: getQuestionContent(141)
+    },
+    {
+      id: 142,
+      category: 'javascript',
+      difficulty: 'basic',
+      question: 'What is JSON.parse()?',
+      content: getQuestionContent(142)
+    },
+    {
+      id: 143,
+      category: 'javascript',
+      difficulty: 'advanced',
+      question: 'What are Regular Expressions?',
+      content: getQuestionContent(143)
+    },
+    {
+      id: 144,
+      category: 'javascript',
+      difficulty: 'intermediate',
+      question: 'What is Type Coercion?',
+      content: getQuestionContent(144)
+    },
+    {
+      id: 145,
+      category: 'javascript',
+      difficulty: 'basic',
+      question: 'What is NaN?',
+      content: getQuestionContent(145)
+    },
+    {
+      id: 146,
+      category: 'javascript',
+      difficulty: 'advanced',
+      question: 'What is Memoization?',
+      content: getQuestionContent(146)
+    },
+    {
+      id: 147,
+      category: 'javascript',
+      difficulty: 'advanced',
+      question: 'What is a Polyfill?',
+      content: getQuestionContent(147)
+    },
+    {
+      id: 148,
+      category: 'javascript',
+      difficulty: 'advanced',
+      question: 'How does V8 Engine work?',
+      content: getQuestionContent(148)
+    },
+    {
+      id: 149,
+      category: 'javascript',
+      difficulty: 'intermediate',
+      question: 'Slice vs Splice?',
+      content: getQuestionContent(149)
+    },
+    {
+      id: 150,
+      category: 'javascript',
+      difficulty: 'intermediate',
+      question: 'Explain find, some, every, includes',
+      content: getQuestionContent(150)
+    },
+    {
+      id: 151,
+      category: 'javascript',
+      difficulty: 'basic',
+      question: 'String Methods: split, join, slice',
+      content: getQuestionContent(151)
+    },
+    {
+      id: 152,
+      category: 'javascript',
+      difficulty: 'basic',
+      question: 'Object.keys, values, entries',
+      content: getQuestionContent(152)
+    },
+    {
+      id: 153,
+      category: 'javascript',
+      difficulty: 'intermediate',
+      question: 'Object.freeze vs Object.seal',
+      content: getQuestionContent(153)
+    },
+    {
+      id: 154,
+      category: 'javascript',
+      difficulty: 'intermediate',
+      question: 'Set vs Map',
+      content: getQuestionContent(154)
+    },
+    {
+      id: 155,
+      category: 'javascript',
+      difficulty: 'advanced',
+      question: 'WeakSet vs WeakMap',
+      content: getQuestionContent(155)
+    },
+    {
+      id: 156,
+      category: 'javascript',
+      difficulty: 'advanced',
+      question: 'What are Generator Functions?',
+      content: getQuestionContent(156)
+    },
+    {
+      id: 157,
+      category: 'javascript',
+      difficulty: 'advanced',
+      question: 'What is the Iterator Protocol?',
+      content: getQuestionContent(157)
+    },
+    {
+      id: 158,
+      category: 'javascript',
+      difficulty: 'basic',
+      question: 'Array.from vs Array.of',
+      content: getQuestionContent(158)
+    },
+    {
+      id: 159,
+      category: 'javascript',
+      difficulty: 'advanced',
+      question: 'What is Execution Context?',
+      content: getQuestionContent(159)
+    },
+    {
+      id: 160,
+      category: 'javascript',
+      difficulty: 'advanced',
+      question: 'What is Lexical Environment?',
+      content: getQuestionContent(160)
+    },
+    {
+      id: 161,
+      category: 'javascript',
+      difficulty: 'basic',
+      question: 'What is the Call Stack?',
+      content: getQuestionContent(161)
+    },
+    {
+      id: 162,
+      category: 'javascript',
+      difficulty: 'advanced',
+      question: 'Event Queue vs Microtask Queue?',
+      content: getQuestionContent(162)
+    },
+    {
+      id: 163,
+      category: 'javascript',
+      difficulty: 'basic',
+      question: 'What is BOM?',
+      content: getQuestionContent(163)
+    },
+    {
+      id: 164,
+      category: 'javascript',
+      difficulty: 'basic',
+      question: 'Is JavaScript statically or dynamically typed?',
+      content: getQuestionContent(164)
+    },
+    {
+      id: 165,
+      category: 'javascript',
+      difficulty: 'intermediate',
+      question: 'How does "this" keyword work?',
+      content: getQuestionContent(165)
+    },
+    {
+      id: 166,
+      category: 'javascript',
+      difficulty: 'basic',
+      question: 'What are Anonymous Functions?',
+      content: getQuestionContent(166)
+    },
+    {
+      id: 167,
+      category: 'javascript',
+      difficulty: 'advanced',
+      question: 'What is a Thunk?',
+      content: getQuestionContent(167)
+    },
+    {
+      id: 168,
+      category: 'javascript',
+      difficulty: 'basic',
+      question: 'Compiled vs Interpreted?',
+      content: getQuestionContent(168)
+    },
+    {
+      id: 169,
+      category: 'javascript',
+      difficulty: 'basic',
+      question: 'Is JavaScript case-sensitive?',
+      content: getQuestionContent(169)
+    },
+    {
+      id: 170,
+      category: 'javascript',
+      difficulty: 'basic',
+      question: 'Java vs JavaScript?',
+      content: getQuestionContent(170)
     },
 
     // React Questions (Basic to Advanced)
@@ -1581,21 +2040,21 @@ console.log(/regex/ instanceof RegExp);   // true`}
       category: 'react',
       difficulty: 'basic',
       question: 'What is JSX and how does it work?',
-      content: { explanation: 'JSX is a syntax extension for JavaScript that allows you to write HTML-like code in React components.' }
+      content: <div className="text-slate-300">JSX is a syntax extension for JavaScript that allows you to write HTML-like code in React components.</div>
     },
     {
       id: 54,
       category: 'react',
       difficulty: 'intermediate',
       question: 'What are React props and how to use them?',
-      content: { explanation: 'Props are arguments passed into React components to pass data from parent to child components.' }
+      content: <div className="text-slate-300">Props are arguments passed into React components to pass data from parent to child components.</div>
     },
     {
       id: 55,
       category: 'react',
       difficulty: 'advanced',
-      question: 'What is React Router and how to implement routing?',
-      content: { explanation: 'React Router is a library for handling routing in React applications, allowing navigation between different components.' }
+      question: 'What is React Router and how does it work?',
+      content: <div className="text-slate-300">React Router is a library for handling routing in React applications, allowing navigation between different components.</div>
     },
 
     // HTML Questions (Basic to Advanced)
@@ -1641,21 +2100,21 @@ console.log(/regex/ instanceof RegExp);   // true`}
       category: 'css',
       difficulty: 'basic',
       question: 'What are CSS selectors and their types?',
-      content: { explanation: 'CSS selectors are patterns used to select HTML elements. Types include element, class, ID, attribute, and pseudo selectors.' }
+      content: <div className="text-slate-300">CSS selectors are patterns used to select HTML elements. Types include element, class, ID, attribute, and pseudo selectors.</div>
     },
     {
       id: 60,
       category: 'css',
       difficulty: 'intermediate',
       question: 'What is CSS positioning and its values?',
-      content: { explanation: 'CSS position property specifies how an element is positioned. Values include static, relative, absolute, fixed, and sticky.' }
+      content: <div className="text-slate-300">CSS position property specifies how an element is positioned. Values include static, relative, absolute, fixed, and sticky.</div>
     },
     {
       id: 61,
       category: 'css',
       difficulty: 'advanced',
       question: 'What are CSS animations and transitions?',
-      content: { explanation: 'CSS animations allow you to animate HTML elements without JavaScript. Transitions provide smooth changes between property values.' }
+      content: <div className="text-slate-300">CSS animations allow you to animate HTML elements without JavaScript. Transitions provide smooth changes between property values.</div>
     },
 
     // Node.js Questions (Basic to Advanced)
@@ -1684,22 +2143,22 @@ console.log(/regex/ instanceof RegExp);   // true`}
       id: 56,
       category: 'node',
       difficulty: 'basic',
-      question: 'What is npm and how to manage packages?',
-      content: { explanation: 'npm (Node Package Manager) is a package manager for JavaScript that allows you to install, update, and manage dependencies.' }
+      question: 'What is npm and how does it work?',
+      content: <div className="text-slate-300">npm (Node Package Manager) is a package manager for JavaScript that allows you to install, update, and manage dependencies.</div>
     },
     {
       id: 57,
       category: 'node',
       difficulty: 'intermediate',
-      question: 'What is the Event Loop in Node.js?',
-      content: { explanation: 'The Event Loop is what allows Node.js to perform non-blocking I/O operations by offloading operations to the system kernel.' }
+      question: 'Explain the event loop in Node.js',
+      content: <div className="text-slate-300">The Event Loop is what allows Node.js to perform non-blocking I/O operations by offloading operations to the system kernel.</div>
     },
     {
       id: 58,
       category: 'node',
       difficulty: 'advanced',
-      question: 'What are Streams in Node.js and their types?',
-      content: { explanation: 'Streams are objects that let you read data from a source or write data to a destination in a continuous fashion.' }
+      question: 'What are streams in Node.js?',
+      content: <div className="text-slate-300">Streams are objects that let you read data from a source or write data to a destination in a continuous fashion.</div>
     },
 
     // Express Questions (Basic to Advanced)
@@ -1889,13 +2348,16 @@ console.log(/regex/ instanceof RegExp);   // true`}
   });
 
   // Language Page Component
+  // Language Page Component
   const LanguagePage = ({ language }) => {
     const languageQuestions = getQuestionsByLanguage(language);
     const languageInfo = categories.find(c => c.id === language);
 
+
+
     return (
       <div className="h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white flex flex-col overflow-hidden">
-        {/* Fixed Header - No Footer */}
+        {/* Fixed Header */}
         <div className="flex-shrink-0 bg-gradient-to-br from-gray-900 via-gray-800 to-black border-b border-slate-700/30 pt-20 z-30 relative">
           <div className="px-6 py-4">
             <motion.div
@@ -1932,82 +2394,178 @@ console.log(/regex/ instanceof RegExp);   // true`}
           </div>
         </div>
 
-        {/* Main Content - Flex Layout with Independent Scrolling */}
-        <div className="flex flex-1 h-full">
+        {/* Main Content - Flex Layout */}
+        <div className="flex flex-1 h-full overflow-hidden">
           {/* Sidebar with Independent Scrolling */}
-          <div className="w-80 bg-slate-800/90 backdrop-blur-sm border-r border-slate-700/50 flex-shrink-0 relative z-20 overflow-hidden">
-            <div className="h-full overflow-y-auto">
-              <QuestionSidebar 
-                language={language}
-                questions={languageQuestions}
-                onQuestionSelect={setSelectedQuestion}
-              />
+          <div className="w-80 bg-slate-800/90 backdrop-blur-sm border-r border-slate-700/50 flex-shrink-0 relative z-20 overflow-hidden flex flex-col">
+            <div className="h-full overflow-y-auto p-4 space-y-6 custom-scrollbar">
+              {/* Basic Questions */}
+              {languageQuestions.filter(q => q.difficulty === 'basic').length > 0 && (
+                <div className="space-y-3">
+                  <h3 className="text-sm font-semibold text-green-400 uppercase tracking-wider flex items-center gap-2 sticky top-0 bg-slate-800/95 py-2 z-10 backdrop-blur-sm">
+                    <div className="w-2 h-2 rounded-full bg-green-400"></div>
+                    Basic Concepts
+                  </h3>
+                  {languageQuestions
+                    .filter(q => q.difficulty === 'basic')
+                    .map((q) => (
+                      <motion.div
+                        key={q.id}
+                        onClick={() => setSelectedQuestion(q)}
+                        className={`group p-3 rounded-lg border transition-all duration-200 cursor-pointer ${
+                          selectedQuestion?.id === q.id
+                            ? 'bg-blue-600/20 border-blue-500/50 shadow-md'
+                            : 'bg-slate-800/50 border-slate-700/50 hover:bg-slate-700 hover:border-slate-600'
+                        }`}
+                      >
+                        <div className="flex justify-between items-start gap-2">
+                          <h4 className={`text-sm font-medium transition-colors ${
+                            selectedQuestion?.id === q.id ? 'text-blue-400' : 'text-slate-300 group-hover:text-white'
+                          }`}>
+                            {q.question}
+                          </h4>
+                          {selectedQuestion?.id === q.id && (
+                            <ChevronRight className="w-4 h-4 text-blue-400 flex-shrink-0" />
+                          )}
+                        </div>
+                      </motion.div>
+                    ))}
+                </div>
+              )}
+
+              {/* Intermediate Questions */}
+              {languageQuestions.filter(q => q.difficulty === 'intermediate').length > 0 && (
+                <div className="space-y-3">
+                  <h3 className="text-sm font-semibold text-yellow-400 uppercase tracking-wider flex items-center gap-2 sticky top-0 bg-slate-800/95 py-2 z-10 backdrop-blur-sm">
+                    <div className="w-2 h-2 rounded-full bg-yellow-400"></div>
+                    Intermediate Concepts
+                  </h3>
+                  {languageQuestions
+                    .filter(q => q.difficulty === 'intermediate')
+                    .map((q) => (
+                      <motion.div
+                        key={q.id}
+                        onClick={() => setSelectedQuestion(q)}
+                        className={`group p-3 rounded-lg border transition-all duration-200 cursor-pointer ${
+                          selectedQuestion?.id === q.id
+                            ? 'bg-blue-600/20 border-blue-500/50 shadow-md'
+                            : 'bg-slate-800/50 border-slate-700/50 hover:bg-slate-700 hover:border-slate-600'
+                        }`}
+                      >
+                        <div className="flex justify-between items-start gap-2">
+                          <h4 className={`text-sm font-medium transition-colors ${
+                            selectedQuestion?.id === q.id ? 'text-blue-400' : 'text-slate-300 group-hover:text-white'
+                          }`}>
+                            {q.question}
+                          </h4>
+                          {selectedQuestion?.id === q.id && (
+                            <ChevronRight className="w-4 h-4 text-blue-400 flex-shrink-0" />
+                          )}
+                        </div>
+                      </motion.div>
+                    ))}
+                </div>
+              )}
+
+              {/* Advanced Questions */}
+              {languageQuestions.filter(q => q.difficulty === 'advanced').length > 0 && (
+                <div className="space-y-3">
+                  <h3 className="text-sm font-semibold text-red-400 uppercase tracking-wider flex items-center gap-2 sticky top-0 bg-slate-800/95 py-2 z-10 backdrop-blur-sm">
+                    <div className="w-2 h-2 rounded-full bg-red-400"></div>
+                    Advanced Concepts
+                  </h3>
+                  {languageQuestions
+                    .filter(q => q.difficulty === 'advanced')
+                    .map((q) => (
+                      <motion.div
+                        key={q.id}
+                        onClick={() => setSelectedQuestion(q)}
+                        className={`group p-3 rounded-lg border transition-all duration-200 cursor-pointer ${
+                          selectedQuestion?.id === q.id
+                            ? 'bg-blue-600/20 border-blue-500/50 shadow-md'
+                            : 'bg-slate-800/50 border-slate-700/50 hover:bg-slate-700 hover:border-slate-600'
+                        }`}
+                      >
+                        <div className="flex justify-between items-start gap-2">
+                          <h4 className={`text-sm font-medium transition-colors ${
+                            selectedQuestion?.id === q.id ? 'text-blue-400' : 'text-slate-300 group-hover:text-white'
+                          }`}>
+                            {q.question}
+                          </h4>
+                          {selectedQuestion?.id === q.id && (
+                            <ChevronRight className="w-4 h-4 text-blue-400 flex-shrink-0" />
+                          )}
+                        </div>
+                      </motion.div>
+                    ))}
+                </div>
+              )}
             </div>
           </div>
 
-          {/* Content Area with Independent Scrolling */}
-          <div className="flex-1 bg-gradient-to-br from-gray-900/50 via-gray-800/50 to-black/50 relative z-10 overflow-hidden">
-            <div className="h-full overflow-y-auto">
-              <div className="p-6 pb-20">
-              {selectedQuestion ? (
-                <motion.div
-                  key={selectedQuestion.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="bg-slate-800/70 backdrop-blur-sm border border-slate-700/50 rounded-2xl overflow-hidden shadow-2xl mb-8"
-                >
-                  <div className="p-8">
-                    <div className="flex items-center justify-between mb-6">
-                      <div className="flex items-center gap-3">
-                        <span className="px-4 py-2 bg-gradient-to-r from-blue-600/30 to-cyan-600/30 text-blue-300 rounded-full text-sm font-medium border border-blue-500/30">
-                          {languageInfo?.name || language}
-                        </span>
+          {/* Content Area */}
+          <div className="flex-1 bg-gradient-to-br from-gray-900/50 via-gray-800/50 to-black/50 relative z-10 overflow-hidden flex flex-col">
+            <div className="h-full overflow-y-auto custom-scrollbar">
+              <div className="p-6 pb-20 max-w-4xl mx-auto">
+                {selectedQuestion ? (
+                  <motion.div
+                    key={selectedQuestion.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="bg-slate-800/70 backdrop-blur-sm border border-slate-700/50 rounded-2xl overflow-hidden shadow-2xl mb-8"
+                  >
+                    <div className="p-8">
+                      <div className="flex items-center justify-between mb-6">
+                        <div className="flex items-center gap-3">
+                          <span className="px-4 py-2 bg-gradient-to-r from-blue-600/30 to-cyan-600/30 text-blue-300 rounded-full text-sm font-medium border border-blue-500/30">
+                            {languageInfo?.name || language}
+                          </span>
+                        </div>
+                        <button
+                          onClick={() => toggleBookmark(`interview-${selectedQuestion.id}`)}
+                          className="text-yellow-400 hover:text-yellow-300 transition-all duration-300 hover:scale-110"
+                        >
+                          {bookmarkedItems.has(`interview-${selectedQuestion.id}`) ? 
+                            <BookmarkCheck className="w-6 h-6" /> : 
+                            <Bookmark className="w-6 h-6" />
+                          }
+                        </button>
                       </div>
-                      <button
-                        onClick={() => toggleBookmark(`interview-${selectedQuestion.id}`)}
-                        className="text-yellow-400 hover:text-yellow-300 transition-all duration-300 hover:scale-110"
-                      >
-                        {bookmarkedItems.has(`interview-${selectedQuestion.id}`) ? 
-                          <BookmarkCheck className="w-6 h-6" /> : 
-                          <Bookmark className="w-6 h-6" />
-                        }
-                      </button>
+                      
+                      <div className="mb-8">
+                        <h3 className="text-3xl font-bold text-white leading-tight mb-4">{selectedQuestion.question}</h3>
+                        {selectedQuestion.difficulty && (
+                          <span className={`px-3 py-1 rounded-full text-xs font-medium border ${getDifficultyColor(selectedQuestion.difficulty)}`}>
+                            {selectedQuestion.difficulty.toUpperCase()}
+                          </span>
+                        )}
+                      </div>
+                      
+                      <div className="question-content">
+                        {selectedQuestion.content || (
+                          <div 
+                            className="prose prose-invert max-w-none"
+                            dangerouslySetInnerHTML={{ __html: selectedQuestion.answer }}
+                          />
+                        )}
+                      </div>
                     </div>
-                    
-                    <div className="mb-8">
-                      <h3 className="text-3xl font-bold text-white leading-tight mb-4">{selectedQuestion.question}</h3>
-                      {selectedQuestion.difficulty && (
-                        <span className={`px-3 py-1 rounded-full text-xs font-medium border ${getDifficultyColor(selectedQuestion.difficulty)}`}>
-                          {selectedQuestion.difficulty.toUpperCase()}
-                        </span>
-                      )}
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    className="flex items-center justify-center h-full min-h-[60vh]"
+                  >
+                    <div className="text-center">
+                      <div className="w-20 h-20 bg-blue-600/20 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                        {React.createElement(languageInfo?.icon || Code, { className: "w-10 h-10 text-blue-400" })}
+                      </div>
+                      <h3 className="text-2xl font-bold text-slate-300 mb-2">Select a Question</h3>
+                      <p className="text-slate-500">Choose a question from the sidebar to view detailed explanation</p>
                     </div>
-                    
-                    <div className="question-content">
-                      {selectedQuestion.content || (
-                        <div 
-                          className="prose prose-invert max-w-none"
-                          dangerouslySetInnerHTML={{ __html: selectedQuestion.answer }}
-                        />
-                      )}
-                    </div>
-                  </div>
-                </motion.div>
-              ) : (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="flex items-center justify-center h-full"
-                >
-                  <div className="text-center">
-                    <div className="w-20 h-20 bg-blue-600/20 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                      {React.createElement(languageInfo?.icon || Code, { className: "w-10 h-10 text-blue-400" })}
-                    </div>
-                    <h3 className="text-2xl font-bold text-slate-300 mb-2">Select a Question</h3>
-                    <p className="text-slate-500">Choose a question from the sidebar to view detailed explanation</p>
-                  </div>
-                </motion.div>
-              )}
+                  </motion.div>
+                )}
               </div>
             </div>
           </div>

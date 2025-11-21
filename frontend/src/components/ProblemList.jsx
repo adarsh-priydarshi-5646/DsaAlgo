@@ -136,16 +136,13 @@ const ProblemList = () => {
     }
   };
 
-  const getStatusIcon = (status) => {
-    switch (status) {
-      case 'SOLVED': return <CheckCircle className="w-5 h-5 text-green-400" />;
-      case 'ATTEMPTED': return <Clock className="w-5 h-5 text-yellow-400" />;
-      default: return <AlertCircle className="w-5 h-5 text-gray-400" />;
-    }
+  const getStatusIcon = (isSolved) => {
+    if (isSolved) return <CheckCircle className="w-5 h-5 text-green-400" />;
+    return <AlertCircle className="w-5 h-5 text-gray-400" />;
   };
 
-  const solvedCount = problems.filter(p => p.userProgress?.status === 'SOLVED').length;
-  const attemptedCount = problems.filter(p => p.userProgress?.status === 'ATTEMPTED').length;
+  const solvedCount = problems.filter(p => p.isSolved).length;
+  const attemptedCount = problems.filter(p => !p.isSolved && p.submissionCount > 0).length;
   const totalCount = problems.length;
 
   return (
@@ -500,7 +497,7 @@ const ProblemList = () => {
                     <div>
                       <div className="flex items-start justify-between mb-4">
                         <div className="flex items-center gap-3">
-                          {getStatusIcon(problem.userProgress?.status)}
+                          {getStatusIcon(problem.isSolved)}
                           <div>
                             <h3 className="text-xl font-semibold text-white group-hover:text-purple-400 transition-colors mb-1">
                               {problem.title}
@@ -562,7 +559,7 @@ const ProblemList = () => {
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-4 flex-1">
                         <div className="flex items-center justify-center w-12 h-12">
-                          {getStatusIcon(problem.userProgress?.status)}
+                          {getStatusIcon(problem.isSolved)}
                         </div>
                         
                         <div className="flex-1">

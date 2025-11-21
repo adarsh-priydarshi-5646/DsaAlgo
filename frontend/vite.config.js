@@ -27,4 +27,9 @@ export default defineConfig({
     exclude: ['lucide-react'],
     include: ['three', '@react-three/fiber', '@react-three/drei']
   },
+  test: {
+    globals: true,
+    environment: 'jsdom',
+    setupFiles: './src/test/setup.js',
+  },
 })
