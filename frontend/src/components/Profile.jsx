@@ -69,42 +69,10 @@ const Profile = () => {
   });
 
   useEffect(() => {
-    // Set mock data immediately for instant loading
-    if (!profile && username) {
-      setProfile({
-        id: '1',
-        username: username,
-        firstName: 'User',
-        lastName: 'Profile',
-        email: `${username}@example.com`,
-        avatar: null,
-        role: 'USER',
-        createdAt: new Date().toISOString()
-      });
-    }
-    
-    if (!stats) {
-      setStats({
-        problemsSolved: 0,
-        problemsAttempted: 0,
-        totalSubmissions: 0,
-        successRate: 0,
-        rank: 0,
-        points: 0,
-        streak: 0,
-        difficultyBreakdown: { EASY: 0, MEDIUM: 0, HARD: 0 },
-        recentSubmissions: [],
-        activitySeries: [],
-        languageDistribution: [],
-        achievements: []
-      });
-    }
-    
-    // Update with real data when available
     if (profileQuery.data) setProfile(profileQuery.data);
     if (statsQuery.data) setStats(statsQuery.data);
     setIsOwnProfile(currentUser?.username === username);
-  }, [profileQuery.data, statsQuery.data, currentUser, username, profile, stats]);
+  }, [profileQuery.data, statsQuery.data, currentUser, username]);
 
   const handleExport = async () => {
     if (!profile?.id) return;

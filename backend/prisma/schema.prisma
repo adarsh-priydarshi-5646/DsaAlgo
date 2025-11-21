@@ -65,6 +65,7 @@ model Problem {
   progress    Progress[]
   solutions   Solution[]
   submissions Submission[]
+  testCases   TestCase[]
 
   @@map("problems")
 }
@@ -86,20 +87,23 @@ model Solution {
 }
 
 model Submission {
-  id          String           @id @default(cuid())
-  code        String
-  language    String
-  status      SubmissionStatus
-  runtime     Int?
-  memory      Int?
-  testsPassed Int              @default(0)
-  totalTests  Int              @default(0)
-  error       String?
-  createdAt   DateTime         @default(now())
-  userId      String
-  problemId   String
-  problem     Problem          @relation(fields: [problemId], references: [id])
-  user        User             @relation(fields: [userId], references: [id])
+  id            String           @id @default(cuid())
+  code          String
+  language      String
+  status        SubmissionStatus
+  runtime       Int?
+  memory        Int?
+  testsPassed   Int              @default(0)
+  totalTests    Int              @default(0)
+  error         String?
+  executionTime Int?
+  memoryUsed    Int?
+  testResults   String?
+  createdAt     DateTime         @default(now())
+  userId        String
+  problemId     String
+  problem       Problem          @relation(fields: [problemId], references: [id])
+  user          User             @relation(fields: [userId], references: [id])
 
   @@map("submissions")
 }
@@ -133,6 +137,22 @@ model Achievement {
   user        User     @relation(fields: [userId], references: [id])
 
   @@map("achievements")
+}
+
+model TestCase {
+  id          String   @id @default(cuid())
+  input       String
+  output      String
+  isHidden    Boolean  @default(false)
+  isSample    Boolean  @default(false)
+  explanation String?
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  problemId   String
+  problem     Problem  @relation(fields: [problemId], references: [id], onDelete: Cascade)
+
+  @@map("test_cases")
 }
 
 enum Role {

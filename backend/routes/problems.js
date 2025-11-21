@@ -8,6 +8,7 @@ import {
   submitSolution,
   createProblem
 } from '../controllers/problemController.js';
+import { syncLeetCodeProblems } from '../controllers/leetcodeSyncController.js';
 
 const router = express.Router();
 
@@ -48,6 +49,7 @@ const handleValidationErrors = (req, res, next) => {
 // Routes
 router.get('/', validateProblemQuery, handleValidationErrors, getProblems);
 router.get('/categories/all', getCategories);
+router.post('/sync/leetcode', authenticateToken, requireAdmin, syncLeetCodeProblems);
 router.get('/:slug', getProblem);
 router.post('/:slug/submit', authenticateToken, validateSubmission, handleValidationErrors, submitSolution);
 router.post('/', authenticateToken, requireAdmin, validateProblemCreation, handleValidationErrors, createProblem);

@@ -1,36 +1,49 @@
 import prisma from '../config/database.js';
+import { executeCodeWithTestCases } from '../services/judge0Service.js';
 
-// Submit solution for a problem
 export const submitSolution = async (req, res) => {
   try {
     const { problemId, code, language } = req.body;
     const userId = req.userId;
 
-
-    // Validate input
     if (!problemId || !code || !language) {
       return res.status(400).json({ 
         error: 'Problem ID, code, and language are required' 
       });
     }
 
-    // Check if problem exists
     const problem = await prisma.problem.findUnique({
       where: { id: problemId },
-      include: { testCases: true }
+      include: { testCases: { orderBy: { order: 'asc' } } }
     });
 
     if (!problem) {
       return res.status(404).json({ error: 'Problem not found' });
     }
 
-    // Simple code execution simulation
-    // In real implementation, this would run the code against test cases
-    const isCorrect = await simulateCodeExecution(code, problem.testCases);
-    const status = isCorrect ? 'ACCEPTED' : 'WRONG_ANSWER';
-    const executionTime = Math.floor(Math.random() * 1000) + 100; // Random execution time
+    let testResults;
+    try {
+      testResults = await executeCodeWithTestCases(code, language, problem.testCases);
+    } catch (executionError) {
+      return res.status(400).json({
+        success: false,
+        error: 'Code execution failed',
+        details: executionError.message,
+        testResults: [{
+          passed: false,
+          error: executionError.message,
+          compilationError: executionError.message
+        }]
+      });
+    }
 
-    // Create submission record
+    const testsPassed = testResults.filter(r => r.passed).length;
+    const totalTests = testResults.length;
+    const status = testsPassed === totalTests ? 'ACCEPTED' : 'WRONG_ANSWER';
+    
+    const avgExecutionTime = testResults.reduce((sum, r) => sum + (r.executionTime || 0), 0) / totalTests;
+    const avgMemory = testResults.reduce((sum, r) => sum + (r.memory || 0), 0) / totalTests;
+
     const submission = await prisma.submission.create({
       data: {
         userId,
@@ -38,8 +51,12 @@ export const submitSolution = async (req, res) => {
         code,
         language,
         status,
-        executionTime,
-        memoryUsed: Math.floor(Math.random() * 50) + 10, // Random memory usage
+        executionTime: Math.round(avgExecutionTime),
+        memoryUsed: Math.round(avgMemory),
+        testsPassed,
+        totalTests,
+        testResults: JSON.stringify(testResults),
+        error: testResults.find(r => r.error)?.error || null
       },
       include: {
         problem: {
@@ -58,22 +75,32 @@ export const submitSolution = async (req, res) => {
       }
     });
 
-    // If accepted, update user stats
     if (status === 'ACCEPTED') {
       await updateUserStats(userId, problem.difficulty);
-      
-      // Add achievement notification
       await addAchievementNotification(userId, problem);
     }
-
 
     res.json({
       success: true,
       submission: {
         id: submission.id,
         status: submission.status,
+        testsPassed,
+        totalTests,
         executionTime: submission.executionTime,
         memoryUsed: submission.memoryUsed,
+        testResults: testResults.map(tr => ({
+          passed: tr.passed,
+          input: tr.input,
+          expectedOutput: tr.expectedOutput,
+          actualOutput: tr.actualOutput,
+          error: tr.error,
+          stderr: tr.stderr,
+          compilationError: tr.compilationError,
+          executionTime: tr.executionTime,
+          memory: tr.memory,
+          status: tr.status
+        })),
         createdAt: submission.createdAt
       },
       message: status === 'ACCEPTED' ? 'Solution accepted! 🎉' : 'Wrong answer. Try again! 💪'
@@ -81,33 +108,10 @@ export const submitSolution = async (req, res) => {
 
   } catch (error) {
     console.error('Submit solution error:', error);
-    res.status(500).json({ error: 'Internal server error' });
-  }
-};
-
-// Simulate code execution (simplified)
-const simulateCodeExecution = async (code, testCases) => {
-  try {
-    // Simple heuristics to determine if code might be correct
-    const codeLength = code.length;
-    const hasLoops = /for|while|forEach/.test(code);
-    const hasConditions = /if|else|switch/.test(code);
-    const hasReturn = /return/.test(code);
-    
-    // Basic scoring system
-    let score = 0;
-    if (codeLength > 50) score += 20;
-    if (hasLoops) score += 30;
-    if (hasConditions) score += 25;
-    if (hasReturn) score += 25;
-    
-    // Random factor to simulate test case results
-    const randomFactor = Math.random() * 100;
-    
-    // Higher chance of success if code looks more complete
-    return (score + randomFactor) > 70;
-  } catch (error) {
-    return false;
+    res.status(500).json({ 
+      error: 'Internal server error',
+      details: error.message 
+    });
   }
 };
 
@@ -150,19 +154,15 @@ const updateUserStats = async (userId, difficulty) => {
 // Add achievement notification
 const addAchievementNotification = async (userId, problem) => {
   try {
-    // This would integrate with notification system
-    // Achievement notification would be created here
-    
-    // In future, create notification record in database
-    // await prisma.notification.create({
-    //   data: {
-    //     userId,
-    //     type: 'ACHIEVEMENT',
-    //     title: 'Problem Solved! 🎉',
-    //     message: `You successfully solved "${problem.title}"`,
-    //     data: { problemId: problem.id, difficulty: problem.difficulty }
-    //   }
-    // });
+    await prisma.notification.create({
+      data: {
+        userId,
+        type: 'ACHIEVEMENT',
+        title: 'Problem Solved! 🎉',
+        message: `You successfully solved "${problem.title}"`,
+        data: { problemId: problem.id, difficulty: problem.difficulty }
+      }
+    });
   } catch (error) {
     console.error('Error adding achievement notification:', error);
   }
