@@ -1,0 +1,24 @@
+name: Bundle Size
+
+on:
+  pull_request:
+    paths:
+      - 'frontend/**/*'
+
+jobs:
+  size:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Dependencies
+        run: |
+          cd frontend
+          npm install
+      - name: Build
+        run: |
+          cd frontend
+          npm run build
+      - name: Check Size
+        run: |
+          cd frontend
+          npx filesize
