@@ -1,0 +1,23 @@
+# Configuration for .github/workflows/labeler.yml
+
+frontend:
+  - changed-files:
+      - any-glob-to-any-file: 'frontend/**/*'
+
+backend:
+  - changed-files:
+      - any-glob-to-any-file: 'backend/**/*'
+
+documentation:
+  - changed-files:
+      - any-glob-to-any-file: '**/*.md'
+      - any-glob-to-any-file: 'docs/**/*'
+
+github_actions:
+  - changed-files:
+      - any-glob-to-any-file: '.github/**/*'
+
+dependencies:
+  - changed-files:
+      - any-glob-to-any-file: '**/package.json'
+      - any-glob-to-any-file: '**/package-lock.json'
